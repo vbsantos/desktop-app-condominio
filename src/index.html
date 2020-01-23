@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Gerenciador de Condomínio</title>
+    <link rel="stylesheet" href="index.css" />
+  </head>
+  <body>
+    <h1>Projeto Base!</h1>
+
+    <div class="quadrado">
+      <p>Esse é o projeto base com os pacotes:</p>
+      <ul>
+        <li>electron</li>
+        <li>electron-builder</li>
+        <li>electron-updater</li>
+        <li>electron-log</li>
+      </ul>
+    </div>
+
+    <div class="quadrado">
+      <p>Versão: <span id="version">vX.Y.Z</span></p>
+    </div>
+
+    <div class="quadrado">
+      <p>Status:</p>
+      <div id="messages"></div>
+    </div>
+
+    <script>
+      // Display the current version
+      let version = window.location.hash.substring(1);
+      document.getElementById("version").innerText = version;
+
+      // Listen for messages
+      const { ipcRenderer } = require("electron");
+      ipcRenderer.on("message", function(event, text) {
+        let container = document.getElementById("messages");
+        let message = document.createElement("p");
+        message.innerHTML = text;
+        container.appendChild(message);
+      });
+    </script>
+  </body>
+</html>

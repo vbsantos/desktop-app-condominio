@@ -1,0 +1,34 @@
+{
+  "name": "desktop-app-condominio",
+  "version": "0.1.0",
+  "description": "Software para gerenciar condomínio",
+  "main": "src/index.js",
+  "repository": "https://github.com/vbsantos/desktop-app-condominio",
+  "build": {
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "vbsantos",
+        "repo": "desktop-app-condominio"
+      }
+    ]
+  },
+  "author": "Vinícius Bohrer",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "start": "electron .",
+    "pack": "electron-builder --dir",
+    "dist-windows": "electron-builder --win --ia32",
+    "dist-linux": "electron-builder --ia32",
+    "publish": "electron-builder --win --ia32 -p always"
+  },
+  "devDependencies": {
+    "electron": "^7.1.9",
+    "electron-builder": "^22.2.0"
+  },
+  "dependencies": {
+    "electron-log": "^4.0.3",
+    "electron-updater": "^4.2.0"
+  }
+}
