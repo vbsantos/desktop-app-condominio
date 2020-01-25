@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <title>Gerenciador de Condomínio</title>
     <link rel="stylesheet" href="index.css" />
+    <script src="../database/knex.js"></script>
   </head>
   <body>
     <h1>Projeto Base!</h1>
@@ -13,6 +14,7 @@
       <ul>
         <li>electron</li>
         <li>electron-builder</li>
+        <li>electron-rebuild</li>
         <li>electron-updater</li>
         <li>electron-log</li>
         <li>knex</li>
@@ -29,14 +31,19 @@
     </div>
 
     <script>
+      // Database read test
+      (async function db_test() {
+        console.table(await knex.select("*").from("User"));
+      })();
+
       // Display the current version
-      let version = window.location.hash.substring(1);
+      const version = window.location.hash.substring(1);
       document.getElementById("version").innerText = version;
 
-      // Listen for messages
+      // Listen for auto-updater status
       const { ipcRenderer } = require("electron");
       ipcRenderer.on("message", function(event, text) {
-        let message = document.getElementById("messages");
+        const message = document.getElementById("messages");
         message.innerHTML = text;
       });
     </script>

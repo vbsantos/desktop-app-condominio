@@ -18,6 +18,7 @@
   "private": false,
   "scripts": {
     "start": "electron .",
+    "rebuild": "electron-rebuild -f -w sqlite3",
     "pack": "electron-builder --dir",
     "dist-windows": "electron-builder --win --ia32",
     "dist-linux": "electron-builder --ia32",
@@ -25,7 +26,8 @@
   },
   "devDependencies": {
     "electron": "^7.1.9",
-    "electron-builder": "^22.2.0"
+    "electron-builder": "^22.2.0",
+    "electron-rebuild": "^1.9.0"
   },
   "dependencies": {
     "electron-log": "^4.0.3",
