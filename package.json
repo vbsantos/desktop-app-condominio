@@ -29,6 +29,8 @@
   },
   "dependencies": {
     "electron-log": "^4.0.3",
-    "electron-updater": "^4.2.0"
+    "electron-updater": "^4.2.0",
+    "knex": "^0.20.8",
+    "sqlite3": "^4.1.1"
   }
 }
