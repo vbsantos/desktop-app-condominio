@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <title>Gerenciador de Condomínio</title>
     <link rel="stylesheet" href="index.css" />
-    <script src="../database/knex.js"></script>
+    <!-- <script src="./database/knex.js"></script> -->
   </head>
   <body>
     <h1>Projeto Base!</h1>
@@ -14,10 +14,8 @@
       <ul>
         <li>electron</li>
         <li>electron-builder</li>
-        <li>electron-rebuild</li>
         <li>electron-updater</li>
         <li>electron-log</li>
-        <li>knex</li>
         <li>sqlite3</li>
       </ul>
     </div>
@@ -30,11 +28,26 @@
       <p>Status: <span id="messages"></span></p>
     </div>
 
+    <div class="quadrado">
+      <p>Database: <span id="database"></span></p>
+    </div>
+
     <script>
-      // Database read test
-      (async function db_test() {
-        console.table(await knex.select("*").from("User"));
-      })();
+      //Database read test
+      var sqlite3 = require("sqlite3").verbose();
+      var db = new sqlite3.Database("./database.sqlite");
+      db.serialize(function() {
+        db.run("CREATE TABLE lorem (info TEXT)");
+        var stmt = db.prepare("INSERT INTO lorem VALUES (?)");
+        for (var i = 0; i < 10; i++) {
+          stmt.run("Ipsum " + i);
+        }
+        stmt.finalize();
+        db.each("SELECT rowid AS id, info FROM User", function(err, row) {
+          console.log(row.id + ": " + row.info);
+        });
+      });
+      db.close();
 
       // Display the current version
       const version = window.location.hash.substring(1);
