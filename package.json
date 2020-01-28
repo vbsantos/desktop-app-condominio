@@ -32,12 +32,10 @@
   "dependencies": {
     "electron-log": "^4.0.3",
     "electron-updater": "^4.2.0",
-    "sequelize": "^5.21.3",
     "sqlite3": "^4.1.1"
   },
   "devDependencies": {
     "electron": "^7.1.10",
-    "electron-builder": "^22.2.0",
-    "sequelize-cli": "^5.5.1"
+    "electron-builder": "^22.2.0"
   }
 }

@@ -3,3 +3,4 @@ yarn.lock
 package-lock.json
 .git
 dist
+database.sqlite
