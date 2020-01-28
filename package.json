@@ -2,7 +2,7 @@
   "name": "desktop-app-condominio",
   "version": "0.1.3",
   "description": "Software para gerenciar condomínio",
-  "main": "src/index.js",
+  "main": "app/index.js",
   "repository": "https://github.com/vbsantos/desktop-app-condominio",
   "build": {
     "publish": [
@@ -11,6 +11,11 @@
         "owner": "vbsantos",
         "repo": "desktop-app-condominio"
       }
+    ],
+    "files": [
+      "app/**/*",
+      "node_modules/**/*",
+      "package.json"
     ]
   },
   "author": "Vinícius Bohrer",
@@ -24,13 +29,15 @@
     "dist-linux": "electron-builder --ia32",
     "publish": "electron-builder --win --ia32 -p always"
   },
-  "devDependencies": {
-    "electron": "^7.1.9",
-    "electron-builder": "^22.2.0"
-  },
   "dependencies": {
     "electron-log": "^4.0.3",
     "electron-updater": "^4.2.0",
+    "sequelize": "^5.21.3",
     "sqlite3": "^4.1.1"
+  },
+  "devDependencies": {
+    "electron": "^7.1.10",
+    "electron-builder": "^22.2.0",
+    "sequelize-cli": "^5.5.1"
   }
 }

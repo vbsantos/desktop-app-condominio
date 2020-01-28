@@ -4,7 +4,6 @@
     <meta charset="UTF-8" />
     <title>Gerenciador de Condomínio</title>
     <link rel="stylesheet" href="index.css" />
-    <!-- <script src="./database/knex.js"></script> -->
   </head>
   <body>
     <h1>Projeto Base!</h1>
@@ -29,22 +28,21 @@
     </div>
 
     <div class="quadrado">
-      <p>Database: <span id="database"></span></p>
+      <p>Usuário: <span id="database"></span></p>
     </div>
 
     <script>
-      //Database read test
+      // Display administrator's name
       var sqlite3 = require("sqlite3").verbose();
-      var db = new sqlite3.Database("./database.sqlite");
+      var db = new sqlite3.Database("database.sqlite");
+      var database = document.getElementById("database");
       db.serialize(function() {
-        db.run("CREATE TABLE lorem (info TEXT)");
-        var stmt = db.prepare("INSERT INTO lorem VALUES (?)");
-        for (var i = 0; i < 10; i++) {
-          stmt.run("Ipsum " + i);
-        }
+        db.run("CREATE TABLE IF NOT EXISTS users (name TEXT)");
+        var stmt = db.prepare("INSERT INTO users VALUES (?)");
+        stmt.run("Vinícius");
         stmt.finalize();
-        db.each("SELECT rowid AS id, info FROM User", function(err, row) {
-          console.log(row.id + ": " + row.info);
+        db.each("SELECT rowid AS id, name FROM users", function(err, row) {
+          database.innerHTML = row.name;
         });
       });
       db.close();
