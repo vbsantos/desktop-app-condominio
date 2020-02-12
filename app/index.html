@@ -2,11 +2,11 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <title>Electron Boilerplate</title>
+    <title>Condomínio</title>
     <link rel="stylesheet" href="index.css" />
   </head>
   <body>
-    <h1>Electron Boilerplate!</h1>
+    <h1>Condomínio <span id="version"></span></h1>
 
     <div class="quadrado">
       <p>Dependencies:</p>
@@ -26,15 +26,11 @@
     </div>
 
     <div class="quadrado">
-      <p>Boilerplate Version: <span id="version"></span></p>
-    </div>
-
-    <div class="quadrado">
       <p>Update Status: <span id="messages"></span></p>
     </div>
 
     <div class="quadrado">
-      <p>Database User: <span id="database"></span></p>
+      <p>Admin: <span id="database"></span></p>
     </div>
 
     <script>
@@ -59,6 +55,7 @@
 
         const BeneficiarioController = require("../controllers/BeneficiarioController");
         const beneficiarioController = new BeneficiarioController();
+
         const beneficiario = beneficiarioController.create({
           nome: "Vinícius Bohrer dos Santos",
           cprf: "036.580.500-98",
@@ -75,6 +72,7 @@
 
         const CondominioController = require("../controllers/CondominioController");
         const condominioController = new CondominioController();
+
         const condominio1 = condominioController.create({
           nome: "Edifício Netuno",
           cep: "97010-100",
@@ -291,6 +289,7 @@
 
         // ------------------------------------------------------------------- Aguarda Promises
 
+        console.time("wait for Promises");
         await Promise.all([
           beneficiario,
           condominio1,
@@ -318,6 +317,7 @@
           boleto13,
           boleto14
         ]);
+        console.timeEnd("wait for Promises");
 
         // ------------------------------------------------------------------- TESTE RELAÇÃO
 
@@ -328,7 +328,7 @@
           }
         })
           .then(beneficiarios => {
-            console.log(beneficiarios[0]);
+            console.log(beneficiarios[0].get());
             const database = document.getElementById("database");
             database.innerHTML = beneficiarios[0].nome;
           })
@@ -341,7 +341,6 @@
 
       const runtest = async () => {
         await runMigrations();
-        // await testDatabase();
         await testRelations();
       };
 

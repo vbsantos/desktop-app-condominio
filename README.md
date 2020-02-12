@@ -1,63 +1,55 @@
-# Gestão de Condomínios
+# Gestão de Condomínios v0.6.0
 
+- Cadastro de Administradores/Beneficiarios;
 - Cadastro de Condomínios;
-- Cadastro de Apartamentos de um Condomínio;
-- Cadastro do Morador do Apartamento (Dono ou Inquilino);
+- Cadastro de Pagantes (Dono ou Inquilino);
 - Rateio de contas do condomínio;
-- Geração de Relatórios (tabelas e gráficos);
-- Geração de Boletos com os valores calculados pelo sistema;
+- Geração de Relatórios (tabelas);
+- Geração e armazenamento de Boletos com os valores calculados pelo sistema;
+  - Boletos pela API Boleto.Cloud
 - Envio automatizado de e-mails para os inquilinos/proprietários;
-
-
 
 ---
 
-
-
 ## Models
 
-Beneficiário:
+Beneficiario:
 
-```
-yarn sequelize model:generate --name Beneficiario --attributes nome_completo:string,cprf:string,token_acesso:string,token_conta:string,cep:string,uf:string,localidade:string,bairro:string,logradouro:string,numero:string,complemento:string
+```bash
+yarn sequelize model:generate --name Beneficiario --attributes nome:string,cprf:string,token_acesso:string,token_conta:string,cep:string,uf:string,localidade:string,bairro:string,logradouro:string,numero:string,complemento:string
 ```
 
-Condomínio:
+Condominio:
 
-```
-yarn sequelize model:generate --name Condominio --attributes nome:string,cep:string,uf:string,localidade:string,bairro:string,logradouro:string,numero:string,id_beneficiario:integer
+```bash
+yarn sequelize model:generate --name Condominio --attributes nome:string,cep:string,uf:string,localidade:string,bairro:string,logradouro:string,numero:string,beneficiarioId:integer
 ```
 
 Pagante:
 
-```
-yarn sequelize model:generate --name Pagante --attributes nome_completo:string,cprf:string,complemento:string,id_condominio:integer
+```bash
+yarn sequelize model:generate --name Pagante --attributes nome:string,cprf:string,complemento:string,fracao:string,condominioId:integer
 ```
 
 Boleto:
 
-```
-yarn sequelize model:generate --name Boleto --attributes emissao:string,vencimento:string,documento:string,numero:string,titulo:string,valor:string,id_beneficiario:integer,id_condominio:integer,id_pagante:integer
+```bash
+yarn sequelize model:generate --name Boleto --attributes emissao:string,vencimento:string,documento:string,numero:string,titulo:string,valor:string,paganteId:integer
 ```
 
-### Relationships & Eager Loading
+### Relações
 
-```mermaid
-classDiagram
-	Condominio <-- Pagante
-	Beneficiario <-- Condominio
+- Beneficiarios (**1-N**) Condominios
+- Condominios (**1-N**) Pagantes
+- Pagantes (**1-N**) Boletos
 
- 	class Beneficiario{
- 		+String beakColor
- 		+swim()
- 		+quack()
- 	}
- 	class Condominio{
- 		-int sizeInFeet
- 		-canEat()
- 	}
- 	class Pagante{
- 		+bool is_wild
- 		+run()
- 	}
-```
+## Controllers
+
+- Beneficiario
+- Condominio
+- Pagante
+- Boleto
+- API \*
+- Email \*
+
+\* Por fazer

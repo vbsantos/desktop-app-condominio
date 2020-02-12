@@ -24,7 +24,7 @@
   },
   "author": "Vinícius Bohrer <vbsanttos@gmail.com>",
   "license": "MIT",
-  "private": true,
+  "private": false,
   "scripts": {
     "start": "electron .",
     "postinstall": "electron-builder install-app-deps",
