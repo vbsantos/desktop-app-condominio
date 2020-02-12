@@ -1,6 +1,6 @@
 {
   "name": "desktop-app-condominio",
-  "version": "0.3.1",
+  "version": "0.6.0",
   "description": "Software para gerenciar condomínio",
   "main": "app/index.js",
   "repository": "https://github.com/vbsantos/desktop-app-condominio",
@@ -13,29 +13,37 @@
       }
     ],
     "files": [
-      "app/**/*",
-      "node_modules/**/*",
-      "package.json"
+      "app/*",
+      "build/*",
+      "config/sequelize.json",
+      "models/*",
+      "migrations/*",
+      "controllers/*",
+      "node_modules/**/*"
     ]
   },
-  "author": "Vinícius Bohrer",
+  "author": "Vinícius Bohrer <vbsanttos@gmail.com>",
   "license": "MIT",
-  "private": false,
+  "private": true,
   "scripts": {
     "start": "electron .",
     "postinstall": "electron-builder install-app-deps",
     "pack": "electron-builder --dir",
-    "dist-windows": "electron-builder --win --ia32",
-    "dist-linux": "electron-builder --ia32",
+    "dist-windows": "electron-builder -w --ia32 exe",
+    "dist-macos": "electron-builder -m tar.gz",
+    "dist-linux": "electron-builder -l deb",
     "publish": "electron-builder --win --ia32 -p always"
   },
   "dependencies": {
     "electron-log": "^4.0.3",
     "electron-updater": "^4.2.0",
-    "sqlite3": "^4.1.1"
+    "sequelize": "^5.21.3",
+    "sqlite3": "^4.1.1",
+    "umzug": "^2.2.0"
   },
   "devDependencies": {
     "electron": "^7.1.10",
-    "electron-builder": "^22.2.0"
+    "electron-builder": "^22.2.0",
+    "sequelize-cli": "^5.5.1"
   }
 }

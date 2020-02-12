@@ -2,50 +2,350 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <title>Gerenciador de Condomínio</title>
+    <title>Electron Boilerplate</title>
     <link rel="stylesheet" href="index.css" />
   </head>
   <body>
-    <h1>Projeto Base!</h1>
+    <h1>Electron Boilerplate!</h1>
 
     <div class="quadrado">
-      <p>Esse é o projeto base com os pacotes:</p>
+      <p>Dependencies:</p>
       <ul>
-        <li>electron</li>
-        <li>electron-builder</li>
         <li>electron-updater</li>
         <li>electron-log</li>
         <li>sqlite3</li>
+        <li>sequelize</li>
+        <li>umzug</li>
+      </ul>
+      <p>devDependencies:</p>
+      <ul>
+        <li>electron</li>
+        <li>electron-builder</li>
+        <li>sequelize-cli</li>
       </ul>
     </div>
 
     <div class="quadrado">
-      <p>Versão: <span id="version">vX.Y.Z</span></p>
+      <p>Boilerplate Version: <span id="version"></span></p>
     </div>
 
     <div class="quadrado">
-      <p>Status: <span id="messages"></span></p>
+      <p>Update Status: <span id="messages"></span></p>
     </div>
 
     <div class="quadrado">
-      <p>Usuário: <span id="database"></span></p>
+      <p>Database User: <span id="database"></span></p>
     </div>
 
     <script>
-      // Display administrator's name
-      var sqlite3 = require("sqlite3").verbose();
-      var db = new sqlite3.Database("database.sqlite");
-      var database = document.getElementById("database");
-      db.serialize(function() {
-        db.run("CREATE TABLE IF NOT EXISTS users (name TEXT)");
-        var stmt = db.prepare("INSERT INTO users VALUES (?)");
-        stmt.run("Vinícius");
-        stmt.finalize();
-        db.each("SELECT rowid AS id, name FROM users", function(err, row) {
-          database.innerHTML = row.name;
+      console.time("Initialization Time");
+
+      // Cria as tabelas do banco de dados
+      const runMigrations = async () => {
+        const DatabaseController = require("../controllers/DatabaseController");
+        let databaseController = new DatabaseController();
+        await databaseController.runMigrations();
+      };
+
+      // Testa Relacionamentos do Sequelize
+      const testRelations = async () => {
+        const models = require("../models");
+        const Beneficiario = models.Beneficiario;
+        const Condominio = models.Condominio;
+        const Pagante = models.Pagante;
+        const Boleto = models.Boleto;
+
+        // ------------------------------------------------------------------- TESTE CRIAÇÃO
+
+        const BeneficiarioController = require("../controllers/BeneficiarioController");
+        const beneficiarioController = new BeneficiarioController();
+        const beneficiario = beneficiarioController.create({
+          nome: "Vinícius Bohrer dos Santos",
+          cprf: "036.580.500-98",
+          token_acesso: "api-key_q-hk4iotl6nWZkqoSPEW32BL9HAWIwckXolM9LEx0H0=",
+          token_conta: "api-key_A1wDgeIdIPoLqmWf159v6OMBCZZ_UW-cVcwtWGl81mI=",
+          cep: "97010-150",
+          uf: "RS",
+          localidade: "Santa Maria",
+          bairro: "Nossa Senhora do Rosário",
+          logradouro: "Rua Daudt",
+          numero: "425",
+          complemento: "Apto 401"
         });
-      });
-      db.close();
+
+        const CondominioController = require("../controllers/CondominioController");
+        const condominioController = new CondominioController();
+        const condominio1 = condominioController.create({
+          nome: "Edifício Netuno",
+          cep: "97010-100",
+          uf: "RS",
+          localidade: "Santa Maria",
+          bairro: "Centro",
+          logradouro: "Rua 1",
+          numero: "412",
+          beneficiarioId: 1
+        });
+        const condominio2 = condominioController.create({
+          nome: "Edifício Plutão",
+          cep: "97010-090",
+          uf: "RS",
+          localidade: "Santa Maria",
+          bairro: "Dores",
+          logradouro: "Rua 2",
+          numero: "1463",
+          beneficiarioId: 1
+        });
+        const condominio3 = condominioController.create({
+          nome: "Edifício Vênus",
+          cep: "97010-080",
+          uf: "RS",
+          localidade: "Santa Maria",
+          bairro: "Camobi",
+          logradouro: "Rua 3",
+          numero: "673",
+          beneficiarioId: 1
+        });
+
+        const PaganteController = require("../controllers/PaganteController");
+        const paganteController = new PaganteController();
+
+        const pagante1 = paganteController.create({
+          nome: "Eduardo Batata",
+          cprf: "043.214.364-12",
+          complemento: "101",
+          fracao: "0.5",
+          condominioId: 1
+        });
+        const pagante2 = paganteController.create({
+          nome: "Jorge Batata",
+          cprf: "132.654.412-12",
+          complemento: "102",
+          fracao: "0.5",
+          condominioId: 1
+        });
+        const pagante3 = paganteController.create({
+          nome: "Jacson dos Santos",
+          cprf: "421.412.524-24",
+          complemento: "101",
+          fracao: "0.5",
+          condominioId: 2
+        });
+        const pagante4 = paganteController.create({
+          nome: "Marcos Pereira",
+          cprf: "543.123.758-53",
+          complemento: "201",
+          fracao: "0.5",
+          condominioId: 2
+        });
+        const pagante5 = paganteController.create({
+          nome: "Dalmir Borges",
+          cprf: "564.234.463-34",
+          complemento: "1001",
+          fracao: "0.333",
+          condominioId: 3
+        });
+        const pagante6 = paganteController.create({
+          nome: "Odila Locatelli",
+          cprf: "123.245.547-39",
+          complemento: "1002",
+          fracao: "0.333",
+          condominioId: 3
+        });
+        const pagante7 = paganteController.create({
+          nome: "Everton Charles",
+          cprf: "128.734.643-92",
+          complemento: "1003",
+          fracao: "0.333",
+          condominioId: 3
+        });
+
+        const BoletoController = require("../controllers/BoletoController");
+        const boletoController = new BoletoController();
+
+        const boleto1 = boletoController.create({
+          emissao: "2020-02-10",
+          vencimento: "2020-02-17",
+          documento: "EX1",
+          numero: "10000001-1",
+          titulo: "DM",
+          valor: "200.00",
+          paganteId: 1
+        });
+        const boleto2 = boletoController.create({
+          emissao: "2020-02-10",
+          vencimento: "2020-02-17",
+          documento: "EX1",
+          numero: "10000002-1",
+          titulo: "DM",
+          valor: "213.42",
+          paganteId: 1
+        });
+        const boleto3 = boletoController.create({
+          emissao: "2020-02-10",
+          vencimento: "2020-02-17",
+          documento: "EX1",
+          numero: "10000003-1",
+          titulo: "DM",
+          valor: "200.00",
+          paganteId: 2
+        });
+        const boleto4 = boletoController.create({
+          emissao: "2020-02-10",
+          vencimento: "2020-02-17",
+          documento: "EX1",
+          numero: "10000004-1",
+          titulo: "DM",
+          valor: "213.42",
+          paganteId: 2
+        });
+        const boleto5 = boletoController.create({
+          emissao: "2020-02-10",
+          vencimento: "2020-02-17",
+          documento: "EX1",
+          numero: "10000005-1",
+          titulo: "DM",
+          valor: "200.00",
+          paganteId: 3
+        });
+        const boleto6 = boletoController.create({
+          emissao: "2020-02-10",
+          vencimento: "2020-02-17",
+          documento: "EX1",
+          numero: "10000006-1",
+          titulo: "DM",
+          valor: "213.42",
+          paganteId: 3
+        });
+        const boleto7 = boletoController.create({
+          emissao: "2020-02-10",
+          vencimento: "2020-02-17",
+          documento: "EX1",
+          numero: "10000007-1",
+          titulo: "DM",
+          valor: "200.00",
+          paganteId: 4
+        });
+        const boleto8 = boletoController.create({
+          emissao: "2020-02-10",
+          vencimento: "2020-02-17",
+          documento: "EX1",
+          numero: "10000008-1",
+          titulo: "DM",
+          valor: "213.42",
+          paganteId: 4
+        });
+        const boleto9 = boletoController.create({
+          emissao: "2020-02-10",
+          vencimento: "2020-02-17",
+          documento: "EX1",
+          numero: "10000009-1",
+          titulo: "DM",
+          valor: "200.00",
+          paganteId: 5
+        });
+        const boleto10 = boletoController.create({
+          emissao: "2020-02-10",
+          vencimento: "2020-02-17",
+          documento: "EX1",
+          numero: "10000010-1",
+          titulo: "DM",
+          valor: "213.42",
+          paganteId: 5
+        });
+        const boleto11 = boletoController.create({
+          emissao: "2020-02-10",
+          vencimento: "2020-02-17",
+          documento: "EX1",
+          numero: "10000011-1",
+          titulo: "DM",
+          valor: "200.00",
+          paganteId: 6
+        });
+        const boleto12 = boletoController.create({
+          emissao: "2020-02-10",
+          vencimento: "2020-02-17",
+          documento: "EX1",
+          numero: "10000012-1",
+          titulo: "DM",
+          valor: "213.42",
+          paganteId: 6
+        });
+        const boleto13 = boletoController.create({
+          emissao: "2020-02-10",
+          vencimento: "2020-02-17",
+          documento: "EX1",
+          numero: "10000013-1",
+          titulo: "DM",
+          valor: "200.00",
+          paganteId: 7
+        });
+        const boleto14 = boletoController.create({
+          emissao: "2020-02-10",
+          vencimento: "2020-02-17",
+          documento: "EX1",
+          numero: "10000014-1",
+          titulo: "DM",
+          valor: "213.42",
+          paganteId: 7
+        });
+
+        // ------------------------------------------------------------------- Aguarda Promises
+
+        await Promise.all([
+          beneficiario,
+          condominio1,
+          condominio2,
+          condominio3,
+          pagante1,
+          pagante2,
+          pagante3,
+          pagante4,
+          pagante5,
+          pagante6,
+          pagante7,
+          boleto1,
+          boleto2,
+          boleto3,
+          boleto4,
+          boleto5,
+          boleto6,
+          boleto7,
+          boleto8,
+          boleto9,
+          boleto10,
+          boleto11,
+          boleto12,
+          boleto13,
+          boleto14
+        ]);
+
+        // ------------------------------------------------------------------- TESTE RELAÇÃO
+
+        await Beneficiario.findAll({
+          include: {
+            all: true,
+            nested: true
+          }
+        })
+          .then(beneficiarios => {
+            console.log(beneficiarios[0]);
+            const database = document.getElementById("database");
+            database.innerHTML = beneficiarios[0].nome;
+          })
+          .catch(err => {
+            console.log("Error while getting Administrador: ", err);
+          });
+
+        return models;
+      };
+
+      const runtest = async () => {
+        await runMigrations();
+        // await testDatabase();
+        await testRelations();
+      };
+
+      runtest();
 
       // Display the current version
       const version = window.location.hash.substring(1);
@@ -57,6 +357,8 @@
         const message = document.getElementById("messages");
         message.innerHTML = text;
       });
+
+      console.timeEnd("Initialization Time");
     </script>
   </body>
 </html>
