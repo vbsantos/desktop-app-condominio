@@ -2,8 +2,11 @@
   "name": "desktop-app-condominio",
   "version": "0.5.0",
   "description": "Software para gerenciar condomínio",
-  "main": "app/index.js",
+  "author": "Vinícius Bohrer <vbsanttos@gmail.com>",
   "repository": "https://github.com/vbsantos/desktop-app-condominio",
+  "private": false,
+  "license": "MIT",
+  "main": "app/index.js",
   "build": {
     "publish": [
       {
@@ -22,9 +25,6 @@
       "node_modules/**/*"
     ]
   },
-  "author": "Vinícius Bohrer <vbsanttos@gmail.com>",
-  "license": "MIT",
-  "private": false,
   "scripts": {
     "start": "electron .",
     "postinstall": "electron-builder install-app-deps",

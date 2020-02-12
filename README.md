@@ -1,4 +1,4 @@
-# Gestão de Condomínios v0.6.0
+# Gestão de Condomínios
 
 - Cadastro de Administradores/Beneficiarios;
 - Cadastro de Condomínios;
