@@ -2,12 +2,14 @@
   "name": "desktop-app-condominio",
   "version": "0.5.0",
   "description": "Software para gerenciar condomínio",
-  "author": "Vinícius Bohrer <vbsanttos@gmail.com>",
   "repository": "https://github.com/vbsantos/desktop-app-condominio",
-  "private": false,
+  "author": "Vinícius Bohrer <vbsanttos@gmail.com>",
   "license": "MIT",
-  "main": "app/index.js",
+  "private": false,
+  "main": "public/electron.js",
+  "homepage": "./",
   "build": {
+    "appId": "com.condominio.electron-cra",
     "publish": [
       {
         "provider": "github",
@@ -16,22 +18,27 @@
       }
     ],
     "files": [
-      "app/*",
-      "build/*",
-      "config/sequelize.json",
       "models/*",
+      "build/**/*",
       "migrations/*",
       "controllers/*",
-      "node_modules/**/*"
-    ]
+      "node_modules/**/*",
+      "config/sequelize.json"
+    ],
+    "directories": {
+      "buildResources": "assets"
+    }
   },
   "scripts": {
-    "start": "electron .",
+    "start": "concurrently \"BROWSER=none yarn react-start\" \"wait-on http://localhost:3000 && electron .\"",
     "postinstall": "electron-builder install-app-deps",
     "pack": "electron-builder --dir",
-    "dist-windows": "electron-builder -w --ia32 exe",
-    "dist-macos": "electron-builder -m tar.gz",
-    "dist-linux": "electron-builder -l deb",
+    "react-start": "react-scripts start",
+    "react-build": "react-scripts build",
+    "react-test": "react-scripts test",
+    "dist-windows": "yarn react-build && electron-builder -w --ia32 exe",
+    "dist-macos": "yarn react-build && electron-builder -m tar.gz",
+    "dist-linux": "yarn react-build && electron-builder -l deb",
     "publish": "electron-builder --win --ia32 -p always"
   },
   "dependencies": {
@@ -39,11 +46,29 @@
     "electron-updater": "^4.2.0",
     "sequelize": "^5.21.3",
     "sqlite3": "^4.1.1",
-    "umzug": "^2.2.0"
+    "umzug": "^2.2.0",
+    "electron-is-dev": "^1.1.0",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "react-scripts": "3.2.0"
   },
   "devDependencies": {
-    "electron": "^7.1.10",
-    "electron-builder": "^22.2.0",
-    "sequelize-cli": "^5.5.1"
+    "electron": "^7.0.0",
+    "electron-builder": "^22.3.2",
+    "sequelize-cli": "^5.5.1",
+    "concurrently": "^5.1.0",
+    "wait-on": "^4.0.0"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }

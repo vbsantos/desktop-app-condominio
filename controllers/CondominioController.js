@@ -5,11 +5,12 @@ const { Condominio } = require("../models");
 class CondominioController {
   create = async data => {
     const condominio = await Condominio.create(data);
-    return condominio;
+    return condominio.get();
   };
   index = async () => {
     const condominios = await Condominio.findAll();
-    return condominios;
+    const response = condominios.map(condominio => condominio.get());
+    return response;
   };
   show = async id => {
     const condominio = await Condominio.findOne({
@@ -17,7 +18,7 @@ class CondominioController {
         id
       }
     });
-    return condominio;
+    return condominio.get();
   };
   update = async data => {
     const condominio = await Condominio.update(data, {

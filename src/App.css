@@ -1,0 +1,22 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+.App {
+  text-align: center;
+}
+
+.Screen {
+  background-color: #f0f0f0;
+  position: absolute;
+  top: 0px; /* Header Height */
+  bottom: 45px; /* Footer Height */
+  width: 100%;
+}

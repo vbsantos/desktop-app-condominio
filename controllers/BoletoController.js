@@ -5,11 +5,12 @@ const { Boleto } = require("../models");
 class BoletoController {
   create = async data => {
     const boleto = await Boleto.create(data);
-    return boleto;
+    return boleto.get();
   };
   index = async () => {
     const boletos = await Boleto.findAll();
-    return boletos;
+    const response = boletos.map(boleto => boleto.get());
+    return response;
   };
   show = async id => {
     const boleto = await Boleto.findOne({
@@ -17,7 +18,7 @@ class BoletoController {
         id
       }
     });
-    return boleto;
+    return boleto.get();
   };
   update = async data => {
     const boleto = await Boleto.update(data, {

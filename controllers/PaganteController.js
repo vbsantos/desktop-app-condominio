@@ -5,11 +5,12 @@ const { Pagante } = require("../models");
 class PaganteController {
   create = async data => {
     const pagante = await Pagante.create(data);
-    return pagante;
+    return pagante.get();
   };
   index = async () => {
     const pagantes = await Pagante.findAll();
-    return pagantes;
+    const response = pagantes.map(pagante => pagante.get());
+    return response;
   };
   show = async id => {
     const pagante = await Pagante.findOne({
@@ -17,7 +18,7 @@ class PaganteController {
         id
       }
     });
-    return pagante;
+    return pagante.get();
   };
   update = async data => {
     const pagante = await Pagante.update(data, {

@@ -5,11 +5,12 @@ const { Beneficiario } = require("../models");
 class BeneficiarioController {
   create = async data => {
     const beneficiario = await Beneficiario.create(data);
-    return beneficiario;
+    return beneficiario.get();
   };
   index = async () => {
     const beneficiarios = await Beneficiario.findAll();
-    return beneficiarios;
+    const response = beneficiarios.map(beneficiario => beneficiario.get());
+    return response;
   };
   show = async id => {
     const beneficiario = await Beneficiario.findOne({
@@ -17,7 +18,7 @@ class BeneficiarioController {
         id
       }
     });
-    return beneficiario;
+    return beneficiario.get();
   };
   update = async data => {
     const beneficiario = await Beneficiario.update(data, {

@@ -1,6 +1,8 @@
 node_modules
 yarn.lock
+yarn-error.log
 package-lock.json
 .git
 dist
 database.sqlite
+build
