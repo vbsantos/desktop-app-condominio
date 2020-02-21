@@ -1,24 +1,15 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 
-import "./App.css";
+// ROTAS
+import Routes from "./routes";
 
-import Login from "./pages/login/Login";
+// CSS
+import "./style.css";
 
-export class App extends Component {
-  state = {
-    administradores: []
-  };
+export default function App() {
+  const [config, setConfig] = useState({ done: false });
 
-  async componentWillMount() {
-    const migrations = await this.runMigrations();
-    console.assert(migrations, "Erro ao rodar as migrations!");
-    const seeds = await this.fillDatabase();
-    console.assert(seeds, "Erro ao rodar as seeds!");
-    const admins = await this.getAdministradores();
-    console.assert(admins, "Erro ao buscar administradores!");
-  }
-
-  runMigrations = async () => {
+  async function runMigrations() {
     console.time("runMigrations");
     const migrations = await window.ipcRenderer.invoke("database", {
       method: "migrations",
@@ -26,21 +17,9 @@ export class App extends Component {
     });
     console.timeEnd("runMigrations");
     return migrations;
-  };
+  }
 
-  getAdministradores = async () => {
-    console.time("getAdministradores");
-    const beneficiarios = await window.ipcRenderer.invoke("beneficiarios", {
-      method: "index",
-      content: null
-    });
-    this.setState({ administradores: [...beneficiarios] });
-    // console.log("App - administradores:", this.state.administradores);
-    console.timeEnd("getAdministradores");
-    return beneficiarios.length > 0 ? true : false;
-  };
-
-  fillDatabase = async () => {
+  async function fillDatabase() {
     console.time("fillDatabase");
     try {
       const beneficiario1 = await window.ipcRenderer.invoke("beneficiarios", {
@@ -362,15 +341,24 @@ export class App extends Component {
       console.timeEnd("fillDatabase");
       return false;
     }
-  };
-
-  render() {
-    return (
-      <div className="App">
-        <Login administradores={this.state.administradores} />
-      </div>
-    );
   }
-}
 
-export default App;
+  async function init() {
+    const migrations = await runMigrations();
+    console.assert(migrations, "Erro ao rodar as migrations!");
+    const seeds = await fillDatabase();
+    console.assert(seeds, "Erro ao rodar as seeds!");
+    if (!config.done) setConfig({ done: true });
+  }
+
+  useEffect(() => {
+    init();
+    return () => console.log("Cleanup function - App encerrou");
+  }, []);
+
+  return (
+    <div id="App">
+      {config.done ? <Routes /> : <h1 id="Loading">LOADING</h1>}
+    </div>
+  );
+}

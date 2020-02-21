@@ -1,0 +1,32 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100vh;
+}
+
+#App {
+  height: 100vh;
+  text-align: center;
+  background-color: #333;
+}
+
+#MainContainer {
+  height: 100vh;
+  background-color: #f0f0f0;
+}
+
+#Loading {
+  background-color: #333;
+  color: #f0f0f0;
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
