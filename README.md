@@ -56,8 +56,8 @@ yarn sequelize model:generate --name Boleto --attributes emissao:string,vencimen
 
 ## Pages/Screens
 
-- Escolher Administrador
-- Registrar Novo Administrador \*
+- Escolher Administrador/Beneficiário
+- Registrar Novo Administrador/Beneficiário \*
 - Escolher Condomínio \*
 
 \* Por fazer

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { HashRouter } from "react-router-dom";
 
 // ROTAS
 import Routes from "./routes";
@@ -22,7 +23,7 @@ export default function App() {
   async function fillDatabase() {
     console.time("fillDatabase");
     try {
-      const beneficiario1 = await window.ipcRenderer.invoke("beneficiarios", {
+      await window.ipcRenderer.invoke("beneficiarios", {
         method: "create",
         content: {
           nome: "Vinícius Bohrer dos Santos",
@@ -39,7 +40,7 @@ export default function App() {
         }
       });
 
-      const beneficiario2 = await window.ipcRenderer.invoke("beneficiarios", {
+      await window.ipcRenderer.invoke("beneficiarios", {
         method: "create",
         content: {
           nome: "Edmilson Borges dos Santos",
@@ -56,7 +57,7 @@ export default function App() {
         }
       });
 
-      const condominio1 = await window.ipcRenderer.invoke("condominios", {
+      await window.ipcRenderer.invoke("condominios", {
         method: "create",
         content: {
           nome: "Edifício Netuno",
@@ -69,7 +70,7 @@ export default function App() {
           beneficiarioId: 1
         }
       });
-      const condominio2 = await window.ipcRenderer.invoke("condominios", {
+      await window.ipcRenderer.invoke("condominios", {
         method: "create",
         content: {
           nome: "Edifício Plutão",
@@ -82,7 +83,7 @@ export default function App() {
           beneficiarioId: 1
         }
       });
-      const condominio3 = await window.ipcRenderer.invoke("condominios", {
+      await window.ipcRenderer.invoke("condominios", {
         method: "create",
         content: {
           nome: "Edifício Vênus",
@@ -96,7 +97,7 @@ export default function App() {
         }
       });
 
-      const pagante1 = await window.ipcRenderer.invoke("pagantes", {
+      await window.ipcRenderer.invoke("pagantes", {
         method: "create",
         content: {
           nome: "Eduardo Batata",
@@ -106,7 +107,7 @@ export default function App() {
           condominioId: 1
         }
       });
-      const pagante2 = await window.ipcRenderer.invoke("pagantes", {
+      await window.ipcRenderer.invoke("pagantes", {
         method: "create",
         content: {
           nome: "Jorge Batata",
@@ -116,7 +117,7 @@ export default function App() {
           condominioId: 1
         }
       });
-      const pagante3 = await window.ipcRenderer.invoke("pagantes", {
+      await window.ipcRenderer.invoke("pagantes", {
         method: "create",
         content: {
           nome: "Jacson dos Santos",
@@ -126,7 +127,7 @@ export default function App() {
           condominioId: 2
         }
       });
-      const pagante4 = await window.ipcRenderer.invoke("pagantes", {
+      await window.ipcRenderer.invoke("pagantes", {
         method: "create",
         content: {
           nome: "Marcos Pereira",
@@ -136,7 +137,7 @@ export default function App() {
           condominioId: 2
         }
       });
-      const pagante5 = await window.ipcRenderer.invoke("pagantes", {
+      await window.ipcRenderer.invoke("pagantes", {
         method: "create",
         content: {
           nome: "Dalmir Borges",
@@ -146,7 +147,7 @@ export default function App() {
           condominioId: 3
         }
       });
-      const pagante6 = await window.ipcRenderer.invoke("pagantes", {
+      await window.ipcRenderer.invoke("pagantes", {
         method: "create",
         content: {
           nome: "Odila Locatelli",
@@ -156,7 +157,7 @@ export default function App() {
           condominioId: 3
         }
       });
-      const pagante7 = await window.ipcRenderer.invoke("pagantes", {
+      await window.ipcRenderer.invoke("pagantes", {
         method: "create",
         content: {
           nome: "Everton Charles",
@@ -167,7 +168,7 @@ export default function App() {
         }
       });
 
-      const boleto1 = await window.ipcRenderer.invoke("boletos", {
+      await window.ipcRenderer.invoke("boletos", {
         method: "create",
         content: {
           emissao: "2020-02-10",
@@ -179,7 +180,7 @@ export default function App() {
           paganteId: 1
         }
       });
-      const boleto2 = await window.ipcRenderer.invoke("boletos", {
+      await window.ipcRenderer.invoke("boletos", {
         method: "create",
         content: {
           emissao: "2020-02-10",
@@ -191,7 +192,7 @@ export default function App() {
           paganteId: 1
         }
       });
-      const boleto3 = await window.ipcRenderer.invoke("boletos", {
+      await window.ipcRenderer.invoke("boletos", {
         method: "create",
         content: {
           emissao: "2020-02-10",
@@ -203,7 +204,7 @@ export default function App() {
           paganteId: 2
         }
       });
-      const boleto4 = await window.ipcRenderer.invoke("boletos", {
+      await window.ipcRenderer.invoke("boletos", {
         method: "create",
         content: {
           emissao: "2020-02-10",
@@ -215,7 +216,7 @@ export default function App() {
           paganteId: 2
         }
       });
-      const boleto5 = await window.ipcRenderer.invoke("boletos", {
+      await window.ipcRenderer.invoke("boletos", {
         method: "create",
         content: {
           emissao: "2020-02-10",
@@ -227,7 +228,7 @@ export default function App() {
           paganteId: 3
         }
       });
-      const boleto6 = await window.ipcRenderer.invoke("boletos", {
+      await window.ipcRenderer.invoke("boletos", {
         method: "create",
         content: {
           emissao: "2020-02-10",
@@ -239,7 +240,7 @@ export default function App() {
           paganteId: 3
         }
       });
-      const boleto7 = await window.ipcRenderer.invoke("boletos", {
+      await window.ipcRenderer.invoke("boletos", {
         method: "create",
         content: {
           emissao: "2020-02-10",
@@ -251,7 +252,7 @@ export default function App() {
           paganteId: 4
         }
       });
-      const boleto8 = await window.ipcRenderer.invoke("boletos", {
+      await window.ipcRenderer.invoke("boletos", {
         method: "create",
         content: {
           emissao: "2020-02-10",
@@ -263,7 +264,7 @@ export default function App() {
           paganteId: 4
         }
       });
-      const boleto9 = await window.ipcRenderer.invoke("boletos", {
+      await window.ipcRenderer.invoke("boletos", {
         method: "create",
         content: {
           emissao: "2020-02-10",
@@ -275,7 +276,7 @@ export default function App() {
           paganteId: 5
         }
       });
-      const boleto10 = await window.ipcRenderer.invoke("boletos", {
+      await window.ipcRenderer.invoke("boletos", {
         method: "create",
         content: {
           emissao: "2020-02-10",
@@ -287,7 +288,7 @@ export default function App() {
           paganteId: 5
         }
       });
-      const boleto11 = await window.ipcRenderer.invoke("boletos", {
+      await window.ipcRenderer.invoke("boletos", {
         method: "create",
         content: {
           emissao: "2020-02-10",
@@ -299,7 +300,7 @@ export default function App() {
           paganteId: 6
         }
       });
-      const boleto12 = await window.ipcRenderer.invoke("boletos", {
+      await window.ipcRenderer.invoke("boletos", {
         method: "create",
         content: {
           emissao: "2020-02-10",
@@ -311,7 +312,7 @@ export default function App() {
           paganteId: 6
         }
       });
-      const boleto13 = await window.ipcRenderer.invoke("boletos", {
+      await window.ipcRenderer.invoke("boletos", {
         method: "create",
         content: {
           emissao: "2020-02-10",
@@ -323,7 +324,7 @@ export default function App() {
           paganteId: 7
         }
       });
-      const boleto14 = await window.ipcRenderer.invoke("boletos", {
+      await window.ipcRenderer.invoke("boletos", {
         method: "create",
         content: {
           emissao: "2020-02-10",
@@ -343,22 +344,26 @@ export default function App() {
     }
   }
 
-  async function init() {
+  async function initDatabase() {
     const migrations = await runMigrations();
     console.assert(migrations, "Erro ao rodar as migrations!");
     const seeds = await fillDatabase();
     console.assert(seeds, "Erro ao rodar as seeds!");
-    if (!config.done) setConfig({ done: true });
+    if (!config.done) {
+      setConfig({ done: true });
+    }
   }
 
   useEffect(() => {
-    init();
+    initDatabase();
     return () => console.log("Cleanup function - App encerrou");
   }, []);
 
   return (
     <div id="App">
-      {config.done ? <Routes /> : <h1 id="Loading">LOADING</h1>}
+      <HashRouter>
+        {config.done ? <Routes /> : <h1 id="Loading">LOADING</h1>}
+      </HashRouter>
     </div>
   );
 }

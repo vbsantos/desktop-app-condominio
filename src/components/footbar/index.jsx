@@ -3,57 +3,26 @@ import React from "react";
 import "./style.css";
 
 export default function footbar(props) {
-  const { left, right } = props;
+  const [footbar, setFootbar] = props.buttons;
 
-  function getBarStyle() {
-    return {
-      height: "45px", // Altura da Footbar
-      padding: "5px 0px",
-      backgroundColor: "#245",
-      display: "flex",
-      justifyContent: "space-between",
-      position: "fixed",
-      width: "100%",
-      bottom: "0"
-    };
-  }
-
-  function getLeftButtonStyle() {
-    return {
-      borderRadius: "3px",
-      width: "90px",
-      padding: "5px",
-      backgroundColor: "#924",
-      // shadow: "21px 21px black",
-      border: "0",
-      color: "#111",
-      cursor: "pointer",
-      marginLeft: "10px"
-    };
-  }
-
-  function getRightButtonStyle() {
-    return {
-      borderRadius: "3px",
-      width: "90px",
-      padding: "5px",
-      backgroundColor: "#593",
-      // shadow: "21px 21px black",
-      border: "0",
-      color: "#111",
-      cursor: "pointer",
-      marginRight: "10px"
-    };
+  function buttonClicked(id) {
+    setFootbar({ ...footbar, action: id });
   }
 
   return (
-    <footer style={getBarStyle()} className="Footbar">
-      <button style={getLeftButtonStyle()} onClick={left.function}>
-        {left.value}
-      </button>
-      <button style={getRightButtonStyle()} onClick={right.function}>
-        {right.value}
-      </button>
+    <footer className="Footbar">
+      {footbar.buttons
+        .filter(button => button.visible)
+        .map(btn => (
+          <button
+            key={btn.id}
+            id={btn.position}
+            disabled={!btn.enabled}
+            onClick={() => buttonClicked(btn.id)}
+          >
+            {btn.value}
+          </button>
+        ))}
     </footer>
   );
 }

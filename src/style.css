@@ -2,6 +2,7 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  color: #111;
 }
 
 html,
@@ -16,7 +17,7 @@ body {
 }
 
 #MainContainer {
-  height: 100vh;
+  min-height: calc(100vh - 45px);
   background-color: #f0f0f0;
 }
 
@@ -29,4 +30,8 @@ body {
   left: 50%;
   -ms-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
+}
+
+* .PageTitle {
+  padding: 3%;
 }
