@@ -1,4 +1,4 @@
-#Login {
+#EscolherBeneficiario {
   margin: 0;
   width: 70%;
   position: absolute;
@@ -9,6 +9,6 @@
   /* border: 2px solid black; */
 }
 
-#Login .DropdownInput {
+#EscolherBeneficiario .DropdownInput {
   padding: 3%;
 }

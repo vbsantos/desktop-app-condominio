@@ -47,6 +47,11 @@ ipcMain.handle("beneficiarios", async (event, arg) => {
         status = await Beneficiario.show(content.id);
         console.log("saida:", status);
         break;
+      case "showNested":
+        console.log("entrada:", arg);
+        status = await Beneficiario.showNested(content.id);
+        console.log("saida:", status);
+        break;
       case "update":
         console.log("entrada:", arg);
         status = await Beneficiario.update(content);
@@ -62,6 +67,7 @@ ipcMain.handle("beneficiarios", async (event, arg) => {
     }
     return status;
   } catch (error) {
+    console.log("Erro no ipcEvents:", error);
     return { error };
   }
 });

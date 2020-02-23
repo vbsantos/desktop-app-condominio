@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { Routes, Route } from "react-router-dom";
 
 // PAGES
-import Login from "./pages/login";
+import EscolherBeneficiario from "./pages/choose/escolherBeneficiario";
 import RegisterBeneficiario from "./pages/register/registrarBeneficiario";
+import EscolherCondominio from "./pages/choose/escolherCondominio";
 
 // COMPONENTS
 import Footbar from "./components/footbar";
@@ -36,27 +37,43 @@ export default function MainRoutes(props) {
         value: "RIGHT"
       }
     ],
-    action: -1,
-    data: []
+    action: -1
   });
+  const [data, setData] = useState([]);
 
   return (
-    <div id="MainContainer">
-      <Routes>
-        <Route
-          path="/"
-          element={<Login buttons={[footbarButtons, setFootbarButtons]} />}
-        />
-        <Route
-          path="/screen-2"
-          element={
-            <RegisterBeneficiario
-              buttons={[footbarButtons, setFootbarButtons]}
-            />
-          }
-        />
-      </Routes>
+    <>
+      <div id="MainContainer">
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <EscolherBeneficiario
+                buttons={[footbarButtons, setFootbarButtons]}
+                data={[data, setData]}
+              />
+            }
+          />
+          <Route
+            path="/screen-2"
+            element={
+              <RegisterBeneficiario
+                buttons={[footbarButtons, setFootbarButtons]}
+              />
+            }
+          />
+          <Route
+            path="/screen-3"
+            element={
+              <EscolherCondominio
+                buttons={[footbarButtons, setFootbarButtons]}
+                data={[data, setData]}
+              />
+            }
+          />
+        </Routes>
+      </div>
       <Footbar buttons={[footbarButtons, setFootbarButtons]} />
-    </div>
+    </>
   );
 }

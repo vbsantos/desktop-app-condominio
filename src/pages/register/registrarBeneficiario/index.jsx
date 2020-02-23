@@ -1,16 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
+// MATERIAL UI COMPONENTS
+import { Container, FormControl, InputLabel, Input } from "@material-ui/core";
+
 // CSS
 import "./style.css";
 
 export default function RegistrarBeneficiario(props) {
   const [footbar, setFootbar] = props.buttons;
-  const [beneficiario, setBeneficiario] = useState({});
-  const [form, setForm] = useState({ completed: false });
   const navigate = useNavigate();
+  // Armazena os dados do beneficiário sendo cadastrado
+  const [beneficiario, setBeneficiario] = useState({});
+  // True se todos os campos do formulário foram preenchidos
+  const [form, setForm] = useState({ completed: false });
 
-  console.log("ao entrar em RegistrarBeneficiario: ", footbar);
+  console.log("Entrou em RegistrarBeneficiario: ", footbar);
 
   useEffect(() => {
     setFootbar({
@@ -37,8 +42,7 @@ export default function RegistrarBeneficiario(props) {
           value: "CADASTRAR"
         }
       ],
-      action: -1,
-      data: footbar.data
+      action: -1
     });
     return () => console.log("RegistrarBeneficiario - Encerrou");
   }, []);
@@ -56,11 +60,9 @@ export default function RegistrarBeneficiario(props) {
           method: "create",
           content: beneficiario
         });
-        setFootbar({ ...footbar, action: -1, data: { beneficiario } });
+        setFootbar({ ...footbar, action: -1 });
         navigate("/");
         break;
-      // default:
-      //   console.log("footbar.action resetado");
     }
   }, [footbar.action]);
 
@@ -96,7 +98,7 @@ export default function RegistrarBeneficiario(props) {
   function changedForm() {
     const form = document.getElementsByTagName("form")[0];
     const formList = Array.from(form);
-    const preenchido = formList.filter(f => f.value === "")[0] == undefined;
+    const formCompleted = formList.filter(f => f.value === "")[0] === undefined;
     setBeneficiario({
       nome: formList[0].value,
       cprf: formList[1].value,
@@ -110,54 +112,69 @@ export default function RegistrarBeneficiario(props) {
       numero: formList[9].value,
       complemento: formList[10].value
     });
-    setForm({ completed: preenchido });
+    setForm({ completed: formCompleted });
   }
 
   return (
-    <div className="registrarBeneficiario">
-      <div className="Screen">
-        <h1 className="PageTitle">Cadastre o Beneficiário</h1>
+    <div id="registrarBeneficiario">
+      <h1 className="PageTitle">Cadastre o Beneficiário</h1>
+      <Container maxWidth="sm">
         <form onChange={() => changedForm()} id="formBeneficiario">
           <section>
             <h2>Informações Pessoais</h2>
-            <label>Nome: </label>
-            <input id="nome" type="text"></input>
-            <label>CPF/CNPJ: </label>
-            <input id="cprf" type="text"></input>
-            <br />
-            <br />
+            <FormControl>
+              <InputLabel htmlFor="nome">Nome</InputLabel>
+              <Input autoFocus id="nome" type="text"></Input>
+            </FormControl>
+            <FormControl>
+              <InputLabel htmlFor="cprf">CPF/CNPJ</InputLabel>
+              <Input id="cprf" type="text"></Input>
+            </FormControl>
           </section>
           <section>
             <h2>Boleto.Cloud</h2>
-            <label>Token Acesso: </label>
-            <input id="tokenAcesso" type="text"></input>
-            <label>Token Conta: </label>
-            <input id="tokenConta" type="text"></input>
-            <br />
-            <br />
+            <FormControl>
+              <InputLabel htmlFor="tokenAcesso">Token Acesso</InputLabel>
+              <Input id="tokenAcesso" type="text"></Input>
+            </FormControl>
+            <FormControl>
+              <InputLabel htmlFor="tokenConta">Token Conta</InputLabel>
+              <Input id="tokenConta" type="text"></Input>
+            </FormControl>
           </section>
           <section>
             <h2>Endereço</h2>
-            <label>CEP: </label>
-            <input id="cep" type="text"></input>
-            <label>UF: </label>
-            <input id="uf" type="text"></input>
-            <br />
-            <label>Localidade: </label>
-            <input id="localidade" type="text"></input>
-            <label>Bairro: </label>
-            <input id="bairro" type="text"></input>
-            <br />
-            <label>Logradouro: </label>
-            <input id="logradouro" type="text"></input>
-            <label>Número: </label>
-            <input id="numero" type="text"></input>
-            <br />
-            <label>Complemento: </label>
-            <input id="complemento" type="text"></input>
+            <FormControl>
+              <InputLabel htmlFor="cep">CEP</InputLabel>
+              <Input id="cep" type="text"></Input>
+            </FormControl>
+            <FormControl>
+              <InputLabel htmlFor="uf">UF</InputLabel>
+              <Input id="uf" type="text"></Input>
+            </FormControl>
+            <FormControl>
+              <InputLabel htmlFor="localidade">Localidade</InputLabel>
+              <Input id="localidade" type="text"></Input>
+            </FormControl>
+            <FormControl>
+              <InputLabel htmlFor="bairro">Bairro</InputLabel>
+              <Input id="bairro" type="text"></Input>
+            </FormControl>
+            <FormControl>
+              <InputLabel htmlFor="logradouro">Logradouro</InputLabel>
+              <Input id="logradouro" type="text"></Input>
+            </FormControl>
+            <FormControl>
+              <InputLabel htmlFor="numero">Número</InputLabel>
+              <Input id="numero" type="text"></Input>
+            </FormControl>
+            <FormControl>
+              <InputLabel htmlFor="complemento">Complemento</InputLabel>
+              <Input id="complemento" type="text"></Input>
+            </FormControl>
           </section>
         </form>
-      </div>
+      </Container>
     </div>
   );
 }
