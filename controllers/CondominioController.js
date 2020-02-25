@@ -12,6 +12,15 @@ class CondominioController {
     const response = condominios.map(condominio => condominio.get());
     return response;
   };
+  indexbyBeneficiarioPk = async id => {
+    const condominios = await Condominio.findAll({
+      where: {
+        beneficiarioId: id
+      }
+    });
+    const response = condominios.map(condominio => condominio.get());
+    return response;
+  };
   show = async id => {
     const condominio = await Condominio.findOne({
       where: {

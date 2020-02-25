@@ -3,8 +3,9 @@ import { Routes, Route } from "react-router-dom";
 
 // PAGES
 import EscolherBeneficiario from "./pages/choose/escolherBeneficiario";
-import RegisterBeneficiario from "./pages/register/registrarBeneficiario";
+import RegistrarBeneficiario from "./pages/register/registrarBeneficiario";
 import EscolherCondominio from "./pages/choose/escolherCondominio";
+import RegistrarCondominio from "./pages/register/registrarCondominio";
 
 // COMPONENTS
 import Footbar from "./components/footbar";
@@ -13,6 +14,7 @@ import Footbar from "./components/footbar";
 import "./style.css";
 
 export default function MainRoutes(props) {
+  const [data, setData] = useState({ beneficiario: {}, allNested: {} });
   const [footbarButtons, setFootbarButtons] = useState({
     buttons: [
       {
@@ -39,7 +41,6 @@ export default function MainRoutes(props) {
     ],
     action: -1
   });
-  const [data, setData] = useState([]);
 
   return (
     <>
@@ -55,15 +56,15 @@ export default function MainRoutes(props) {
             }
           />
           <Route
-            path="/screen-2"
+            path="/RegistrarBeneficiario"
             element={
-              <RegisterBeneficiario
+              <RegistrarBeneficiario
                 buttons={[footbarButtons, setFootbarButtons]}
               />
             }
           />
           <Route
-            path="/screen-3"
+            path="/EscolherCondominio"
             element={
               <EscolherCondominio
                 buttons={[footbarButtons, setFootbarButtons]}
@@ -71,6 +72,24 @@ export default function MainRoutes(props) {
               />
             }
           />
+          <Route
+            path="/RegistrarCondominio"
+            element={
+              <RegistrarCondominio
+                buttons={[footbarButtons, setFootbarButtons]}
+                data={[data, setData]}
+              />
+            }
+          />
+          {/* <Route
+            path="/screen-5"
+            element={
+              <EscolherCondominio
+                buttons={[footbarButtons, setFootbarButtons]}
+                data={[data, setData]}
+              />
+            }
+          /> */}
         </Routes>
       </div>
       <Footbar buttons={[footbarButtons, setFootbarButtons]} />

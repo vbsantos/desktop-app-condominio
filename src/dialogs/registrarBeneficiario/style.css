@@ -1,0 +1,11 @@
+section {
+  border: 1px solid gray;
+  border-radius: 5px;
+  padding-bottom: 50px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+section {
+  color: black;
+}

@@ -90,6 +90,11 @@ ipcMain.handle("condominios", async (event, arg) => {
         status = await Condominio.index();
         console.log("saida:", status);
         break;
+      case "indexByBeneficiarioPk":
+        console.log("entrada:", arg);
+        status = await Condominio.indexbyBeneficiarioPk(content.id);
+        console.log("saida:", status);
+        break;
       case "show":
         console.log("entrada:", arg);
         status = await Condominio.show(content.id);
@@ -110,6 +115,7 @@ ipcMain.handle("condominios", async (event, arg) => {
     }
     return status;
   } catch (error) {
+    console.log("Erro no ipcEvents:", error);
     return { error };
   }
 });
@@ -152,6 +158,7 @@ ipcMain.handle("pagantes", async (event, arg) => {
     }
     return status;
   } catch (error) {
+    console.log("Erro no ipcEvents:", error);
     return { error };
   }
 });
@@ -194,6 +201,7 @@ ipcMain.handle("boletos", async (event, arg) => {
     }
     return status;
   } catch (error) {
+    console.log("Erro no ipcEvents:", error);
     return { error };
   }
 });

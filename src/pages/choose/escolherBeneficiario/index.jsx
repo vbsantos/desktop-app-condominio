@@ -7,6 +7,9 @@ import { FormControl, NativeSelect } from "@material-ui/core";
 // CSS
 import "./style.css";
 
+// DIALOGS
+import RegistrarBeneficiario from "../../../dialogs/registrarBeneficiario";
+
 export default function EscolherBeneficiario(props) {
   const [footbar, setFootbar] = props.buttons;
   const [data, setData] = props.data;
@@ -15,21 +18,18 @@ export default function EscolherBeneficiario(props) {
   const [list, setList] = useState([]);
   // ID do Beneficiário escolhido
   const [selected, setSelected] = useState({ id: -1 });
+  // Boolean for Dialog
+  const [dialog, setDialog] = useState(false);
 
-  console.log("Entrou em EscolherBeneficiário: ", footbar);
+  console.log(
+    "Entrou em EscolherBeneficiario\nFootbar:",
+    footbar,
+    "\nData:",
+    data
+  );
 
+  // This function runs only when the component is monted
   useEffect(() => {
-    async function getBeneficiarios() {
-      console.time("getBeneficiarios");
-      const beneficiarios = await window.ipcRenderer.invoke("beneficiarios", {
-        method: "index",
-        content: null
-      });
-      setList([...beneficiarios]);
-      console.timeEnd("getBeneficiarios");
-      return beneficiarios.length > 0 ? true : false;
-    }
-    getBeneficiarios();
     setFootbar({
       buttons: [
         {
@@ -59,6 +59,24 @@ export default function EscolherBeneficiario(props) {
     return () => console.log("EscolherBeneficiário - Encerrou");
   }, []);
 
+  // This function runs only when the dialog status is closed
+  useEffect(() => {
+    if (!dialog) {
+      async function getBeneficiarios() {
+        console.time("getBeneficiarios");
+        const beneficiarios = await window.ipcRenderer.invoke("beneficiarios", {
+          method: "index",
+          content: null
+        });
+        setList([...beneficiarios]);
+        console.timeEnd("getBeneficiarios");
+        return beneficiarios.length > 0 ? true : false;
+      }
+      getBeneficiarios();
+    }
+  }, [dialog]);
+
+  // This function runs only when there is an interaction with the footbar buttons
   useEffect(() => {
     switch (footbar.action) {
       case 0:
@@ -69,7 +87,8 @@ export default function EscolherBeneficiario(props) {
       case 1:
         console.log("EscolherBeneficiario - Botão do centro");
         setFootbar({ ...footbar, action: -1 });
-        navigate("/screen-2"); // vai pra tela de cadastro
+        // navigate("/RegistrarBeneficiario"); // vai pra tela de cadastro
+        setDialog(true);
         break;
       case 2:
         console.log("EscolherBeneficiario - Botão da direita");
@@ -81,7 +100,7 @@ export default function EscolherBeneficiario(props) {
           ...footbar,
           action: -1
         });
-        navigate("/screen-3"); // vai pra tela de condominios
+        navigate("/EscolherCondominio"); // vai pra tela de condominios
         break;
     }
   }, [footbar.action]);
@@ -122,6 +141,8 @@ export default function EscolherBeneficiario(props) {
 
   return (
     <div id="EscolherBeneficiario">
+      {dialog && <RegistrarBeneficiario open={[dialog, setDialog]} />}
+
       <h1 className="PageTitle">Selecione o Beneficiário</h1>
       <div className="DropdownInput">
         <FormControl>

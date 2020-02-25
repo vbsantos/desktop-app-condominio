@@ -15,8 +15,9 @@ export default function RegistrarBeneficiario(props) {
   // True se todos os campos do formulário foram preenchidos
   const [form, setForm] = useState({ completed: false });
 
-  console.log("Entrou em RegistrarBeneficiario: ", footbar);
+  console.log("Entrou em RegistrarBeneficiario\nFootbar:", footbar);
 
+  // This function runs only when the component is monted
   useEffect(() => {
     setFootbar({
       buttons: [
@@ -47,6 +48,7 @@ export default function RegistrarBeneficiario(props) {
     return () => console.log("RegistrarBeneficiario - Encerrou");
   }, []);
 
+  // This function runs only when there is an interaction with the footbar buttons
   useEffect(() => {
     switch (footbar.action) {
       case 0:
@@ -66,6 +68,7 @@ export default function RegistrarBeneficiario(props) {
     }
   }, [footbar.action]);
 
+  // This function runs only when all the fields of the form are filled
   useEffect(() => {
     setFootbar({
       ...footbar,
@@ -95,6 +98,7 @@ export default function RegistrarBeneficiario(props) {
     });
   }, [form.completed]);
 
+  // function that runs each time there is a change in the form
   function changedForm() {
     const form = document.getElementsByTagName("form")[0];
     const formList = Array.from(form);
