@@ -29,6 +29,8 @@ module.exports = {
       paganteId: {
         type: Sequelize.INTEGER,
         allowNull: false,
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
         references: {
           model: "Pagantes",
           key: "id"
