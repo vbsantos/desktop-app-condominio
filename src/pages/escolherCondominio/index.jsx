@@ -17,22 +17,34 @@ import {
 import "./style.css";
 
 // DIALOGS
-import RegistrarCondominio from "../../../dialogs/registrarCondominio";
+import DialogCondominio from "../../dialogs/condominio";
+import DialogExcluirCondominio from "../../dialogs/confirmar";
 
 export default function EscolherCondominio(props) {
   const [footbar, setFootbar] = props.buttons;
   const [data, setData] = props.data;
-  const [selected, setSelected] = useState({ id: -1 });
-  const navigate = useNavigate();
-  // Boolean for Dialog
-  const [dialog, setDialog] = useState(false);
 
-  console.log(
-    "Entrou em EscolherCondominio\nFootbar:",
-    footbar,
-    "\nData:",
-    data
-  );
+  // React Router Hook for navigation between pages
+  const navigate = useNavigate();
+
+  // ID of the Condomínio selected
+  const [selected, setSelected] = useState({ id: -1 });
+
+  // Boolean for Condomínio expanded panels
+  const [expanded, setExpanded] = React.useState(false);
+
+  // Boolean for Form Dialog
+  const [formDialog, setFormDialog] = useState(false);
+
+  // Boolean for Confirmation Dialog
+  const [destroyDialog, setDestroyDialog] = useState(false);
+
+  // console.log(
+  //   "Entrou em EscolherCondominio\nFootbar:",
+  //   footbar,
+  //   "\nData:",
+  //   data
+  // );
 
   // This function runs only when the component is monted
   useEffect(() => {
@@ -65,23 +77,33 @@ export default function EscolherCondominio(props) {
     return () => console.log("EscolherCondominio - Encerrou");
   }, []);
 
+  // This function runs only when the confirm delete dialog is closed
+  useEffect(() => {
+    if (!destroyDialog) {
+      // Started as a bug, now it is a feature
+      setSelected({ id: -1 });
+      setExpanded(false);
+    }
+  }, [destroyDialog]);
+
   // This function runs only when the dialog status is closed
   useEffect(() => {
-    async function getEverything() {
-      console.time("getEverything");
-      const response = await window.ipcRenderer.invoke("beneficiarios", {
-        method: "showNested",
-        content: { id: data.beneficiario.id }
-      });
-      setData({
-        ...data,
-        allNested: response
-      });
-      console.timeEnd("getEverything");
-      console.log(response);
+    if (!formDialog || !destroyDialog) {
+      async function getEverything() {
+        console.time("getEverything");
+        const response = await window.ipcRenderer.invoke("beneficiarios", {
+          method: "showNested",
+          content: { id: data.beneficiario.id }
+        });
+        setData({
+          ...data,
+          allNestedBeneficiario: response
+        });
+        console.timeEnd("getEverything");
+      }
+      getEverything();
     }
-    getEverything();
-  }, [dialog]);
+  }, [formDialog, destroyDialog]);
 
   // This function runs only when there is an interaction with the footbar buttons
   useEffect(() => {
@@ -89,22 +111,22 @@ export default function EscolherCondominio(props) {
       case 0:
         console.log("Login - Botão da esquerda");
         setFootbar({ ...footbar, action: -1 });
-        navigate("/"); // vai pra tela de login
+        selected.id === -1 ? navigate("/") : setDestroyDialog(true);
         break;
       case 1:
         console.log("Login - Botão do centro");
         setFootbar({ ...footbar, action: -1 });
-        // navigate("/RegistrarCondominio"); // vai pra tela de cadastro de condomínio
-        setDialog(true);
+        setFormDialog(true);
         break;
       case 2:
         console.log("Login - Botão da direita");
         setFootbar({ ...footbar, action: -1 });
-        // navigate("/screen-5"); // vai pra tela de rateamento de contas
+        navigate("/"); // vai pra tela de rateamento de contas
         break;
     }
   }, [footbar.action]);
 
+  // This function runs only when a different Condomínio is selected
   useEffect(() => {
     console.log("Condomínio selecionado:", selected);
     setFootbar({
@@ -115,14 +137,14 @@ export default function EscolherCondominio(props) {
           position: "left",
           visible: true,
           enabled: true,
-          value: "VOLTAR"
+          value: selected.id === -1 ? "VOLTAR" : "EXCLUIR"
         },
         {
           id: 1,
           position: "center",
           visible: true,
           enabled: true,
-          value: "CADASTRAR"
+          value: selected.id === -1 ? "CADASTRAR" : "EDITAR"
         },
         {
           id: 2,
@@ -135,30 +157,49 @@ export default function EscolherCondominio(props) {
     });
   }, [selected.id]);
 
-  function handleChange(string) {
+  const handleClickCondominio = panel => (event, isExpanded) => {
+    if (isExpanded) {
+      setSelected({ id: panel });
+      setExpanded(panel);
+      const allNestedCondominio = data.allNestedBeneficiario[
+        "Condominios"
+      ].filter(condominio => condominio.id == panel)[0];
+      setData({ ...data, allNestedCondominio });
+    } else {
+      setSelected({ id: -1 });
+      setExpanded(false);
+    }
+  };
+
+  function handleClickPagante(string) {
     console.log(string);
   }
 
-  console.log(data);
   return (
     <div id="EscolherCondominio">
-      {dialog && (
-        <RegistrarCondominio
+      {formDialog && (
+        <DialogCondominio
           beneficiario={data.beneficiario}
-          //condominio={data.allNested["Condominios"][0]}
-          open={[dialog, setDialog]}
+          condominio={selected.id === -1 ? undefined : data.allNestedCondominio}
+          open={[formDialog, setFormDialog]}
         />
       )}
-
+      {destroyDialog && (
+        <DialogExcluirCondominio
+          condominio={data.allNestedCondominio}
+          open={[destroyDialog, setDestroyDialog]}
+        />
+      )}
       <h1 className="PageTitle">Selecione o Condomínio</h1>
       {/* TODOS OS CONDOMÍNIOS */}
       <Container maxWidth="xl">
         {/*CADA CONDOMÍNIO*/}
-        {typeof data.allNested["Condominios"] !== "undefined" &&
-          data.allNested["Condominios"].map(condominio => (
+        {typeof data.allNestedBeneficiario["Condominios"] !== "undefined" &&
+          data.allNestedBeneficiario["Condominios"].map(condominio => (
             <ExpansionPanel
               key={condominio.id}
-              onChange={() => handleChange("Clicou em " + condominio.nome)}
+              expanded={expanded === condominio.id}
+              onChange={handleClickCondominio(condominio.id)}
             >
               <ExpansionPanelSummary expandIcon={"+"} id={condominio.id}>
                 <Typography>{condominio.nome}</Typography>
@@ -172,7 +213,11 @@ export default function EscolherCondominio(props) {
                       <ListItemText
                         primary={pagante.complemento}
                         secondary={pagante.nome}
-                        onClick={() => handleChange(pagante.id)}
+                        onClick={() =>
+                          handleClickPagante(
+                            pagante.complemento + " " + pagante.nome
+                          )
+                        }
                       />
                     </ListItem>
                   ))}

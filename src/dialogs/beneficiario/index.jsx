@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import Draggable from "react-draggable";
 
 // MATERIAL UI COMPONENTS
@@ -32,8 +32,28 @@ function PaperComponent(props) {
 export default function DraggableDialog(props) {
   const [dialog, setDialog] = props.open;
   const [beneficiario, setBeneficiario] = useState({});
+
+  // true when all the fields of the form are filled
   const [formCompleted, setFormCompleted] = useState(false);
-  const [loading, setLoading] = useState(false);
+
+  // if this dialog is for edition not for creation
+  const beneficiarioAntigo = props.beneficiario || {
+    id: "",
+    nome: "",
+    cprf: "",
+    token_acesso: "",
+    token_conta: "",
+    cep: "",
+    uf: "",
+    localidade: "",
+    bairro: "",
+    logradouro: "",
+    numero: "",
+    complemento: ""
+  };
+
+  // form reference
+  const formEl = useRef();
 
   // function that runs when the dialog is suposed to close
   function handleClose() {
@@ -42,21 +62,28 @@ export default function DraggableDialog(props) {
 
   // function that runs when you click the right button
   async function handleRightButton() {
-    setLoading(true);
-    const response = await window.ipcRenderer.invoke("beneficiarios", {
-      method: "create",
-      content: beneficiario
-    });
-    console.log("Beneficiário Cadastrado:", response);
+    if (beneficiarioAntigo.id === "") {
+      const response = await window.ipcRenderer.invoke("beneficiarios", {
+        method: "create",
+        content: beneficiario
+      });
+      console.log("Beneficiário Cadastrado:", response);
+    } else {
+      const response = await window.ipcRenderer.invoke("beneficiarios", {
+        method: "update",
+        content: beneficiario
+      });
+      console.log("Beneficiário Editado:", response);
+    }
     setDialog(false);
   }
 
   // function that runs each time there is a change in the form
   function changedForm() {
-    const form = document.getElementsByTagName("form")[0];
-    const formList = Array.from(form);
+    const formList = [...formEl.current.elements];
     const completed = formList.filter(f => f.value === "")[0] === undefined;
     setBeneficiario({
+      id: beneficiarioAntigo.id,
       nome: formList[0].value,
       cprf: formList[1].value,
       token_acesso: formList[2].value,
@@ -88,18 +115,26 @@ export default function DraggableDialog(props) {
           Cadastrar Novo Beneficiário
         </DialogTitle>
         <DialogContent>
-          <form onChange={changedForm}>
+          <form ref={formEl} onChange={changedForm}>
             <section>
               <DialogContentText color="inherit">
                 Informações Pessoais
               </DialogContentText>
               <FormControl>
                 <InputLabel htmlFor="nome">Nome</InputLabel>
-                <Input autoFocus id="nome" type="text"></Input>
+                <Input
+                  defaultValue={beneficiarioAntigo.nome}
+                  id="nome"
+                  type="text"
+                ></Input>
               </FormControl>
               <FormControl>
                 <InputLabel htmlFor="cprf">CPF/CNPJ</InputLabel>
-                <Input id="cprf" type="text"></Input>
+                <Input
+                  defaultValue={beneficiarioAntigo.cprf}
+                  id="cprf"
+                  type="text"
+                ></Input>
               </FormControl>
             </section>
             <section>
@@ -108,42 +143,78 @@ export default function DraggableDialog(props) {
               </DialogContentText>
               <FormControl>
                 <InputLabel htmlFor="tokenAcesso">Token Acesso</InputLabel>
-                <Input id="tokenAcesso" type="text"></Input>
+                <Input
+                  defaultValue={beneficiarioAntigo.token_acesso}
+                  id="tokenAcesso"
+                  type="text"
+                ></Input>
               </FormControl>
               <FormControl>
                 <InputLabel htmlFor="tokenConta">Token Conta</InputLabel>
-                <Input id="tokenConta" type="text"></Input>
+                <Input
+                  defaultValue={beneficiarioAntigo.token_conta}
+                  id="tokenConta"
+                  type="text"
+                ></Input>
               </FormControl>
             </section>
             <section>
               <DialogContentText color="inherit">Endereço</DialogContentText>
               <FormControl>
                 <InputLabel htmlFor="cep">CEP</InputLabel>
-                <Input id="cep" type="text"></Input>
+                <Input
+                  defaultValue={beneficiarioAntigo.cep}
+                  id="cep"
+                  type="text"
+                ></Input>
               </FormControl>
               <FormControl>
                 <InputLabel htmlFor="uf">UF</InputLabel>
-                <Input id="uf" type="text"></Input>
+                <Input
+                  defaultValue={beneficiarioAntigo.uf}
+                  id="uf"
+                  type="text"
+                ></Input>
               </FormControl>
               <FormControl>
                 <InputLabel htmlFor="localidade">Localidade</InputLabel>
-                <Input id="localidade" type="text"></Input>
+                <Input
+                  defaultValue={beneficiarioAntigo.localidade}
+                  id="localidade"
+                  type="text"
+                ></Input>
               </FormControl>
               <FormControl>
                 <InputLabel htmlFor="bairro">Bairro</InputLabel>
-                <Input id="bairro" type="text"></Input>
+                <Input
+                  defaultValue={beneficiarioAntigo.bairro}
+                  id="bairro"
+                  type="text"
+                ></Input>
               </FormControl>
               <FormControl>
                 <InputLabel htmlFor="logradouro">Logradouro</InputLabel>
-                <Input id="logradouro" type="text"></Input>
+                <Input
+                  defaultValue={beneficiarioAntigo.logradouro}
+                  id="logradouro"
+                  type="text"
+                ></Input>
               </FormControl>
               <FormControl>
                 <InputLabel htmlFor="numero">Número</InputLabel>
-                <Input id="numero" type="text"></Input>
+                <Input
+                  defaultValue={beneficiarioAntigo.numero}
+                  id="numero"
+                  type="text"
+                ></Input>
               </FormControl>
               <FormControl>
                 <InputLabel htmlFor="complemento">Complemento</InputLabel>
-                <Input id="complemento" type="text"></Input>
+                <Input
+                  defaultValue={beneficiarioAntigo.complemento}
+                  id="complemento"
+                  type="text"
+                ></Input>
               </FormControl>
             </section>
           </form>
@@ -163,7 +234,7 @@ export default function DraggableDialog(props) {
             color="primary"
             disabled={!formCompleted}
           >
-            Cadastrar
+            {beneficiarioAntigo.id === "" ? "Cadastrar" : "Editar"}
           </Button>
         </DialogActions>
       </Dialog>

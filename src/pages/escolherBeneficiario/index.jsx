@@ -8,25 +8,30 @@ import { FormControl, NativeSelect } from "@material-ui/core";
 import "./style.css";
 
 // DIALOGS
-import RegistrarBeneficiario from "../../../dialogs/registrarBeneficiario";
+import DialogBeneficiario from "../../dialogs/beneficiario";
 
 export default function EscolherBeneficiario(props) {
   const [footbar, setFootbar] = props.buttons;
   const [data, setData] = props.data;
-  const navigate = useNavigate();
-  // Lista de Beneficiários
-  const [list, setList] = useState([]);
-  // ID do Beneficiário escolhido
-  const [selected, setSelected] = useState({ id: -1 });
-  // Boolean for Dialog
-  const [dialog, setDialog] = useState(false);
 
-  console.log(
-    "Entrou em EscolherBeneficiario\nFootbar:",
-    footbar,
-    "\nData:",
-    data
-  );
+  // React Router Hook for navigation between pages
+  const navigate = useNavigate();
+
+  // List of Beneficiários
+  const [list, setList] = useState([]);
+
+  // ID of the Beneficiário selected
+  const [selected, setSelected] = useState({ id: -1 });
+
+  // Boolean for Dialog
+  const [formDialog, setFormDialog] = useState(false);
+
+  // console.log(
+  //   "Entrou em EscolherBeneficiario\nFootbar:",
+  //   footbar,
+  //   "\nData:",
+  //   data
+  // );
 
   // This function runs only when the component is monted
   useEffect(() => {
@@ -59,9 +64,9 @@ export default function EscolherBeneficiario(props) {
     return () => console.log("EscolherBeneficiário - Encerrou");
   }, []);
 
-  // This function runs only when the dialog status is closed
+  // This function runs only when the formDialog status is closed
   useEffect(() => {
-    if (!dialog) {
+    if (!formDialog) {
       async function getBeneficiarios() {
         console.time("getBeneficiarios");
         const beneficiarios = await window.ipcRenderer.invoke("beneficiarios", {
@@ -74,7 +79,7 @@ export default function EscolherBeneficiario(props) {
       }
       getBeneficiarios();
     }
-  }, [dialog]);
+  }, [formDialog]);
 
   // This function runs only when there is an interaction with the footbar buttons
   useEffect(() => {
@@ -87,8 +92,7 @@ export default function EscolherBeneficiario(props) {
       case 1:
         console.log("EscolherBeneficiario - Botão do centro");
         setFootbar({ ...footbar, action: -1 });
-        // navigate("/RegistrarBeneficiario"); // vai pra tela de cadastro
-        setDialog(true);
+        setFormDialog(true);
         break;
       case 2:
         console.log("EscolherBeneficiario - Botão da direita");
@@ -105,6 +109,7 @@ export default function EscolherBeneficiario(props) {
     }
   }, [footbar.action]);
 
+  // This function runs only when a different Beneficiário is selected
   useEffect(() => {
     console.log("Beneficiário selecionado:", selected);
     setFootbar({
@@ -141,8 +146,7 @@ export default function EscolherBeneficiario(props) {
 
   return (
     <div id="EscolherBeneficiario">
-      {dialog && <RegistrarBeneficiario open={[dialog, setDialog]} />}
-
+      {formDialog && <DialogBeneficiario open={[formDialog, setFormDialog]} />}
       <h1 className="PageTitle">Selecione o Beneficiário</h1>
       <div className="DropdownInput">
         <FormControl>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import Draggable from "react-draggable";
 
 // MATERIAL UI COMPONENTS
@@ -32,6 +32,8 @@ function PaperComponent(props) {
 export default function DraggableDialog(props) {
   const [dialog, setDialog] = props.open;
   const [condominio, setCondominio] = useState({});
+
+  // true when all the fields of the form are filled
   const [formCompleted, setFormCompleted] = useState(false);
 
   // condominio must belong to a beneficiario
@@ -49,11 +51,9 @@ export default function DraggableDialog(props) {
     numero: "",
     beneficiarioId: beneficiario.id
   };
-  // props.condominio || console.warn("Não veio nada pro dialog");
-  // props.condominio && console.log("Veio coisa pro dialog:", props.condominio);
 
-  // This function runs only when the component is monted
-  useEffect(() => {}, []);
+  // form reference
+  const formEl = useRef();
 
   // function that runs when the dialog is suposed to close
   function handleClose() {
@@ -73,7 +73,7 @@ export default function DraggableDialog(props) {
         method: "update",
         content: condominio
       });
-      console.log("Condomínio Cadastrado:", response);
+      console.log("Condomínio Editado:", response);
     }
 
     setDialog(false);
@@ -81,8 +81,7 @@ export default function DraggableDialog(props) {
 
   // function that runs each time there is a change in the form
   function changedForm() {
-    const form = document.getElementsByTagName("form")[0];
-    const formList = Array.from(form);
+    const formList = [...formEl.current.elements];
     const completed = formList.filter(f => f.value === "")[0] === undefined;
     setCondominio({
       id: condominioAntigo.id,
@@ -114,7 +113,7 @@ export default function DraggableDialog(props) {
           Cadastrar Novo Condomínio
         </DialogTitle>
         <DialogContent>
-          <form onChange={() => changedForm()} id="formCondominio">
+          <form ref={formEl} onChange={() => changedForm()} id="formCondominio">
             <section>
               <DialogContentText color="inherit">
                 Informações do Condomínio
@@ -123,7 +122,6 @@ export default function DraggableDialog(props) {
                 <InputLabel htmlFor="nome">Nome</InputLabel>
                 <Input
                   defaultValue={condominioAntigo.nome}
-                  autoFocus
                   id="nome"
                   type="text"
                 ></Input>
