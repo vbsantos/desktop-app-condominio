@@ -57,9 +57,9 @@ ipcMain.handle("beneficiarios", async (event, arg) => {
         status = await Beneficiario.update(content);
         console.log("saida:", status);
         break;
-      case "destroy":
+      case "delete":
         console.log("entrada:", arg);
-        status = await Beneficiario.destroy(content.id);
+        status = await Beneficiario.delete(content.id);
         console.log("saida:", status);
         break;
       default:
@@ -105,9 +105,9 @@ ipcMain.handle("condominios", async (event, arg) => {
         status = await Condominio.update(content);
         console.log("saida:", status);
         break;
-      case "destroy":
+      case "delete":
         console.log("entrada:", arg);
-        status = await Condominio.destroy(content.id);
+        status = await Condominio.delete(content.id);
         console.log("saida:", status);
         break;
       default:
@@ -148,9 +148,9 @@ ipcMain.handle("pagantes", async (event, arg) => {
         status = await Pagante.update(content);
         console.log("saida:", status);
         break;
-      case "destroy":
+      case "delete":
         console.log("entrada:", arg);
-        status = await Pagante.destroy(content.id);
+        status = await Pagante.delete(content.id);
         console.log("saida:", status);
         break;
       default:
@@ -191,9 +191,9 @@ ipcMain.handle("boletos", async (event, arg) => {
         status = await Boleto.update(content);
         console.log("saida:", status);
         break;
-      case "destroy":
+      case "delete":
         console.log("entrada:", arg);
-        status = await Boleto.destroy(content.id);
+        status = await Boleto.delete(content.id);
         console.log("saida:", status);
         break;
       default:
