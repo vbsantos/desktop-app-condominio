@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React from "react";
 import Draggable from "react-draggable";
 
 // MATERIAL UI COMPONENTS
@@ -10,6 +10,9 @@ import {
   DialogTitle,
   Paper
 } from "@material-ui/core";
+
+// MATERIAL UI ICONS
+import { DeleteOutlined } from "@material-ui/icons";
 
 // CSS
 import "./style.css";
@@ -27,7 +30,7 @@ function PaperComponent(props) {
 
 export default function DraggableDialog(props) {
   const [dialog, setDialog] = props.open;
-  const { condominio } = props;
+  const { beneficiario } = props;
 
   // function that runs when the dialog is suposed to close
   function handleClose() {
@@ -36,18 +39,18 @@ export default function DraggableDialog(props) {
 
   // function that runs when you click the right button
   async function handleRightButton() {
-    const response = await window.ipcRenderer.invoke("condominios", {
+    const response = await window.ipcRenderer.invoke("beneficiarios", {
       method: "delete",
-      content: { id: condominio.id }
+      content: { id: beneficiario.id }
     });
     response === 1
-      ? console.warn(`Condomínio [id=${condominio.id}] excluido`)
-      : console.warn(`Falha ao excluir condomínio [id=${condominio.id}]`);
+      ? console.warn(`Beneficiário [id=${beneficiario.id}] excluido`)
+      : console.warn(`Falha ao excluir beneficiário [id=${beneficiario.id}]`);
     setDialog(false);
   }
 
   return (
-    <div id="dialogRegistrarBeneficiario">
+    <div id="dialogDeletarBeneficiario">
       <Dialog
         open={dialog}
         onClose={handleClose}
@@ -59,12 +62,10 @@ export default function DraggableDialog(props) {
           id="draggable-dialog-title"
           color="inherit"
         >
-          Tem certeza que deseja excluir {condominio.nome}?
+          Tem certeza que deseja excluir {beneficiario.nome}?
         </DialogTitle>
         <DialogContent>
-          {condominio["Pagantes"].length > 0
-            ? `A exclusão desse condomínio acarretará na exclusão de ${condominio["Pagantes"].length} moradores e não poderá ser desfeita.`
-            : "Essa ação não poderá ser desfeita."}
+          {`A exclusão desse administrador acarretará na exclusão de todos os condomínios cadastrados por ele e não poderá ser desfeita.`}
         </DialogContent>
         <DialogActions>
           <Button
@@ -77,9 +78,10 @@ export default function DraggableDialog(props) {
           </Button>
           <Button
             onClick={handleRightButton}
-            variant="outlined"
+            variant="contained"
             color="secondary"
           >
+            <DeleteOutlined />
             Excluir
           </Button>
         </DialogActions>

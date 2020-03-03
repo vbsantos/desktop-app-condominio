@@ -2,13 +2,14 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 // MATERIAL UI COMPONENTS
-import { FormControl, NativeSelect } from "@material-ui/core";
+import { FormControl, NativeSelect, Button } from "@material-ui/core";
 
 // CSS
 import "./style.css";
 
 // DIALOGS
 import DialogBeneficiario from "../../dialogs/beneficiario";
+import DialogExcluirBeneficiario from "../../dialogs/deletarBeneficiario";
 
 export default function EscolherBeneficiario(props) {
   const [footbar, setFootbar] = props.buttons;
@@ -23,15 +24,21 @@ export default function EscolherBeneficiario(props) {
   // ID of the Beneficiário selected
   const [selected, setSelected] = useState({ id: -1 });
 
-  // Boolean for Dialog
-  const [formDialog, setFormDialog] = useState(false);
+  // Boolean for Register Dialog
+  const [dialogRegisterForm, setDialogRegisterForm] = useState(false);
 
-  // console.log(
-  //   "Entrou em EscolherBeneficiario\nFootbar:",
-  //   footbar,
-  //   "\nData:",
-  //   data
-  // );
+  // Boolean for Edit Dialog
+  const [dialogEditForm, setDialogEditForm] = useState(false);
+
+  // Boolean for Confirmation Dialog
+  const [dialogDelete, setDialogDelete] = useState(false);
+
+  console.log(
+    "Entrou em EscolherBeneficiario\nFootbar:",
+    footbar,
+    "\nData:",
+    data
+  );
 
   // This function runs only when the component is monted
   useEffect(() => {
@@ -47,9 +54,9 @@ export default function EscolherBeneficiario(props) {
         {
           id: 1,
           position: "center",
-          visible: true,
-          enabled: true,
-          value: "CADASTRAR"
+          visible: false,
+          enabled: false,
+          value: ""
         },
         {
           id: 2,
@@ -64,9 +71,14 @@ export default function EscolherBeneficiario(props) {
     return () => console.log("EscolherBeneficiário - Encerrou");
   }, []);
 
-  // This function runs only when the formDialog status is closed
+  // This function runs only when the all dialogs are closed closed
   useEffect(() => {
-    if (!formDialog) {
+    const allDialogsClosed = !(
+      dialogRegisterForm ||
+      dialogDelete ||
+      dialogEditForm
+    );
+    if (allDialogsClosed) {
       async function getBeneficiarios() {
         console.time("getBeneficiarios");
         const beneficiarios = await window.ipcRenderer.invoke("beneficiarios", {
@@ -74,12 +86,19 @@ export default function EscolherBeneficiario(props) {
           content: null
         });
         setList([...beneficiarios]);
+        if (
+          beneficiarios.filter(
+            beneficiario => beneficiario.id === selected.id
+          )[0] === undefined
+        ) {
+          setSelected({ id: -1 });
+        }
         console.timeEnd("getBeneficiarios");
         return beneficiarios.length > 0 ? true : false;
       }
       getBeneficiarios();
     }
-  }, [formDialog]);
+  }, [dialogRegisterForm, dialogDelete, dialogEditForm]);
 
   // This function runs only when there is an interaction with the footbar buttons
   useEffect(() => {
@@ -92,7 +111,7 @@ export default function EscolherBeneficiario(props) {
       case 1:
         console.log("EscolherBeneficiario - Botão do centro");
         setFootbar({ ...footbar, action: -1 });
-        setFormDialog(true);
+        setDialogRegisterForm(true);
         break;
       case 2:
         console.log("EscolherBeneficiario - Botão da direita");
@@ -125,9 +144,9 @@ export default function EscolherBeneficiario(props) {
         {
           id: 1,
           position: "center",
-          visible: true,
-          enabled: true,
-          value: "CADASTRAR"
+          visible: false,
+          enabled: false,
+          value: ""
         },
         {
           id: 2,
@@ -146,7 +165,25 @@ export default function EscolherBeneficiario(props) {
 
   return (
     <div id="EscolherBeneficiario">
-      {formDialog && <DialogBeneficiario open={[formDialog, setFormDialog]} />}
+      {dialogRegisterForm && (
+        <DialogBeneficiario
+          open={[dialogRegisterForm, setDialogRegisterForm]}
+          delete={[dialogDelete, setDialogDelete]}
+        />
+      )}
+      {dialogEditForm && (
+        <DialogBeneficiario
+          beneficiario={list.filter(a => a.id === selected.id)[0]}
+          open={[dialogEditForm, setDialogEditForm]}
+          delete={[dialogDelete, setDialogDelete]}
+        />
+      )}
+      {dialogDelete && (
+        <DialogExcluirBeneficiario
+          beneficiario={list.filter(a => a.id === selected.id)[0]}
+          open={[dialogDelete, setDialogDelete]}
+        />
+      )}
       <h1 className="PageTitle">Selecione o Beneficiário</h1>
       <div className="DropdownInput">
         <FormControl>
@@ -160,6 +197,21 @@ export default function EscolherBeneficiario(props) {
               </option>
             ))}
           </NativeSelect>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => setDialogRegisterForm(true)}
+          >
+            Cadastrar
+          </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            disabled={selected.id === -1}
+            onClick={() => setDialogEditForm(true)}
+          >
+            Editar
+          </Button>
         </FormControl>
       </div>
     </div>

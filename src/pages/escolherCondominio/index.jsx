@@ -3,22 +3,33 @@ import { useNavigate } from "react-router-dom";
 
 // MATERIAL UI COMPONENTS
 import {
-  List,
-  ListItem,
   Container,
-  Typography,
-  ListItemText,
   ExpansionPanel,
   ExpansionPanelSummary,
-  ExpansionPanelDetails
+  ExpansionPanelDetails,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemSecondaryAction
 } from "@material-ui/core";
+
+// MATERIAL UI ICONS
+import {
+  Delete,
+  Create,
+  HomeWorkOutlined,
+  PeopleOutlined,
+  PlusOne
+} from "@material-ui/icons";
 
 // CSS
 import "./style.css";
 
 // DIALOGS
 import DialogCondominio from "../../dialogs/condominio";
-import DialogExcluirCondominio from "../../dialogs/confirmar";
+import DialogExcluirCondominio from "../../dialogs/deletarCondominio";
+import DialogPagante from "../../dialogs/pagante";
+import DialogExcluirPagante from "../../dialogs/deletarPagante";
 
 export default function EscolherCondominio(props) {
   const [footbar, setFootbar] = props.buttons;
@@ -27,24 +38,46 @@ export default function EscolherCondominio(props) {
   // React Router Hook for navigation between pages
   const navigate = useNavigate();
 
-  // ID of the Condomínio selected
-  const [selected, setSelected] = useState({ id: -1 });
+  // ID of the selected Condominio
+  const [selectedCondominio, setSelectedCondominio] = useState({ id: -1 });
 
-  // Boolean for Condomínio expanded panels
+  // ID of the selected Pagante
+  const [selectedPagante, setSelectedPagante] = useState({ id: -1 });
+
+  // Boolean for Condominio expanded panels
   const [expanded, setExpanded] = React.useState(false);
 
-  // Boolean for Form Dialog
-  const [formDialog, setFormDialog] = useState(false);
+  // Boolean for Register Dialog
+  const [
+    dialogRegisterCondominioForm,
+    setDialogRegisterCondominioForm
+  ] = useState(false);
 
-  // Boolean for Confirmation Dialog
-  const [destroyDialog, setDestroyDialog] = useState(false);
+  // Boolean for Edit Dialog
+  const [dialogEditCondominioForm, setDialogEditCondominioForm] = useState(
+    false
+  );
 
-  // console.log(
-  //   "Entrou em EscolherCondominio\nFootbar:",
-  //   footbar,
-  //   "\nData:",
-  //   data
-  // );
+  // Boolean for Delete Confirmation Dialog
+  const [dialogDeleteCondominio, setDialogDeleteCondominio] = useState(false);
+
+  // Boolean for Register Dialog
+  const [dialogRegisterPaganteForm, setDialogRegisterPaganteForm] = useState(
+    false
+  );
+
+  // Boolean for Edit Dialog
+  const [dialogEditPaganteForm, setDialogEditPaganteForm] = useState(false);
+
+  // Boolean for Delete Confirmation Dialog
+  const [dialogDeletePagante, setDialogDeletePagante] = useState(false);
+
+  console.log(
+    "Entrou em EscolherCondominio\nFootbar:",
+    footbar,
+    "\nData:",
+    data
+  );
 
   // This function runs only when the component is monted
   useEffect(() => {
@@ -60,9 +93,9 @@ export default function EscolherCondominio(props) {
         {
           id: 1,
           position: "center",
-          visible: true,
-          enabled: true,
-          value: "CADASTRAR"
+          visible: false,
+          enabled: false,
+          value: ""
         },
         {
           id: 2,
@@ -77,33 +110,57 @@ export default function EscolherCondominio(props) {
     return () => console.log("EscolherCondominio - Encerrou");
   }, []);
 
-  // This function runs only when the confirm delete dialog is closed
+  // This function runs only when the confirm delete Condominio dialog is closed
   useEffect(() => {
-    if (!destroyDialog) {
+    if (!dialogDeleteCondominio) {
       // Started as a bug, now it is a feature
-      setSelected({ id: -1 });
+      setSelectedCondominio({ id: -1 });
       setExpanded(false);
     }
-  }, [destroyDialog]);
+  }, [dialogDeleteCondominio]);
 
-  // This function runs only when the dialog status is closed
+  // This function runs only when the all dialogs are closed
   useEffect(() => {
-    if (!formDialog || !destroyDialog) {
+    const allDialogsClosed = !(
+      dialogRegisterCondominioForm ||
+      dialogDeleteCondominio ||
+      dialogEditCondominioForm ||
+      dialogRegisterPaganteForm ||
+      dialogDeletePagante ||
+      dialogEditPaganteForm
+    );
+    if (allDialogsClosed) {
+      data.beneficiario.id || navigate("/"); //corrects development bug when reloading pages
       async function getEverything() {
         console.time("getEverything");
         const response = await window.ipcRenderer.invoke("beneficiarios", {
           method: "showNested",
           content: { id: data.beneficiario.id }
         });
-        setData({
-          ...data,
-          allNestedBeneficiario: response
-        });
+        selectedCondominio.id === -1
+          ? setData({
+              ...data,
+              allNestedBeneficiario: response
+            })
+          : setData({
+              ...data,
+              allNestedBeneficiario: response,
+              allNestedCondominio: response["Condominios"].filter(
+                condominio => condominio.id == selectedCondominio.id
+              )[0]
+            });
         console.timeEnd("getEverything");
       }
       getEverything();
     }
-  }, [formDialog, destroyDialog]);
+  }, [
+    dialogRegisterCondominioForm,
+    dialogDeleteCondominio,
+    dialogEditCondominioForm,
+    dialogRegisterPaganteForm,
+    dialogDeletePagante,
+    dialogEditPaganteForm
+  ]);
 
   // This function runs only when there is an interaction with the footbar buttons
   useEffect(() => {
@@ -111,12 +168,7 @@ export default function EscolherCondominio(props) {
       case 0:
         console.log("Login - Botão da esquerda");
         setFootbar({ ...footbar, action: -1 });
-        selected.id === -1 ? navigate("/") : setDestroyDialog(true);
-        break;
-      case 1:
-        console.log("Login - Botão do centro");
-        setFootbar({ ...footbar, action: -1 });
-        setFormDialog(true);
+        navigate("/");
         break;
       case 2:
         console.log("Login - Botão da direita");
@@ -126,9 +178,9 @@ export default function EscolherCondominio(props) {
     }
   }, [footbar.action]);
 
-  // This function runs only when a different Condomínio is selected
+  // This function runs only when a different Condominio is selectedCondominio
   useEffect(() => {
-    console.log("Condomínio selecionado:", selected);
+    console.log("Condominio selecionado:", selectedCondominio);
     setFootbar({
       ...footbar,
       buttons: [
@@ -137,94 +189,218 @@ export default function EscolherCondominio(props) {
           position: "left",
           visible: true,
           enabled: true,
-          value: selected.id === -1 ? "VOLTAR" : "EXCLUIR"
+          value: "VOLTAR"
         },
         {
           id: 1,
           position: "center",
-          visible: true,
-          enabled: true,
-          value: selected.id === -1 ? "CADASTRAR" : "EDITAR"
+          visible: false,
+          enabled: false,
+          value: ""
         },
         {
           id: 2,
           position: "right",
           visible: true,
-          enabled: selected.id !== -1,
+          enabled: selectedCondominio.id !== -1,
           value: "CONTINUAR"
         }
       ]
     });
-  }, [selected.id]);
+  }, [selectedCondominio.id]);
 
-  const handleClickCondominio = panel => (event, isExpanded) => {
+  const handleCondominioClick = panel => (event, isExpanded) => {
     if (isExpanded) {
-      setSelected({ id: panel });
+      setSelectedCondominio({ id: panel });
       setExpanded(panel);
       const allNestedCondominio = data.allNestedBeneficiario[
         "Condominios"
       ].filter(condominio => condominio.id == panel)[0];
       setData({ ...data, allNestedCondominio });
     } else {
-      setSelected({ id: -1 });
+      setSelectedCondominio({ id: -1 });
       setExpanded(false);
     }
   };
 
-  function handleClickPagante(string) {
-    console.log(string);
+  function handleCondominioEdit(e) {
+    console.log("EDITAR CONDOMINIO", selectedCondominio.id);
+    setDialogEditCondominioForm(true);
+    if (!e) var e = window.event;
+    e.cancelBubble = true;
+    if (e.stopPropagation) e.stopPropagation();
+  }
+
+  function handleCondominioDelete(e) {
+    console.log("DELETAR CONDOMINIO", selectedCondominio.id);
+    setDialogDeleteCondominio(true);
+    if (!e) var e = window.event;
+    e.cancelBubble = true;
+    if (e.stopPropagation) e.stopPropagation();
+  }
+
+  function hadleCondominioRegister() {
+    console.log("CADASTRAR CONDOMINIO");
+    setDialogRegisterCondominioForm(true);
+  }
+
+  function handlePaganteEdit(paganteId) {
+    console.log("EDITAR PAGANTE", paganteId);
+    setSelectedPagante({ id: paganteId });
+    setDialogEditPaganteForm(true);
+  }
+
+  function handlePaganteDelete(paganteId) {
+    console.log("DELETAR PAGANTE", paganteId);
+    setSelectedPagante({ id: paganteId });
+    setDialogDeletePagante(true);
+  }
+
+  function hadlePaganteRegister() {
+    console.log("CADASTRAR PAGANTE");
+    setDialogRegisterPaganteForm(true);
   }
 
   return (
     <div id="EscolherCondominio">
-      {formDialog && (
+      {/* CONDOMINIO DIALOGS */}
+      {dialogRegisterCondominioForm && (
         <DialogCondominio
+          open={[dialogRegisterCondominioForm, setDialogRegisterCondominioForm]}
+          delete={[dialogDeleteCondominio, setDialogDeleteCondominio]}
           beneficiario={data.beneficiario}
-          condominio={selected.id === -1 ? undefined : data.allNestedCondominio}
-          open={[formDialog, setFormDialog]}
         />
       )}
-      {destroyDialog && (
-        <DialogExcluirCondominio
+      {dialogEditCondominioForm && (
+        <DialogCondominio
+          open={[dialogEditCondominioForm, setDialogEditCondominioForm]}
+          delete={[dialogDeleteCondominio, setDialogDeleteCondominio]}
+          beneficiario={data.beneficiario}
           condominio={data.allNestedCondominio}
-          open={[destroyDialog, setDestroyDialog]}
         />
       )}
-      <h1 className="PageTitle">Selecione o Condomínio</h1>
-      {/* TODOS OS CONDOMÍNIOS */}
+      {dialogDeleteCondominio && (
+        <DialogExcluirCondominio
+          open={[dialogDeleteCondominio, setDialogDeleteCondominio]}
+          condominio={data.allNestedCondominio}
+        />
+      )}
+      {/* PAGANTE DIALOGS */}
+      {dialogRegisterPaganteForm && (
+        <DialogPagante
+          open={[dialogRegisterPaganteForm, setDialogRegisterPaganteForm]}
+          delete={[dialogDeletePagante, setDialogDeletePagante]}
+          condominio={selectedCondominio}
+        />
+      )}
+      {dialogEditPaganteForm && (
+        <DialogPagante
+          open={[dialogEditPaganteForm, setDialogEditPaganteForm]}
+          delete={[dialogDeletePagante, setDialogDeletePagante]}
+          condominio={selectedCondominio}
+          pagante={
+            data.allNestedCondominio["Pagantes"].filter(
+              pagante => pagante.id === selectedPagante.id
+            )[0]
+          }
+        />
+      )}
+      {dialogDeletePagante && (
+        <DialogExcluirPagante
+          open={[dialogDeletePagante, setDialogDeletePagante]}
+          pagante={
+            data.allNestedCondominio["Pagantes"].filter(
+              pagante => pagante.id === selectedPagante.id
+            )[0]
+          }
+        />
+      )}
+      <h1 className="PageTitle">Selecione o Condominio</h1>
+      {/* TODOS OS CONDOMINIOS */}
       <Container maxWidth="xl">
-        {/*CADA CONDOMÍNIO*/}
+        {/*CADA CONDOMINIO*/}
         {typeof data.allNestedBeneficiario["Condominios"] !== "undefined" &&
           data.allNestedBeneficiario["Condominios"].map(condominio => (
             <ExpansionPanel
+              elevation={condominio.id === selectedCondominio.id ? 10 : 1}
               key={condominio.id}
               expanded={expanded === condominio.id}
-              onChange={handleClickCondominio(condominio.id)}
+              onChange={handleCondominioClick(condominio.id)}
             >
-              <ExpansionPanelSummary expandIcon={"+"} id={condominio.id}>
-                <Typography>{condominio.nome}</Typography>
+              <ExpansionPanelSummary expandIcon={"+"}>
+                <div className="leftCondominioItens">
+                  <HomeWorkOutlined />
+                  <h3>{condominio.nome}</h3>
+                </div>
+                {condominio.id === selectedCondominio.id && (
+                  <div className="rightCondominioItens">
+                    <Create
+                      className="EditIcon"
+                      onClick={handleCondominioEdit}
+                    />
+                    <Delete
+                      className="DeleteIcon"
+                      onClick={handleCondominioDelete}
+                    />
+                  </div>
+                )}
               </ExpansionPanelSummary>
-              {/* TODOS OS PAGANTES */}
               <ExpansionPanelDetails>
+                {/* TODOS OS PAGANTES */}
                 <List>
                   {/* CADA PAGANTE */}
                   {condominio["Pagantes"].map(pagante => (
                     <ListItem key={pagante.id}>
-                      <ListItemText
-                        primary={pagante.complemento}
-                        secondary={pagante.nome}
-                        onClick={() =>
-                          handleClickPagante(
-                            pagante.complemento + " " + pagante.nome
-                          )
-                        }
-                      />
+                      <ListItemAvatar>
+                        <PeopleOutlined />
+                      </ListItemAvatar>
+                      <p>
+                        <strong>{pagante.complemento}</strong>
+                        {" " + pagante.nome}
+                      </p>
+                      <ListItemSecondaryAction>
+                        <Create
+                          className="EditIcon"
+                          onClick={() => handlePaganteEdit(pagante.id)}
+                        />
+                        <Delete
+                          className="DeleteIcon"
+                          onClick={() => handlePaganteDelete(pagante.id)}
+                        />
+                      </ListItemSecondaryAction>
                     </ListItem>
                   ))}
+                  {/* BOTÃO DE ADICIONAR PAGANTE */}
+                  <ListItem
+                    key={-1}
+                    id="PaganteRegisterLink"
+                    onClick={hadlePaganteRegister}
+                  >
+                    <ListItemAvatar>
+                      <PlusOne />
+                    </ListItemAvatar>
+                    <p>
+                      <strong>Adicionar novo morador</strong>
+                    </p>
+                  </ListItem>
                 </List>
               </ExpansionPanelDetails>
             </ExpansionPanel>
           ))}
+        {/* BOTÃO DE ADICIONAR CONDOMINIO */}
+        <ExpansionPanel
+          id="CondominioRegisterLink"
+          elevation={0}
+          key={-1}
+          expanded={false}
+        >
+          <ExpansionPanelSummary onClick={hadleCondominioRegister}>
+            <div className="leftCondominioItens">
+              <PlusOne />
+              <h3>Adicionar Novo Condomínio</h3>
+            </div>
+          </ExpansionPanelSummary>
+        </ExpansionPanel>
       </Container>
     </div>
   );

@@ -1,0 +1,62 @@
+.MuiExpansionPanelSummary-content {
+  display: inline-flex !important;
+  justify-content: space-between !important;
+}
+
+.leftCondominioItens {
+  display: inline-flex;
+}
+
+.leftCondominioItens h3,
+h4 {
+  /* width: 75vw; */
+  text-align: left;
+  padding: 0px 5px 0px 20px;
+}
+
+.MuiList-root {
+  width: 100%;
+}
+
+.MuiListItem-root strong {
+  margin-right: 30px;
+}
+
+.MuiList-root .MuiSvgIcon-root {
+  color: gray;
+}
+
+.MuiSvgIcon-root.DeleteIcon:hover {
+  color: rgb(200, 25, 50);
+  cursor: pointer;
+}
+
+.MuiSvgIcon-root.EditIcon:hover {
+  color: rgb(25, 50, 200);
+  cursor: pointer;
+}
+
+#PaganteRegisterLink {
+  cursor: pointer;
+  background-color: #e0e0e0;
+  border-radius: 10px;
+  margin-top: 10px;
+}
+
+#CondominioRegisterLink {
+  background-color: #e0e0e0;
+  border-radius: 10px;
+  margin-top: 10px;
+}
+
+#CondominioRegisterLink * {
+  border: hidden !important;
+}
+
+#PaganteRegisterLink:hover {
+  background-color: #ccc;
+}
+
+#CondominioRegisterLink:hover {
+  background-color: #ccc;
+}

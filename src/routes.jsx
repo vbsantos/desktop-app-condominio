@@ -29,8 +29,8 @@ export default function MainRoutes(props) {
       {
         id: 1,
         position: "center",
-        visible: true,
-        enabled: true,
+        visible: false,
+        enabled: false,
         value: "CENTER"
       },
       {

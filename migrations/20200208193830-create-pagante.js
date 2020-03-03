@@ -20,6 +20,9 @@ module.exports = {
       fracao: {
         type: Sequelize.STRING
       },
+      email: {
+        type: Sequelize.STRING
+      },
       condominioId: {
         type: Sequelize.INTEGER,
         allowNull: false,

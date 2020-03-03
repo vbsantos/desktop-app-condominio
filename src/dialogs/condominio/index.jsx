@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import Draggable from "react-draggable";
 
 // MATERIAL UI COMPONENTS
@@ -7,16 +7,19 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
-  Paper,
-  FormControl,
-  InputLabel,
-  Input
+  Paper
 } from "@material-ui/core";
+
+// FORM COMPONENTS
+import FormCondominio from "../../forms/condominio";
 
 // CSS
 import "./style.css";
+
+// MATERIAL UI ICONS
+import { DeleteOutlined } from "@material-ui/icons";
+import { CreateOutlined } from "@material-ui/icons";
 
 function PaperComponent(props) {
   return (
@@ -31,38 +34,49 @@ function PaperComponent(props) {
 
 export default function DraggableDialog(props) {
   const [dialog, setDialog] = props.open;
-  const [condominio, setCondominio] = useState({});
+  const [dialogDelete, setDialogDelete] = props.delete;
 
   // true when all the fields of the form are filled
   const [formCompleted, setFormCompleted] = useState(false);
 
   // condominio must belong to a beneficiario
-  const beneficiario = props.beneficiario || { id: -1 };
+  const { beneficiario } = props;
 
-  // if this dialog is for edition not for creation
-  const condominioAntigo = props.condominio || {
-    id: "",
-    nome: "",
-    cep: "",
-    uf: "",
-    localidade: "",
-    bairro: "",
-    logradouro: "",
-    numero: "",
-    beneficiarioId: beneficiario.id
-  };
+  const [condominio, setCondominio] = useState(
+    props.condominio || {
+      id: "",
+      nome: "",
+      cep: "",
+      uf: "",
+      localidade: "",
+      bairro: "",
+      logradouro: "",
+      numero: "",
+      beneficiarioId: beneficiario.id
+    }
+  );
 
-  // form reference
-  const formEl = useRef();
+  // store the number of Pagantes in the Condominio
+  const [numPagantes, setNumPagantes] = useState(
+    typeof props.condominio !== "undefined"
+      ? props.condominio["Pagantes"].length
+      : 0
+  );
 
   // function that runs when the dialog is suposed to close
   function handleClose() {
     setDialog(false);
   }
 
+  // function that runs when for delete confirmation
+  function handleDelete() {
+    setDialogDelete(true);
+    setDialog(false);
+  }
+
   // function that runs when you click the right button
   async function handleRightButton() {
-    if (condominioAntigo.id === "") {
+    if (condominio.id === "") {
       const response = await window.ipcRenderer.invoke("condominios", {
         method: "create",
         content: condominio
@@ -79,24 +93,6 @@ export default function DraggableDialog(props) {
     setDialog(false);
   }
 
-  // function that runs each time there is a change in the form
-  function changedForm() {
-    const formList = [...formEl.current.elements];
-    const completed = formList.filter(f => f.value === "")[0] === undefined;
-    setCondominio({
-      id: condominioAntigo.id,
-      nome: formList[0].value,
-      cep: formList[1].value,
-      uf: formList[2].value,
-      localidade: formList[3].value,
-      bairro: formList[4].value,
-      logradouro: formList[5].value,
-      numero: formList[6].value,
-      beneficiarioId: condominioAntigo.beneficiarioId || beneficiario.id
-    });
-    setFormCompleted(completed);
-  }
-
   return (
     <div id="dialogRegistrarBeneficiario">
       <Dialog
@@ -110,92 +106,41 @@ export default function DraggableDialog(props) {
           id="draggable-dialog-title"
           color="inherit"
         >
-          Cadastrar Novo Condomínio
+          {condominio.id === ""
+            ? "Cadastrar Novo Condomínio"
+            : "Editar Condomínio"}
         </DialogTitle>
         <DialogContent>
-          <form ref={formEl} onChange={() => changedForm()} id="formCondominio">
-            <section>
-              <DialogContentText color="inherit">
-                Informações do Condomínio
-              </DialogContentText>
-              <FormControl>
-                <InputLabel htmlFor="nome">Nome</InputLabel>
-                <Input
-                  defaultValue={condominioAntigo.nome}
-                  id="nome"
-                  type="text"
-                ></Input>
-              </FormControl>
-            </section>
-            <section>
-              <DialogContentText color="inherit">Endereço</DialogContentText>
-              <FormControl>
-                <InputLabel htmlFor="cep">CEP</InputLabel>
-                <Input
-                  defaultValue={condominioAntigo.cep}
-                  id="cep"
-                  type="text"
-                ></Input>
-              </FormControl>
-              <FormControl>
-                <InputLabel htmlFor="uf">UF</InputLabel>
-                <Input
-                  defaultValue={condominioAntigo.uf}
-                  id="uf"
-                  type="text"
-                ></Input>
-              </FormControl>
-              <FormControl>
-                <InputLabel htmlFor="localidade">Localidade</InputLabel>
-                <Input
-                  defaultValue={condominioAntigo.localidade}
-                  id="localidade"
-                  type="text"
-                ></Input>
-              </FormControl>
-              <FormControl>
-                <InputLabel htmlFor="bairro">Bairro</InputLabel>
-                <Input
-                  defaultValue={condominioAntigo.bairro}
-                  id="bairro"
-                  type="text"
-                ></Input>
-              </FormControl>
-              <FormControl>
-                <InputLabel htmlFor="logradouro">Logradouro</InputLabel>
-                <Input
-                  defaultValue={condominioAntigo.logradouro}
-                  id="logradouro"
-                  type="text"
-                ></Input>
-              </FormControl>
-              <FormControl>
-                <InputLabel htmlFor="numero">Número</InputLabel>
-                <Input
-                  defaultValue={condominioAntigo.numero}
-                  id="numero"
-                  type="text"
-                ></Input>
-              </FormControl>
-            </section>
-          </form>
+          <FormCondominio
+            beneficiario={beneficiario}
+            condominio={[condominio, setCondominio]}
+            pagantes={[numPagantes, setNumPagantes]}
+            completed={[formCompleted, setFormCompleted]}
+          />
         </DialogContent>
         <DialogActions>
-          <Button
-            autoFocus
-            onClick={handleClose}
-            variant="outlined"
-            color="secondary"
-          >
+          <Button onClick={handleClose} variant="outlined" color="secondary">
             Cancelar
           </Button>
+          {condominio.id !== "" && (
+            <Button
+              onClick={handleDelete}
+              variant="contained"
+              color="secondary"
+              disabled={condominio.id === ""}
+            >
+              <DeleteOutlined />
+              Excluir
+            </Button>
+          )}
           <Button
             onClick={handleRightButton}
-            variant="outlined"
+            variant="contained"
             color="primary"
             disabled={!formCompleted}
           >
-            {condominioAntigo.id === "" ? "Cadastrar" : "Editar"}
+            <CreateOutlined />
+            {condominio.id === "" ? "Cadastrar" : "Editar"}
           </Button>
         </DialogActions>
       </Dialog>

@@ -12,7 +12,7 @@ import {
 } from "@material-ui/core";
 
 // FORM COMPONENTS
-import FormBeneficiario from "../../forms/beneficiario";
+import FormPagante from "../../forms/pagante";
 
 // CSS
 import "./style.css";
@@ -36,20 +36,18 @@ export default function DraggableDialog(props) {
   const [dialog, setDialog] = props.open;
   const [dialogDelete, setDialogDelete] = props.delete;
 
-  const [beneficiario, setBeneficiario] = useState(
-    props.beneficiario || {
+  // pagante must belong to a condominio
+  const { condominio } = props;
+
+  const [pagante, setPagante] = useState(
+    props.pagante || {
       id: "",
       nome: "",
       cprf: "",
-      token_acesso: "",
-      token_conta: "",
-      cep: "",
-      uf: "",
-      localidade: "",
-      bairro: "",
-      logradouro: "",
-      numero: "",
-      complemento: ""
+      complemento: "",
+      fracao: "",
+      email: "",
+      condominioId: condominio.id
     }
   );
 
@@ -69,24 +67,24 @@ export default function DraggableDialog(props) {
 
   // function that runs when you click the right button
   async function handleRightButton() {
-    if (beneficiario.id === "") {
-      const response = await window.ipcRenderer.invoke("beneficiarios", {
+    if (pagante.id === "") {
+      const response = await window.ipcRenderer.invoke("pagantes", {
         method: "create",
-        content: beneficiario
+        content: pagante
       });
-      console.log("Beneficiário Cadastrado:", response);
+      console.log("Pagante Cadastrado:", response);
     } else {
-      const response = await window.ipcRenderer.invoke("beneficiarios", {
+      const response = await window.ipcRenderer.invoke("pagantes", {
         method: "update",
-        content: beneficiario
+        content: pagante
       });
-      console.log("Beneficiário Editado:", response);
+      console.log("Pagante Editado:", response);
     }
     setDialog(false);
   }
 
   return (
-    <div id="dialogRegistrarBeneficiario">
+    <div id="dialogRegistrarPagante">
       <Dialog
         open={dialog}
         onClose={handleClose}
@@ -98,13 +96,12 @@ export default function DraggableDialog(props) {
           id="draggable-dialog-title"
           color="inherit"
         >
-          {beneficiario.id === ""
-            ? "Cadastrar Novo Beneficiário"
-            : "Editar Beneficiário"}
+          {pagante.id === "" ? "Cadastrar Novo Pagante" : "Editar Pagante"}
         </DialogTitle>
         <DialogContent>
-          <FormBeneficiario
-            beneficiario={[beneficiario, setBeneficiario]}
+          <FormPagante
+            condominio={condominio}
+            pagante={[pagante, setPagante]}
             completed={[formCompleted, setFormCompleted]}
           />
         </DialogContent>
@@ -112,13 +109,13 @@ export default function DraggableDialog(props) {
           <Button onClick={handleClose} variant="outlined" color="secondary">
             Cancelar
           </Button>
-          {beneficiario.id !== "" && (
+          {pagante.id !== "" && (
             <Button
               onClick={handleDelete}
               variant="contained"
               color="secondary"
               display="false"
-              disabled={beneficiario.id === ""}
+              disabled={pagante.id === ""}
             >
               <DeleteOutlined />
               Excluir
@@ -131,7 +128,7 @@ export default function DraggableDialog(props) {
             disabled={!formCompleted}
           >
             <CreateOutlined />
-            {beneficiario.id === "" ? "Cadastrar" : "Editar"}
+            {pagante.id === "" ? "Cadastrar" : "Editar"}
           </Button>
         </DialogActions>
       </Dialog>
