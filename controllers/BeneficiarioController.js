@@ -32,8 +32,13 @@ class BeneficiarioController {
     });
     let Boletos = [];
     let Pagantes = [];
+    let Conta = [];
     let Condominios = [];
     beneficiario.Condominios.forEach(condominio => {
+      condominio.Conta.forEach(conta => {
+        const temp3 = conta.get();
+        Conta.push(temp3);
+      });
       condominio.Pagantes.forEach(pagante => {
         pagante.Boletos.forEach(boleto => {
           Boletos.push(boleto.get());
@@ -44,7 +49,13 @@ class BeneficiarioController {
         Boletos = [];
       });
       const temp2 = condominio.get();
-      temp2.Pagantes = Pagantes;
+      delete temp2.Conta;
+      temp2.Contas = Conta;
+      Conta = [];
+      // Sort pra colocar "pagantes" por ordem de complemento (número do apartamento)
+      temp2.Pagantes = Pagantes.sort((a, b) =>
+        a.complemento > b.complemento ? 1 : -1
+      );
       Condominios.push(temp2);
       Pagantes = [];
     });

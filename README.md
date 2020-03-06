@@ -25,6 +25,12 @@ Condominio:
 yarn sequelize model:generate --name Condominio --attributes nome:string,cep:string,uf:string,localidade:string,bairro:string,logradouro:string,numero:string,beneficiarioId:integer
 ```
 
+Conta:
+
+```bash
+yarn sequelize model:generate --name Conta --attributes nome:string,valor:string,rateioAutomatico:boolean,permanente:boolean,condominioId:integer
+```
+
 Pagante:
 
 ```bash
