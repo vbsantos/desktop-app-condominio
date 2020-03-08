@@ -50,7 +50,8 @@ class BeneficiarioController {
       });
       const temp2 = condominio.get();
       delete temp2.Conta;
-      temp2.Contas = Conta;
+      // Sort pra colocar "contas" por ordem de criação (id)
+      temp2.Contas = Conta.sort((a, b) => (a.id > b.id ? 1 : -1));
       Conta = [];
       // Sort pra colocar "pagantes" por ordem de complemento (número do apartamento)
       temp2.Pagantes = Pagantes.sort((a, b) =>

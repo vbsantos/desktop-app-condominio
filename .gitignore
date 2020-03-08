@@ -6,3 +6,4 @@ package-lock.json
 dist
 database.sqlite
 build
+backup.sqlite

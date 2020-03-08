@@ -9,12 +9,16 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       nome: {
+        allowNull: false,
+        unique: true,
         type: Sequelize.STRING
       },
       categoria: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       valor: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       parcelaAtual: {
@@ -24,9 +28,11 @@ module.exports = {
         type: Sequelize.STRING
       },
       rateioAutomatico: {
+        allowNull: false,
         type: Sequelize.BOOLEAN
       },
       permanente: {
+        allowNull: false,
         type: Sequelize.BOOLEAN
       },
       condominioId: {

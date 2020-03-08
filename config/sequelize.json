@@ -1,6 +1,6 @@
 {
   "development": {
-    "host": ":memory:",
+    "host": "database.sqlite",
     "dialect": "sqlite"
   },
   "test": {

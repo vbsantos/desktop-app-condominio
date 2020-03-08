@@ -9,18 +9,24 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       nome: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       cprf: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       complemento: {
+        allowNull: false,
+        unique: true,
         type: Sequelize.STRING
       },
       fracao: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       email: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       condominioId: {
