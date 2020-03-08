@@ -11,7 +11,16 @@ module.exports = {
       nome: {
         type: Sequelize.STRING
       },
+      categoria: {
+        type: Sequelize.STRING
+      },
       valor: {
+        type: Sequelize.STRING
+      },
+      parcelaAtual: {
+        type: Sequelize.STRING
+      },
+      numParcelas: {
         type: Sequelize.STRING
       },
       rateioAutomatico: {

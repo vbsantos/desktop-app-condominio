@@ -4,7 +4,10 @@ module.exports = (sequelize, DataTypes) => {
     "Conta",
     {
       nome: DataTypes.STRING,
+      categoria: DataTypes.STRING,
       valor: DataTypes.STRING,
+      parcelaAtual: DataTypes.STRING,
+      numParcelas: DataTypes.STRING,
       rateioAutomatico: DataTypes.BOOLEAN,
       permanente: DataTypes.BOOLEAN,
       condominioId: DataTypes.INTEGER
