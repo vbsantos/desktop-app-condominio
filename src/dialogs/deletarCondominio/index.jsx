@@ -62,7 +62,7 @@ export default function DraggableDialog(props) {
           id="draggable-dialog-title"
           color="inherit"
         >
-          Tem certeza que deseja excluir {condominio.nome}?
+          Tem certeza que deseja excluir <strong>{condominio.nome}</strong>?
         </DialogTitle>
         <DialogContent>
           {condominio["Pagantes"].length > 0

@@ -56,13 +56,6 @@ export default function DraggableDialog(props) {
     }
   );
 
-  // store the number of Pagantes in the Condominio
-  const [numPagantes, setNumPagantes] = useState(
-    typeof props.condominio !== "undefined"
-      ? props.condominio["Pagantes"].length
-      : 0
-  );
-
   // function that runs when the dialog is suposed to close
   function handleClose() {
     setDialog(false);
@@ -114,7 +107,6 @@ export default function DraggableDialog(props) {
           <FormCondominio
             beneficiario={beneficiario}
             condominio={[condominio, setCondominio]}
-            pagantes={[numPagantes, setNumPagantes]}
             completed={[formCompleted, setFormCompleted]}
           />
         </DialogContent>
@@ -127,7 +119,6 @@ export default function DraggableDialog(props) {
               onClick={handleDelete}
               variant="contained"
               color="secondary"
-              disabled={condominio.id === ""}
             >
               <DeleteOutlined />
               Excluir

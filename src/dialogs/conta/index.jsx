@@ -36,13 +36,20 @@ export default function DraggableDialog(props) {
   const [dialog, setDialog] = props.open;
   const [dialogDelete, setDialogDelete] = props.delete;
 
+  // conta must belong to a condominio
+  const { condominio } = props;
+
   const [conta, setConta] = useState(
     props.conta || {
       id: "",
       nome: "",
-      descricao: "",
+      categoria: "",
       valor: "",
-      tipo: ""
+      parcelaAtual: "",
+      numParcelas: "",
+      rateioAutomatico: true,
+      permanente: true,
+      condominioId: condominio.id
     }
   );
 
@@ -62,7 +69,20 @@ export default function DraggableDialog(props) {
 
   // function that runs when you click the right button
   async function handleRightButton() {
-    console.log("Conta Registrada");
+    if (conta.id === "") {
+      const response = await window.ipcRenderer.invoke("despesas", {
+        method: "create",
+        content: conta
+      });
+      console.log("Conta Cadastrada:", response);
+    } else {
+      const response = await window.ipcRenderer.invoke("despesas", {
+        method: "update",
+        content: conta
+      });
+      console.log("Conta Editada:", response);
+    }
+
     setDialog(false);
   }
 
@@ -79,10 +99,11 @@ export default function DraggableDialog(props) {
           id="draggable-dialog-title"
           color="inherit"
         >
-          Registrar Nova Despesa
+          {conta.id === "" ? "Cadastrar Nova Despesa" : "Editar Despesa"}
         </DialogTitle>
         <DialogContent>
           <FormConta
+            condominio={condominio}
             conta={[conta, setConta]}
             completed={[formCompleted, setFormCompleted]}
           />
@@ -91,12 +112,11 @@ export default function DraggableDialog(props) {
           <Button onClick={handleClose} variant="outlined" color="secondary">
             Cancelar
           </Button>
-          {"" === "" && (
+          {conta.id !== "" && (
             <Button
               onClick={handleDelete}
               variant="contained"
               color="secondary"
-              disabled={true === ""}
             >
               <DeleteOutlined />
               Excluir
@@ -109,7 +129,7 @@ export default function DraggableDialog(props) {
             disabled={!formCompleted}
           >
             <CreateOutlined />
-            Registrar
+            {conta.id === "" ? "Registrar" : "Editar"}
           </Button>
         </DialogActions>
       </Dialog>

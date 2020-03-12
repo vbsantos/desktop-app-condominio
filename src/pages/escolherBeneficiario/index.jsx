@@ -2,7 +2,13 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 // MATERIAL UI COMPONENTS
-import { FormControl, NativeSelect, Button } from "@material-ui/core";
+import {
+  FormControl,
+  InputLabel,
+  NativeSelect,
+  ButtonGroup,
+  Button
+} from "@material-ui/core";
 
 // CSS
 import "./style.css";
@@ -184,10 +190,15 @@ export default function EscolherBeneficiario(props) {
           open={[dialogDelete, setDialogDelete]}
         />
       )}
-      <h1 className="PageTitle">Selecione o Beneficiário</h1>
-      <div className="DropdownInput">
+      <h1 className="PageTitle">Gerenciador de Condomínios</h1>
+      <div className="UserInputs">
         <FormControl>
-          <NativeSelect onChange={e => beneficiarioSelected(e.target.value)}>
+          <InputLabel htmlFor="administrator">Administrador</InputLabel>
+          <NativeSelect
+            id="administrator"
+            className="Selector"
+            onChange={e => beneficiarioSelected(e.target.value)}
+          >
             <option key={-1} value={-1}>
               {""}
             </option>
@@ -197,21 +208,23 @@ export default function EscolherBeneficiario(props) {
               </option>
             ))}
           </NativeSelect>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => setDialogRegisterForm(true)}
-          >
-            Cadastrar
-          </Button>
-          <Button
-            variant="contained"
-            color="primary"
-            disabled={selected.id === -1}
-            onClick={() => setDialogEditForm(true)}
-          >
-            Editar
-          </Button>
+          <ButtonGroup className="Buttons">
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => setDialogRegisterForm(true)}
+            >
+              Cadastrar
+            </Button>
+            <Button
+              variant="contained"
+              color="secondary"
+              disabled={selected.id === -1}
+              onClick={() => setDialogEditForm(true)}
+            >
+              Editar
+            </Button>
+          </ButtonGroup>
         </FormControl>
       </div>
     </div>

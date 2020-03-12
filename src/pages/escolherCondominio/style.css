@@ -1,3 +1,22 @@
+.MuiExpansionPanel-root:before {
+  background-color: rgba(0, 0, 0, 0) !important;
+}
+
+li:nth-child(odd) {
+  background-color: #eee;
+  border-radius: 5px;
+}
+
+.MuiIconButton-edgeEnd {
+  margin-right: -22px;
+}
+
+.MuiExpansionPanelSummary-expandIcon.Mui-expanded {
+  transform: rotate(135deg) !important;
+  font-size: 200% !important;
+  margin-right: -25px;
+}
+
 .MuiExpansionPanelSummary-content {
   display: inline-flex !important;
   justify-content: space-between !important;
@@ -9,9 +28,12 @@
 
 .leftCondominioItens h3,
 h4 {
-  /* width: 75vw; */
   text-align: left;
   padding: 0px 5px 0px 20px;
+}
+
+.MuiList-root.MuiList-dense.MuiList-padding {
+  padding: 0;
 }
 
 .MuiList-root {
@@ -22,35 +44,49 @@ h4 {
   margin-right: 30px;
 }
 
-.MuiList-root .MuiSvgIcon-root {
-  color: gray;
+.rightCondominioItens {
+  display: inline-flex;
+  justify-content: space-between;
 }
 
-.MuiSvgIcon-root.DeleteIcon:hover {
-  color: rgb(200, 25, 50);
+.rightCondominioItens p {
+  padding: 1px 5px 1px 5px;
+  margin: 0px 10px 0px 10px;
   cursor: pointer;
+  display: inline-flex;
+  justify-content: space-between;
+  font-size: 17px;
 }
 
-.MuiSvgIcon-root.EditIcon:hover {
-  color: rgb(25, 50, 200);
-  cursor: pointer;
+.MuiListItemSecondaryAction-root {
+  padding-top: 2px;
+}
+
+.rightCondominioItens *.EditIcon:hover {
+  color: #3f51b5;
+  border: 1px solid #3f51b5;
+  border-radius: 4px;
+  padding: 0 4px 0 4px;
+}
+
+.rightCondominioItens *.DeleteIcon:hover {
+  color: #f50057;
+  border: 1px solid #f50057;
+  border-radius: 4px;
+  padding: 0 4px 0 4px;
 }
 
 #PaganteRegisterLink {
   cursor: pointer;
   background-color: #e0e0e0;
-  border-radius: 10px;
-  margin-top: 10px;
+  border-radius: 5px;
+  margin-top: 25px;
 }
 
 #CondominioRegisterLink {
   background-color: #e0e0e0;
-  border-radius: 10px;
-  margin-top: 10px;
-}
-
-#CondominioRegisterLink * {
-  border: hidden !important;
+  border-radius: 5px;
+  margin-top: 25px;
 }
 
 #PaganteRegisterLink:hover {

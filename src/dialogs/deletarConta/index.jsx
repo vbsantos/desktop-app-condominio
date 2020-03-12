@@ -30,7 +30,7 @@ function PaperComponent(props) {
 
 export default function DraggableDialog(props) {
   const [dialog, setDialog] = props.open;
-  const { pagante } = props;
+  const { conta } = props;
 
   // function that runs when the dialog is suposed to close
   function handleClose() {
@@ -39,18 +39,18 @@ export default function DraggableDialog(props) {
 
   // function that runs when you click the right button
   async function handleRightButton() {
-    const response = await window.ipcRenderer.invoke("pagantes", {
+    const response = await window.ipcRenderer.invoke("despesas", {
       method: "delete",
-      content: { id: pagante.id }
+      content: { id: conta.id }
     });
     response === 1
-      ? console.warn(`Pagante [id=${pagante.id}] excluido`)
-      : console.warn(`Falha ao excluir pagante [id=${pagante.id}]`);
+      ? console.warn(`Conta [${conta.id}] removida`)
+      : console.warn(`Falha ao remover conta [${conta.id}]`);
     setDialog(false);
   }
 
   return (
-    <div id="dialogDeletarPagante">
+    <div id="dialogDeletarConta">
       <Dialog
         open={dialog}
         onClose={handleClose}
@@ -62,11 +62,10 @@ export default function DraggableDialog(props) {
           id="draggable-dialog-title"
           color="inherit"
         >
-          Tem certeza que deseja excluir <strong>{pagante.nome}</strong>?
+          Tem certeza que deseja remover a despesa <strong>{conta.nome}</strong>
+          ?
         </DialogTitle>
-        <DialogContent>
-          {`A exclusão desse morador acarretará na exclusão de todos os boletos dele e não poderá ser desfeita.`}
-        </DialogContent>
+        <DialogContent>Essa ação não poderá ser desfeita.</DialogContent>
         <DialogActions>
           <Button
             autoFocus

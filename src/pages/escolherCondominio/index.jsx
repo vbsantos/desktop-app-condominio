@@ -110,70 +110,18 @@ export default function EscolherCondominio(props) {
     return () => console.log("EscolherCondominio - Encerrou");
   }, []);
 
-  // This function runs only when the confirm delete Condominio dialog is closed
-  useEffect(() => {
-    if (!dialogDeleteCondominio) {
-      // Started as a bug, now it is a feature
-      setSelectedCondominio({ id: -1 });
-      setExpanded(false);
-    }
-  }, [dialogDeleteCondominio]);
-
-  // This function runs only when the all dialogs are closed
-  useEffect(() => {
-    const allDialogsClosed = !(
-      dialogRegisterCondominioForm ||
-      dialogDeleteCondominio ||
-      dialogEditCondominioForm ||
-      dialogRegisterPaganteForm ||
-      dialogDeletePagante ||
-      dialogEditPaganteForm
-    );
-    if (allDialogsClosed) {
-      data.beneficiario.id || navigate("/"); //corrects development bug when reloading pages
-      async function getEverything() {
-        console.time("getEverything");
-        const response = await window.ipcRenderer.invoke("beneficiarios", {
-          method: "showNested",
-          content: { id: data.beneficiario.id }
-        });
-        selectedCondominio.id === -1
-          ? setData({
-              ...data,
-              allNestedBeneficiario: response
-            })
-          : setData({
-              ...data,
-              allNestedBeneficiario: response,
-              allNestedCondominio: response["Condominios"].filter(
-                condominio => condominio.id == selectedCondominio.id
-              )[0]
-            });
-        console.timeEnd("getEverything");
-      }
-      getEverything();
-    }
-  }, [
-    dialogRegisterCondominioForm,
-    dialogDeleteCondominio,
-    dialogEditCondominioForm,
-    dialogRegisterPaganteForm,
-    dialogDeletePagante,
-    dialogEditPaganteForm
-  ]);
-
   // This function runs only when there is an interaction with the footbar buttons
   useEffect(() => {
     switch (footbar.action) {
       case 0:
-        console.log("Login - Botão da esquerda");
+        console.log("EscolherCondominio - Botão da esquerda");
         setFootbar({ ...footbar, action: -1 });
         navigate("/");
         break;
       case 2:
-        console.log("Login - Botão da direita");
+        console.log("EscolherCondominio - Botão da direita");
         setFootbar({ ...footbar, action: -1 });
-        navigate("/"); // vai pra tela de rateamento de contas
+        navigate("/RegistrarContas"); // vai pra tela de rateamento de contas
         break;
     }
   }, [footbar.action]);
@@ -209,13 +157,65 @@ export default function EscolherCondominio(props) {
     });
   }, [selectedCondominio.id]);
 
+  // This function runs only when the confirm delete Condominio dialog is closed
+  useEffect(() => {
+    if (!dialogDeleteCondominio) {
+      // Started as a bug, now it is a feature
+      setSelectedCondominio({ id: -1 });
+      setExpanded(false);
+    }
+  }, [dialogDeleteCondominio]);
+
+  // This function runs only when the all dialogs are closed
+  useEffect(() => {
+    data.beneficiario.id || navigate("/"); //corrects development bug when reloading pages
+    const allDialogsClosed = !(
+      dialogRegisterCondominioForm ||
+      dialogDeleteCondominio ||
+      dialogEditCondominioForm ||
+      dialogRegisterPaganteForm ||
+      dialogDeletePagante ||
+      dialogEditPaganteForm
+    );
+    if (allDialogsClosed) {
+      async function getEverything() {
+        console.time("getEverything");
+        const response = await window.ipcRenderer.invoke("beneficiarios", {
+          method: "showNested",
+          content: { id: data.beneficiario.id }
+        });
+        selectedCondominio.id === -1
+          ? setData({
+              ...data,
+              allNestedBeneficiario: response
+            })
+          : setData({
+              ...data,
+              allNestedBeneficiario: response,
+              allNestedCondominio: response["Condominios"].filter(
+                condominio => condominio.id == selectedCondominio.id
+              )[0]
+            });
+        console.timeEnd("getEverything");
+      }
+      getEverything();
+    }
+  }, [
+    dialogRegisterCondominioForm,
+    dialogDeleteCondominio,
+    dialogEditCondominioForm,
+    dialogRegisterPaganteForm,
+    dialogDeletePagante,
+    dialogEditPaganteForm
+  ]);
+
   const handleCondominioClick = panel => (event, isExpanded) => {
     if (isExpanded) {
       setSelectedCondominio({ id: panel });
       setExpanded(panel);
       const allNestedCondominio = data.allNestedBeneficiario[
         "Condominios"
-      ].filter(condominio => condominio.id == panel)[0];
+      ].filter(condominio => condominio.id === panel)[0];
       setData({ ...data, allNestedCondominio });
     } else {
       setSelectedCondominio({ id: -1 });
@@ -322,7 +322,7 @@ export default function EscolherCondominio(props) {
         {typeof data.allNestedBeneficiario["Condominios"] !== "undefined" &&
           data.allNestedBeneficiario["Condominios"].map(condominio => (
             <ExpansionPanel
-              elevation={condominio.id === selectedCondominio.id ? 10 : 1}
+              elevation={condominio.id === selectedCondominio.id ? 10 : 3}
               key={condominio.id}
               expanded={expanded === condominio.id}
               onChange={handleCondominioClick(condominio.id)}
@@ -334,20 +334,20 @@ export default function EscolherCondominio(props) {
                 </div>
                 {condominio.id === selectedCondominio.id && (
                   <div className="rightCondominioItens">
-                    <Create
-                      className="EditIcon"
-                      onClick={handleCondominioEdit}
-                    />
-                    <Delete
-                      className="DeleteIcon"
-                      onClick={handleCondominioDelete}
-                    />
+                    <p className="EditIcon" onClick={handleCondominioEdit}>
+                      <Create />
+                      Editar
+                    </p>
+                    <p className="DeleteIcon" onClick={handleCondominioDelete}>
+                      <Delete />
+                      Deletar
+                    </p>
                   </div>
                 )}
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
                 {/* TODOS OS PAGANTES */}
-                <List>
+                <List dense>
                   {/* CADA PAGANTE */}
                   {condominio["Pagantes"].map(pagante => (
                     <ListItem key={pagante.id}>
@@ -359,14 +359,22 @@ export default function EscolherCondominio(props) {
                         {" " + pagante.nome}
                       </p>
                       <ListItemSecondaryAction>
-                        <Create
-                          className="EditIcon"
-                          onClick={() => handlePaganteEdit(pagante.id)}
-                        />
-                        <Delete
-                          className="DeleteIcon"
-                          onClick={() => handlePaganteDelete(pagante.id)}
-                        />
+                        <div className="rightCondominioItens">
+                          <p
+                            className="EditIcon"
+                            onClick={() => handlePaganteEdit(pagante.id)}
+                          >
+                            <Create />
+                            Editar
+                          </p>
+                          <p
+                            className="DeleteIcon"
+                            onClick={() => handlePaganteDelete(pagante.id)}
+                          >
+                            <Delete />
+                            Deletar
+                          </p>
+                        </div>
                       </ListItemSecondaryAction>
                     </ListItem>
                   ))}

@@ -117,8 +117,6 @@ export default function DraggableDialog(props) {
               onClick={handleDelete}
               variant="contained"
               color="secondary"
-              display="false"
-              disabled={beneficiario.id === ""}
             >
               <DeleteOutlined />
               Excluir

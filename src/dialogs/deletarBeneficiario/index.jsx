@@ -62,7 +62,7 @@ export default function DraggableDialog(props) {
           id="draggable-dialog-title"
           color="inherit"
         >
-          Tem certeza que deseja excluir {beneficiario.nome}?
+          Tem certeza que deseja excluir <strong>{beneficiario.nome}</strong>?
         </DialogTitle>
         <DialogContent>
           {`A exclusão desse administrador acarretará na exclusão de todos os condomínios cadastrados por ele e não poderá ser desfeita.`}

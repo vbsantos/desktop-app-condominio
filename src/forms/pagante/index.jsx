@@ -29,7 +29,7 @@ export default function FormPagante(props) {
       cprf: formList[1].value,
       email: formList[2].value,
       complemento: formList[3].value,
-      fracao: formList[4].value,
+      fracao: formList[4].value.replace(",", "."),
       condominioId: condominio.id
     });
     setFormCompleted(formList.filter(f => f.value === "")[0] === undefined);
@@ -50,8 +50,8 @@ export default function FormPagante(props) {
           <Input defaultValue={pagante.cprf} id="cprf"></Input>
         </FormControl>
         <FormControl>
-          <InputLabel htmlFor="cep">Email</InputLabel>
-          <Input defaultValue={pagante.email} type="email" id="cep"></Input>
+          <InputLabel htmlFor="email">Email</InputLabel>
+          <Input defaultValue={pagante.email} type="email" id="email"></Input>
         </FormControl>
       </section>
       <section>
@@ -59,12 +59,12 @@ export default function FormPagante(props) {
           Informações Relativas ao condomínio
         </DialogContentText>
         <FormControl>
-          <InputLabel htmlFor="tokenAcesso">Número do apartamento</InputLabel>
-          <Input defaultValue={pagante.complemento} id="tokenAcesso"></Input>
+          <InputLabel htmlFor="complemento">Número do apartamento</InputLabel>
+          <Input defaultValue={pagante.complemento} id="complemento"></Input>
         </FormControl>
         <FormControl>
-          <InputLabel htmlFor="tokenConta">Fração</InputLabel>
-          <Input defaultValue={pagante.fracao} id="tokenConta"></Input>
+          <InputLabel htmlFor="fracao">Fração</InputLabel>
+          <Input defaultValue={pagante.fracao} id="fracao"></Input>
         </FormControl>
       </section>
     </form>

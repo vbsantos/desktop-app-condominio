@@ -14,8 +14,16 @@
 
 #MainContainer {
   height: calc(100vh - 45px);
-  overflow: auto;
-  background-color: #f0f0f0;
+  /* min-width: 150vw;
+  max-width: 150vw;*/
+  overflow-y: auto;
+  overflow-x: auto;
+  background: rgb(219, 231, 250);
+  background: linear-gradient(
+    0deg,
+    rgba(219, 231, 250, 1) 0%,
+    rgba(255, 255, 255, 1) 100%
+  );
   padding: 0 0 20px 0;
 }
 
@@ -30,6 +38,6 @@
   transform: translate(-50%, -50%);
 }
 
-* .PageTitle {
-  padding: 3%;
+.PageTitle {
+  padding: 2%;
 }
