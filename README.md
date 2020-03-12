@@ -25,10 +25,16 @@ Condominio:
 yarn sequelize model:generate --name Condominio --attributes nome:string,cep:string,uf:string,localidade:string,bairro:string,logradouro:string,numero:string,beneficiarioId:integer
 ```
 
-Conta:
+Despesa:
 
 ```bash
 yarn sequelize model:generate --name Conta --attributes nome:string,valor:string,rateioAutomatico:boolean,permanente:boolean,condominioId:integer
+```
+
+Valor:
+
+```bash
+yarn sequelize model:generate --name Valor --attributes valor:string,despesaId:integer,paganteId:integer
 ```
 
 Pagante:
@@ -47,6 +53,8 @@ yarn sequelize model:generate --name Boleto --attributes emissao:string,vencimen
 
 - Beneficiarios (**1-N**) Condominios
 - Condominios (**1-N**) Pagantes
+- Condominios (**1-N**) Despesas
+- Despesas (**1-N**) Valors
 - Pagantes (**1-N**) Boletos
 
 ## Controllers
@@ -54,7 +62,9 @@ yarn sequelize model:generate --name Boleto --attributes emissao:string,vencimen
 - Beneficiario
 - Condominio
 - Pagante
+- Despesa
 - Boleto
+- Valor \*
 - API \*
 - Email \*
 
@@ -62,8 +72,11 @@ yarn sequelize model:generate --name Boleto --attributes emissao:string,vencimen
 
 ## Pages/Screens
 
-- Escolher Administrador/Beneficiário
-- Registrar Novo Administrador/Beneficiário \*
-- Escolher Condomínio \*
+- Visualizar/Registrar/Editar Administrador/Beneficiário
+- Visualizar/Registrar/Editar Condomínio
+- Visualizar/Registrar/Editar Despesas
+- Confirmar Relatório Geral \*
+- Confirmar Relatório Individual \*
+- Gerar Boletos \*
 
 \* Por fazer

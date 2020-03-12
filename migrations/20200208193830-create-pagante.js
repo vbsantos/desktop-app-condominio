@@ -32,7 +32,6 @@ module.exports = {
       condominioId: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        onUpdate: "CASCADE",
         onDelete: "CASCADE",
         references: {
           model: "Condominios",

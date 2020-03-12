@@ -92,7 +92,7 @@ ipcMain.handle("condominios", async (event, arg) => {
         break;
       case "indexByBeneficiarioPk":
         console.log("entrada:", arg);
-        status = await Condominio.indexbyBeneficiarioPk(content.id);
+        status = await Condominio.indexByBeneficiarioPk(content.id);
         console.log("saida:", status);
         break;
       case "show":
@@ -206,37 +206,37 @@ ipcMain.handle("boletos", async (event, arg) => {
   }
 });
 
-const contaController = require("../controllers/ContaController.js");
-const Conta = new contaController();
+const despesaController = require("../controllers/DespesaController.js");
+const Despesa = new despesaController();
 
-ipcMain.handle("contas", async (event, arg) => {
+ipcMain.handle("despesas", async (event, arg) => {
   const { method, content } = arg;
   let status;
   try {
     switch (method) {
       case "create":
         console.log("entrada:", arg);
-        status = await Conta.create(content);
+        status = await Despesa.create(content);
         console.log("saida:", status);
         break;
       case "index":
         console.log("entrada:", arg);
-        status = await Conta.index();
+        status = await Despesa.index();
         console.log("saida:", status);
         break;
       case "show":
         console.log("entrada:", arg);
-        status = await Conta.show(content.id);
+        status = await Despesa.show(content.id);
         console.log("saida:", status);
         break;
       case "update":
         console.log("entrada:", arg);
-        status = await Conta.update(content);
+        status = await Despesa.update(content);
         console.log("saida:", status);
         break;
       case "delete":
         console.log("entrada:", arg);
-        status = await Conta.delete(content.id);
+        status = await Despesa.delete(content.id);
         console.log("saida:", status);
         break;
       default:
@@ -248,3 +248,56 @@ ipcMain.handle("contas", async (event, arg) => {
     return { error };
   }
 });
+
+// const valorIndividualController = require("../controllers/ValorIndividualController.js");
+// const ValorIndividual = new valorIndividualController();
+
+// ipcMain.handle("valoresIndividuais", async (event, arg) => {
+//   const { method, content } = arg;
+//   let status;
+//   try {
+//     switch (method) {
+//       case "create":
+//         console.log("entrada:", arg);
+//         status = await ValorIndividual.create(content);
+//         console.log("saida:", status);
+//         break;
+//       case "bulkCreate":
+//         console.log("entrada:", arg);
+//         status = await ValorIndividual.bulkCreate(content);
+//         console.log("saida:", status);
+//         break;
+//       case "index":
+//         console.log("entrada:", arg);
+//         status = await ValorIndividual.index();
+//         console.log("saida:", status);
+//         break;
+//       case "indexByContaPk":
+//         console.log("entrada:", arg);
+//         status = await ValorIndividual.indexByContaPk(content.id);
+//         console.log("saida:", status);
+//         break;
+//       case "show":
+//         console.log("entrada:", arg);
+//         status = await ValorIndividual.show(content.id);
+//         console.log("saida:", status);
+//         break;
+//       case "update":
+//         console.log("entrada:", arg);
+//         status = await ValorIndividual.update(content);
+//         console.log("saida:", status);
+//         break;
+//       case "delete":
+//         console.log("entrada:", arg);
+//         status = await ValorIndividual.delete(content.id);
+//         console.log("saida:", status);
+//         break;
+//       default:
+//         console.log({ error: "This method do not exist." });
+//     }
+//     return status;
+//   } catch (error) {
+//     console.log("Erro no ipcEvents:", error);
+//     return { error };
+//   }
+// });

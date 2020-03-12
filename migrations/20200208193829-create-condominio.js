@@ -41,7 +41,6 @@ module.exports = {
       beneficiarioId: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        onUpdate: "CASCADE",
         onDelete: "CASCADE",
         references: {
           model: "Beneficiarios",

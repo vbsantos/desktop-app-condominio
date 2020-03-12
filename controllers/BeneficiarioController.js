@@ -32,12 +32,16 @@ class BeneficiarioController {
     });
     let Boletos = [];
     let Pagantes = [];
-    let Conta = [];
+    let Despesa = [];
+    // let ValorIndividual = [];
     let Condominios = [];
     beneficiario.Condominios.forEach(condominio => {
-      condominio.Conta.forEach(conta => {
-        const temp3 = conta.get();
-        Conta.push(temp3);
+      condominio.Despesas.forEach(despesa => {
+        // conta.ValorIndividuals.forEach(valorIndividual => {
+        //   ValorIndividual.push(valorIndividual.get());
+        // });
+        const temp3 = despesa.get();
+        Despesa.push(temp3);
       });
       condominio.Pagantes.forEach(pagante => {
         pagante.Boletos.forEach(boleto => {
@@ -49,10 +53,14 @@ class BeneficiarioController {
         Boletos = [];
       });
       const temp2 = condominio.get();
-      delete temp2.Conta;
+      // delete temp2.Conta;
       // Sort pra colocar "contas" por ordem de criação (id)
-      temp2.Contas = Conta.sort((a, b) => (a.id > b.id ? 1 : -1));
-      Conta = [];
+      temp2.Despesas = Despesa.sort((a, b) => (a.id > b.id ? 1 : -1));
+      Despesa = [];
+      // Valores individuais
+      // delete temp2.Contas.ValorIndividual;
+      // temp2.Contas.ValoresIndividuais = ValorIndividual;
+      // ValorIndividual = [];
       // Sort pra colocar "pagantes" por ordem de complemento (número do apartamento)
       temp2.Pagantes = Pagantes.sort((a, b) =>
         a.complemento > b.complemento ? 1 : -1

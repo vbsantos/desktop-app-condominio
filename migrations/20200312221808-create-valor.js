@@ -1,39 +1,29 @@
 "use strict";
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable("Boletos", {
+    return queryInterface.createTable("Valors", {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      emissao: {
-        type: Sequelize.STRING
-      },
-      vencimento: {
-        type: Sequelize.STRING
-      },
-      documento: {
-        type: Sequelize.STRING
-      },
-      numero: {
-        type: Sequelize.STRING
-      },
-      titulo: {
-        type: Sequelize.STRING
-      },
       valor: {
+        allowNull: false,
         type: Sequelize.STRING
       },
-      paganteId: {
-        type: Sequelize.INTEGER,
+      despesaId: {
         allowNull: false,
+        type: Sequelize.INTEGER,
         onDelete: "CASCADE",
         references: {
-          model: "Pagantes",
+          model: "Despesas",
           key: "id"
         }
+      },
+      paganteId: {
+        allowNull: false,
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,
@@ -46,6 +36,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable("Boletos");
+    return queryInterface.dropTable("Valors");
   }
 };

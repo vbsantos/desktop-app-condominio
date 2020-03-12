@@ -17,10 +17,9 @@ module.exports = (sequelize, DataTypes) => {
   Condominio.associate = function(models) {
     // associations can be defined here
     Condominio.hasMany(models.Pagante);
-    Condominio.hasMany(models.Conta);
+    Condominio.hasMany(models.Despesa);
     Condominio.belongsTo(models.Beneficiario, {
-      foreignKey: "beneficiarioId",
-      as: "Administrador"
+      foreignKey: "beneficiarioId"
     });
   };
   return Condominio;
