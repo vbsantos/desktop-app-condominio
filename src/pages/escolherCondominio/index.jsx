@@ -121,7 +121,7 @@ export default function EscolherCondominio(props) {
       case 2:
         console.log("EscolherCondominio - Botão da direita");
         setFootbar({ ...footbar, action: -1 });
-        navigate("/RegistrarContas"); // vai pra tela de rateamento de contas
+        navigate("/RegistrarDespesas"); // vai pra tela de rateamento de contas
         break;
     }
   }, [footbar.action]);

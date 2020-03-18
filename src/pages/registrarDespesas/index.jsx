@@ -1,48 +1,49 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-// MATERIAL UI COMPONENTS
-import { Button } from "@material-ui/core";
-
-// MATERIAL UI ICONS
-import { PlusOne } from "@material-ui/icons";
-
 // CSS
 import "./style.css";
 
 // DIALOGS
-import DialogConta from "../../dialogs/conta";
-import DialogExcluirConta from "../../dialogs/deletarConta";
+import DialogDespesa from "../../dialogs/despesa";
+import DialogExcluirDespesa from "../../dialogs/deletarDespesa";
 
 // REPORTS
 import RelatorioCondominio from "../../reports/relatorioCondominio";
 
-export default function RegistrarContas(props) {
+export default function RegistrarDespesas(props) {
   const [footbar, setFootbar] = props.buttons;
   const [data, setData] = props.data;
 
   // React Router Hook for navigation between pages
   const navigate = useNavigate();
 
-  // Store the Contas by Categoria
+  // Store the Despesas by Categoria
   const [categorias, setCategorias] = useState([]);
 
   // Store the total value
   const [total, setTotal] = useState(0);
 
-  // ID of the selected Conta
-  const [selectedConta, setSelectedConta] = useState({ id: -1 });
+  // ID of the selected Despesa
+  const [selectedDespesa, setSelectedDespesa] = useState({ id: -1 });
 
   // Boolean for Edit Dialog
-  const [dialogEditContaForm, setDialogEditContaForm] = useState(false);
+  const [dialogEditDespesaForm, setDialogEditDespesaForm] = useState(false);
 
   // Boolean for Register Dialog
-  const [dialogRegisterContaForm, setDialogRegisterContaForm] = useState(false);
+  const [dialogRegisterDespesaForm, setDialogRegisterDespesaForm] = useState(
+    false
+  );
 
   // Boolean for Delete Dialog
-  const [dialogDeleteConta, setDialogDeleteConta] = useState(false);
+  const [dialogDeleteDespesa, setDialogDeleteDespesa] = useState(false);
 
-  console.log("Entrou em RegistrarContas\nFootbar:", footbar, "\nData:", data);
+  console.log(
+    "Entrou em RegistrarDespesas\nFootbar:",
+    footbar,
+    "\nData:",
+    data
+  );
 
   // This function runs only when the component is monted
   useEffect(() => {
@@ -72,26 +73,26 @@ export default function RegistrarContas(props) {
       ],
       action: -1
     });
-    return () => console.log("RegistrarContas - Encerrou");
+    return () => console.log("RegistrarDespesas - Encerrou");
   }, []);
 
   // This function runs only when there is an interaction with the footbar buttons
   useEffect(() => {
     switch (footbar.action) {
       case 0:
-        console.log("RegistrarContas - Botão da esquerda");
+        console.log("RegistrarDespesas - Botão da esquerda");
         setFootbar({ ...footbar, action: -1 });
         navigate("/EscolherCondominio");
         break;
       case 1:
-        console.log("RegistrarContas - Botão do Centro");
+        console.log("RegistrarDespesas - Botão do Centro");
         setFootbar({ ...footbar, action: -1 });
-        setDialogRegisterContaForm(true);
+        setDialogRegisterDespesaForm(true);
         break;
       case 2:
-        console.log("RegistrarContas - Botão da direita");
+        console.log("RegistrarDespesas - Botão da direita");
         setFootbar({ ...footbar, action: -1 });
-        navigate("/"); // vai pra tela de rateamento de contas
+        navigate("/"); // vai pra tela de rateamento de despesas
         break;
     }
   }, [footbar.action]);
@@ -100,9 +101,9 @@ export default function RegistrarContas(props) {
   useEffect(() => {
     data.beneficiario.id || navigate("/");
     const allDialogsClosed = !(
-      dialogRegisterContaForm ||
-      dialogDeleteConta ||
-      dialogEditContaForm
+      dialogRegisterDespesaForm ||
+      dialogDeleteDespesa ||
+      dialogEditDespesaForm
     );
     if (allDialogsClosed) {
       async function getEverything() {
@@ -126,50 +127,50 @@ export default function RegistrarContas(props) {
       }
       getEverything();
     }
-  }, [dialogRegisterContaForm, dialogDeleteConta, dialogEditContaForm]);
+  }, [dialogRegisterDespesaForm, dialogDeleteDespesa, dialogEditDespesaForm]);
 
-  // This function runs only when something change in Contas
+  // This function runs only when something change in Despesas
   useEffect(() => {
     const allCategorias = data.allNestedCondominio["Despesas"].map(
-      conta => conta.categoria
+      despesa => despesa.categoria
     );
     setCategorias(
       allCategorias.filter((a, b) => allCategorias.indexOf(a) === b)
     );
     setTotal(
-      data.allNestedCondominio["Despesas"].reduce((acc, conta) => {
-        return acc + Number(conta.valor);
+      data.allNestedCondominio["Despesas"].reduce((acc, despesa) => {
+        return acc + Number(despesa.valor);
       }, 0)
     );
   }, [data.allNestedCondominio["Despesas"]]);
 
   return (
     <>
-      {dialogRegisterContaForm && (
-        <DialogConta
-          open={[dialogRegisterContaForm, setDialogRegisterContaForm]}
-          delete={[dialogDeleteConta, setDialogDeleteConta]}
+      {dialogRegisterDespesaForm && (
+        <DialogDespesa
+          open={[dialogRegisterDespesaForm, setDialogRegisterDespesaForm]}
+          delete={[dialogDeleteDespesa, setDialogDeleteDespesa]}
           condominio={data.allNestedCondominio}
         />
       )}
-      {dialogEditContaForm && (
-        <DialogConta
-          open={[dialogEditContaForm, setDialogEditContaForm]}
-          delete={[dialogDeleteConta, setDialogDeleteConta]}
+      {dialogEditDespesaForm && (
+        <DialogDespesa
+          open={[dialogEditDespesaForm, setDialogEditDespesaForm]}
+          delete={[dialogDeleteDespesa, setDialogDeleteDespesa]}
           condominio={data.allNestedCondominio}
-          conta={
+          despesa={
             data.allNestedCondominio["Despesas"].filter(
-              conta => conta.id === selectedConta.id
+              despesa => despesa.id === selectedDespesa.id
             )[0]
           }
         />
       )}
-      {dialogDeleteConta && (
-        <DialogExcluirConta
-          open={[dialogDeleteConta, setDialogDeleteConta]}
-          conta={
+      {dialogDeleteDespesa && (
+        <DialogExcluirDespesa
+          open={[dialogDeleteDespesa, setDialogDeleteDespesa]}
+          despesa={
             data.allNestedCondominio["Despesas"].filter(
-              conta => conta.id === selectedConta.id
+              despesa => despesa.id === selectedDespesa.id
             )[0]
           }
         />
@@ -177,9 +178,9 @@ export default function RegistrarContas(props) {
       <h1 className="PageTitle">Registro de Despesas</h1>
       <RelatorioCondominio
         pdf={false}
-        contas={data.allNestedCondominio["Despesas"]}
-        setSelected={setSelectedConta}
-        editDialog={[dialogEditContaForm, setDialogEditContaForm]}
+        despesas={data.allNestedCondominio["Despesas"]}
+        setSelected={setSelectedDespesa}
+        editDialog={[dialogEditDespesaForm, setDialogEditDespesaForm]}
         categorias={[categorias, setCategorias]}
         valorTotal={[total, setTotal]}
       />

@@ -4,7 +4,7 @@ import { Routes, Route } from "react-router-dom";
 // PAGES
 import EscolherBeneficiario from "./pages/escolherBeneficiario";
 import EscolherCondominio from "./pages/escolherCondominio";
-import RegistrarContas from "./pages/registrarContas";
+import RegistrarDespesas from "./pages/registrarDespesas";
 
 // COMPONENTS
 import Footbar from "./components/footbar";
@@ -68,9 +68,9 @@ export default function MainRoutes(props) {
             }
           />
           <Route
-            path="/RegistrarContas"
+            path="/RegistrarDespesas"
             element={
-              <RegistrarContas
+              <RegistrarDespesas
                 buttons={[footbarButtons, setFootbarButtons]}
                 data={[data, setData]}
               />

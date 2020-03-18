@@ -12,7 +12,7 @@ import {
 } from "@material-ui/core";
 
 // FORM COMPONENTS
-import FormConta from "../../forms/conta";
+import FormDespesa from "../../forms/despesa";
 
 // CSS
 import "./style.css";
@@ -36,11 +36,12 @@ export default function DraggableDialog(props) {
   const [dialog, setDialog] = props.open;
   const [dialogDelete, setDialogDelete] = props.delete;
 
-  // conta must belong to a condominio
+  // despesa must belong to a condominio
   const { condominio } = props;
 
-  const [conta, setConta] = useState(
-    props.conta || {
+  // Opens or Create a Despesa
+  const [despesa, setDespesa] = useState(
+    props.despesa || {
       id: "",
       nome: "",
       categoria: "",
@@ -49,9 +50,16 @@ export default function DraggableDialog(props) {
       numParcelas: "",
       rateioAutomatico: true,
       permanente: true,
-      condominioId: condominio.id
+      aguaIndividual: false,
+      condominioId: condominio.id,
+      Valores: []
     }
   );
+
+  const [valores, setValores] = useState(
+    props.despesa ? props.despesa["Valores"] : []
+  );
+  console.log("VALORES1:", valores);
 
   // true when all the fields of the form are filled
   const [formCompleted, setFormCompleted] = useState(false);
@@ -69,25 +77,56 @@ export default function DraggableDialog(props) {
 
   // function that runs when you click the right button
   async function handleRightButton() {
-    if (conta.id === "") {
+    if (despesa.id === "") {
       const response = await window.ipcRenderer.invoke("despesas", {
         method: "create",
-        content: conta
+        content: despesa
       });
-      console.log("Conta Cadastrada:", response);
+      console.log("CREATE NEO VALORES:", valores);
+      const neoValores = valores.map(valor => {
+        return {
+          despesaId: response.id,
+          paganteId: valor.paganteId,
+          valor: valor.valor
+        };
+      });
+
+      if (valores.length > 0) {
+        await window.ipcRenderer.invoke("valores", {
+          method: "bulkCreate",
+          content: neoValores
+        });
+      }
+      console.log("Despesa Cadastrada:", response);
     } else {
+      console.log("EDIT NEO VALORES:", valores);
       const response = await window.ipcRenderer.invoke("despesas", {
         method: "update",
-        content: conta
+        content: despesa
       });
-      console.log("Conta Editada:", response);
+      if (valores.length > 0) {
+        if (valores[0].id !== "") {
+          console.log("JUST AN UPDATE:", valores);
+          await window.ipcRenderer.invoke("valores", {
+            method: "bulkUpdate",
+            content: valores
+          });
+        } else {
+          console.log("IT IS A CREATION:", valores);
+          await window.ipcRenderer.invoke("valores", {
+            method: "bulkCreate",
+            content: valores
+          });
+        }
+      }
+      console.log("Despesa Editada:", response);
     }
 
     setDialog(false);
   }
 
   return (
-    <div id="dialogRegistrarConta">
+    <div id="dialogRegistrarDespesas">
       <Dialog
         open={dialog}
         onClose={handleClose}
@@ -99,12 +138,13 @@ export default function DraggableDialog(props) {
           id="draggable-dialog-title"
           color="inherit"
         >
-          {conta.id === "" ? "Cadastrar Nova Despesa" : "Editar Despesa"}
+          {despesa.id === "" ? "Cadastrar Nova Despesa" : "Editar Despesa"}
         </DialogTitle>
         <DialogContent>
-          <FormConta
+          <FormDespesa
             condominio={condominio}
-            conta={[conta, setConta]}
+            despesa={[despesa, setDespesa]}
+            valores={[valores, setValores]}
             completed={[formCompleted, setFormCompleted]}
           />
         </DialogContent>
@@ -112,7 +152,7 @@ export default function DraggableDialog(props) {
           <Button onClick={handleClose} variant="outlined" color="secondary">
             Cancelar
           </Button>
-          {conta.id !== "" && (
+          {despesa.id !== "" && (
             <Button
               onClick={handleDelete}
               variant="contained"
@@ -129,7 +169,7 @@ export default function DraggableDialog(props) {
             disabled={!formCompleted}
           >
             <CreateOutlined />
-            {conta.id === "" ? "Registrar" : "Editar"}
+            {despesa.id === "" ? "Registrar" : "Editar"}
           </Button>
         </DialogActions>
       </Dialog>

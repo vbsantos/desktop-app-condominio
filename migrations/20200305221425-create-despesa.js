@@ -35,6 +35,10 @@ module.exports = {
         allowNull: false,
         type: Sequelize.BOOLEAN
       },
+      aguaIndividual: {
+        allowNull: false,
+        type: Sequelize.BOOLEAN
+      },
       condominioId: {
         type: Sequelize.INTEGER,
         allowNull: false,

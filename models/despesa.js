@@ -10,6 +10,7 @@ module.exports = (sequelize, DataTypes) => {
       numParcelas: DataTypes.STRING,
       rateioAutomatico: DataTypes.BOOLEAN,
       permanente: DataTypes.BOOLEAN,
+      aguaIndividual: DataTypes.BOOLEAN,
       condominioId: DataTypes.INTEGER
     },
     {}

@@ -30,6 +30,7 @@ export default function FormPagante(props) {
       email: formList[2].value,
       complemento: formList[3].value,
       fracao: formList[4].value.replace(",", "."),
+      leituraAgua: formList[5].value.replace(",", "."),
       condominioId: condominio.id
     });
     setFormCompleted(formList.filter(f => f.value === "")[0] === undefined);
@@ -65,6 +66,10 @@ export default function FormPagante(props) {
         <FormControl>
           <InputLabel htmlFor="fracao">Fração</InputLabel>
           <Input defaultValue={pagante.fracao} id="fracao"></Input>
+        </FormControl>
+        <FormControl>
+          <InputLabel htmlFor="leituraAgua">Leitura da Água</InputLabel>
+          <Input defaultValue={pagante.leituraAgua} id="leituraAgua"></Input>
         </FormControl>
       </section>
     </form>

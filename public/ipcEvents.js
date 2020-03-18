@@ -249,55 +249,64 @@ ipcMain.handle("despesas", async (event, arg) => {
   }
 });
 
-// const valorIndividualController = require("../controllers/ValorIndividualController.js");
-// const ValorIndividual = new valorIndividualController();
-
-// ipcMain.handle("valoresIndividuais", async (event, arg) => {
-//   const { method, content } = arg;
-//   let status;
-//   try {
-//     switch (method) {
-//       case "create":
-//         console.log("entrada:", arg);
-//         status = await ValorIndividual.create(content);
-//         console.log("saida:", status);
-//         break;
-//       case "bulkCreate":
-//         console.log("entrada:", arg);
-//         status = await ValorIndividual.bulkCreate(content);
-//         console.log("saida:", status);
-//         break;
-//       case "index":
-//         console.log("entrada:", arg);
-//         status = await ValorIndividual.index();
-//         console.log("saida:", status);
-//         break;
-//       case "indexByContaPk":
-//         console.log("entrada:", arg);
-//         status = await ValorIndividual.indexByContaPk(content.id);
-//         console.log("saida:", status);
-//         break;
-//       case "show":
-//         console.log("entrada:", arg);
-//         status = await ValorIndividual.show(content.id);
-//         console.log("saida:", status);
-//         break;
-//       case "update":
-//         console.log("entrada:", arg);
-//         status = await ValorIndividual.update(content);
-//         console.log("saida:", status);
-//         break;
-//       case "delete":
-//         console.log("entrada:", arg);
-//         status = await ValorIndividual.delete(content.id);
-//         console.log("saida:", status);
-//         break;
-//       default:
-//         console.log({ error: "This method do not exist." });
-//     }
-//     return status;
-//   } catch (error) {
-//     console.log("Erro no ipcEvents:", error);
-//     return { error };
-//   }
-// });
+const valorController = require("../controllers/ValorController.js");
+const Valor = new valorController();
+ipcMain.handle("valores", async (event, arg) => {
+  const { method, content } = arg;
+  let status;
+  try {
+    switch (method) {
+      // case "updateOrCreate":
+      //   console.log("entrada:", arg);
+      //   status = await Valor.updateOrCreate(content);
+      //   console.log("saida:", status);
+      //   break;
+      case "create":
+        console.log("entrada:", arg);
+        status = await Valor.create(content);
+        console.log("saida:", status);
+        break;
+      case "bulkCreate":
+        console.log("entrada:", arg);
+        status = await Valor.bulkCreate(content);
+        console.log("saida:", status);
+        break;
+      case "index":
+        console.log("entrada:", arg);
+        status = await Valor.index();
+        console.log("saida:", status);
+        break;
+      case "show":
+        console.log("entrada:", arg);
+        status = await Valor.show(content.id);
+        console.log("saida:", status);
+        break;
+      case "update":
+        console.log("entrada:", arg);
+        status = await Valor.update(content);
+        console.log("saida:", status);
+        break;
+      case "bulkUpdate":
+        console.log("entrada:", arg);
+        status = await Valor.bulkUpdate(content);
+        console.log("saida:", status);
+        break;
+      case "delete":
+        console.log("entrada:", arg);
+        status = await Valor.delete(content.id);
+        console.log("saida:", status);
+        break;
+      case "bulkDelete":
+        console.log("entrada:", arg);
+        status = await Valor.bulkDelete(content.id);
+        console.log("saida:", status);
+        break;
+      default:
+        console.log({ error: "This method do not exist." });
+    }
+    return status;
+  } catch (error) {
+    console.log("Erro no ipcEvents:", error);
+    return { error };
+  }
+});

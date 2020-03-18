@@ -30,7 +30,7 @@ function PaperComponent(props) {
 
 export default function DraggableDialog(props) {
   const [dialog, setDialog] = props.open;
-  const { conta } = props;
+  const { despesa } = props;
 
   // function that runs when the dialog is suposed to close
   function handleClose() {
@@ -41,11 +41,11 @@ export default function DraggableDialog(props) {
   async function handleRightButton() {
     const response = await window.ipcRenderer.invoke("despesas", {
       method: "delete",
-      content: { id: conta.id }
+      content: { id: despesa.id }
     });
     response === 1
-      ? console.warn(`Conta [${conta.id}] removida`)
-      : console.warn(`Falha ao remover conta [${conta.id}]`);
+      ? console.warn(`Despesa [${despesa.id}] removida`)
+      : console.warn(`Falha ao remover Despesa [${despesa.id}]`);
     setDialog(false);
   }
 
@@ -62,8 +62,8 @@ export default function DraggableDialog(props) {
           id="draggable-dialog-title"
           color="inherit"
         >
-          Tem certeza que deseja remover a despesa <strong>{conta.nome}</strong>
-          ?
+          Tem certeza que deseja remover a despesa{" "}
+          <strong>{despesa.nome}</strong>?
         </DialogTitle>
         <DialogContent>Essa ação não poderá ser desfeita.</DialogContent>
         <DialogActions>

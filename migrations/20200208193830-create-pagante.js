@@ -29,6 +29,10 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING
       },
+      leituraAgua: {
+        allowNull: false,
+        type: Sequelize.STRING
+      },
       condominioId: {
         type: Sequelize.INTEGER,
         allowNull: false,

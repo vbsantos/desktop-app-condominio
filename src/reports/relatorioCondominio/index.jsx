@@ -18,7 +18,7 @@ export default function RelatorioCondominio(props) {
   const { pdf } = props;
 
   // All Contas of the Condominio
-  const { contas } = props;
+  const { despesas } = props;
 
   // Function that stores the id of the selected Conta
   const { setSelected } = props;
@@ -42,11 +42,11 @@ export default function RelatorioCondominio(props) {
   return (
     <TableContainer>
       {categorias.map(categoria => {
-        const categoriaContas = contas.filter(
-          conta => conta.categoria === categoria
+        const categoriaContas = despesas.filter(
+          despesa => despesa.categoria === categoria
         );
-        const subtotal = categoriaContas.reduce((acc, conta) => {
-          return acc + Number(conta.valor);
+        const subtotal = categoriaContas.reduce((acc, despesa) => {
+          return acc + Number(despesa.valor);
         }, 0);
         return (
           <Table key={categoria + "table"}>

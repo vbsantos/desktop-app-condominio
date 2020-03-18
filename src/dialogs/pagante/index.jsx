@@ -47,6 +47,7 @@ export default function DraggableDialog(props) {
       complemento: "",
       fracao: "",
       email: "",
+      leituraAgua: "",
       condominioId: condominio.id
     }
   );
