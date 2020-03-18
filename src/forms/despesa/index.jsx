@@ -13,7 +13,6 @@ import {
 export default function FormDespesa(props) {
   // true when all the fields of the form are filled
   const [formCompleted, setFormCompleted] = props.completed;
-  setFormCompleted(true);
 
   // store all current values of the form fields
   const [despesa, setDespesa] = props.despesa;
@@ -97,7 +96,8 @@ export default function FormDespesa(props) {
     });
 
     setFormCompleted(
-      formList.filter(field => field.value === "")[0] === undefined
+      formList.filter(field => !field.disabled && field.value === "")[0] ===
+        undefined
     );
   }
 

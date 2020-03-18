@@ -59,7 +59,6 @@ export default function DraggableDialog(props) {
   const [valores, setValores] = useState(
     props.despesa ? props.despesa["Valores"] : []
   );
-  console.log("VALORES1:", valores);
 
   // true when all the fields of the form are filled
   const [formCompleted, setFormCompleted] = useState(false);
@@ -82,7 +81,6 @@ export default function DraggableDialog(props) {
         method: "create",
         content: despesa
       });
-      console.log("CREATE NEO VALORES:", valores);
       const neoValores = valores.map(valor => {
         return {
           despesaId: response.id,
@@ -90,33 +88,36 @@ export default function DraggableDialog(props) {
           valor: valor.valor
         };
       });
-
+      console.log("CREATE NEO VALORES:", neoValores);
       if (valores.length > 0) {
-        await window.ipcRenderer.invoke("valores", {
+        const response2 = await window.ipcRenderer.invoke("valores", {
           method: "bulkCreate",
           content: neoValores
         });
+        console.log("Valores Cadastrados:", response2);
       }
       console.log("Despesa Cadastrada:", response);
     } else {
-      console.log("EDIT NEO VALORES:", valores);
+      // console.log("EDIT NEO VALORES:", valores);
       const response = await window.ipcRenderer.invoke("despesas", {
         method: "update",
         content: despesa
       });
       if (valores.length > 0) {
         if (valores[0].id !== "") {
-          console.log("JUST AN UPDATE:", valores);
-          await window.ipcRenderer.invoke("valores", {
+          // console.log("JUST AN UPDATE:", valores);
+          const response2 = await window.ipcRenderer.invoke("valores", {
             method: "bulkUpdate",
             content: valores
           });
+          console.log("Valores Editados:", response2);
         } else {
-          console.log("IT IS A CREATION:", valores);
-          await window.ipcRenderer.invoke("valores", {
+          // console.log("IT IS A CREATION:", valores);
+          const response2 = await window.ipcRenderer.invoke("valores", {
             method: "bulkCreate",
             content: valores
           });
+          console.log("Valores Cadastrados:", response2);
         }
       }
       console.log("Despesa Editada:", response);
