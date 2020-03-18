@@ -64,7 +64,7 @@ yarn sequelize model:generate --name Boleto --attributes emissao:string,vencimen
 - Pagante
 - Despesa
 - Boleto
-- Valor \*
+- Valor
 - API \*
 - Email \*
 
