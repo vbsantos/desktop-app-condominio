@@ -18,6 +18,8 @@ module.exports = (sequelize, DataTypes) => {
     // associations can be defined here
     Condominio.hasMany(models.Pagante);
     Condominio.hasMany(models.Despesa);
+    Condominio.hasMany(models.GeneralReport);
+
     Condominio.belongsTo(models.Beneficiario, {
       foreignKey: "beneficiarioId"
     });

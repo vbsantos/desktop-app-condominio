@@ -256,11 +256,6 @@ ipcMain.handle("valores", async (event, arg) => {
   let status;
   try {
     switch (method) {
-      // case "updateOrCreate":
-      //   console.log("entrada:", arg);
-      //   status = await Valor.updateOrCreate(content);
-      //   console.log("saida:", status);
-      //   break;
       case "create":
         console.log("entrada:", arg);
         status = await Valor.create(content);
@@ -299,6 +294,90 @@ ipcMain.handle("valores", async (event, arg) => {
       case "bulkDelete":
         console.log("entrada:", arg);
         status = await Valor.bulkDelete(content.id);
+        console.log("saida:", status);
+        break;
+      default:
+        console.log({ error: "This method do not exist." });
+    }
+    return status;
+  } catch (error) {
+    console.log("Erro no ipcEvents:", error);
+    return { error };
+  }
+});
+
+const individualReportController = require("../controllers/IndividualReportController.js");
+const IndividualReport = new individualReportController();
+ipcMain.handle("individualReports", async (event, arg) => {
+  const { method, content } = arg;
+  let status;
+  try {
+    switch (method) {
+      case "create":
+        console.log("entrada:", arg);
+        status = await IndividualReport.create(content);
+        console.log("saida:", status);
+        break;
+      case "index":
+        console.log("entrada:", arg);
+        status = await IndividualReport.index();
+        console.log("saida:", status);
+        break;
+      case "show":
+        console.log("entrada:", arg);
+        status = await IndividualReport.show(content.id);
+        console.log("saida:", status);
+        break;
+      case "update":
+        console.log("entrada:", arg);
+        status = await IndividualReport.update(content);
+        console.log("saida:", status);
+        break;
+      case "delete":
+        console.log("entrada:", arg);
+        status = await IndividualReport.delete(content.id);
+        console.log("saida:", status);
+        break;
+      default:
+        console.log({ error: "This method do not exist." });
+    }
+    return status;
+  } catch (error) {
+    console.log("Erro no ipcEvents:", error);
+    return { error };
+  }
+});
+
+const generalReportController = require("../controllers/GeneralReportController.js");
+const GeneralReport = new generalReportController();
+ipcMain.handle("generalReports", async (event, arg) => {
+  const { method, content } = arg;
+  let status;
+  try {
+    switch (method) {
+      case "create":
+        console.log("entrada:", arg);
+        status = await GeneralReport.create(content);
+        console.log("saida:", status);
+        break;
+      case "index":
+        console.log("entrada:", arg);
+        status = await GeneralReport.index();
+        console.log("saida:", status);
+        break;
+      case "show":
+        console.log("entrada:", arg);
+        status = await GeneralReport.show(content.id);
+        console.log("saida:", status);
+        break;
+      case "update":
+        console.log("entrada:", arg);
+        status = await GeneralReport.update(content);
+        console.log("saida:", status);
+        break;
+      case "delete":
+        console.log("entrada:", arg);
+        status = await GeneralReport.delete(content.id);
         console.log("saida:", status);
         break;
       default:

@@ -15,10 +15,12 @@ module.exports = (sequelize, DataTypes) => {
   );
   Pagante.associate = function(models) {
     // associations can be defined here
+    Pagante.hasMany(models.Boleto);
+    Pagante.hasMany(models.IndividualReport);
+
     Pagante.belongsTo(models.Condominio, {
       foreignKey: "condominioId"
     });
-    Pagante.hasMany(models.Boleto);
   };
   return Pagante;
 };
