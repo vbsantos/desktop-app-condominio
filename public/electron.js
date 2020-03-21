@@ -71,6 +71,16 @@ const createDefaultWindow = () => {
     }
   });
 
+  // page zoom disabled
+  win.webContents.on("did-finish-load", () => {
+    win.webContents.setZoomFactor(1);
+    win.webContents.setVisualZoomLevelLimits(1, 1);
+    win.webContents.setLayoutZoomLevelLimits(0, 0);
+  });
+
+  // menu disabled
+  win.setMenuBarVisibility(false);
+
   if (isDev) {
     win.webContents.openDevTools();
   }
@@ -78,8 +88,6 @@ const createDefaultWindow = () => {
   win.on("closed", () => {
     win = null;
   });
-
-  win.setMenuBarVisibility(false);
 
   win.loadURL(
     isDev
