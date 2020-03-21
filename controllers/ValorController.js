@@ -3,15 +3,6 @@
 const { Valor } = require("../models");
 
 class ValorController {
-  // updateOrCreate = async data => {
-  //   data.forEach(dt => {
-  //     try {
-  //       const valor = await Valor.create(dt);
-  //     } catch (error) {
-  //       const valor = await Valor.update(dt);
-  //     }
-  //   });
-  // };
   create = async data => {
     const valor = await Valor.create(data);
     return valor.get();
