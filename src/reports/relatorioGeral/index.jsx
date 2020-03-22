@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useRef } from "react";
 
 // MATERIAL UI COMPONENTS
 import {
@@ -15,7 +15,10 @@ import "./style.css";
 
 export default function RelatorioCondominio(props) {
   // If true all buttons and interaction are disabled
-  const { pdf } = props;
+  const { editable } = props;
+
+  // Stores the general report reference
+  const { reportRef } = props;
 
   // All Contas of the Condominio
   const { despesas } = props;
@@ -40,7 +43,7 @@ export default function RelatorioCondominio(props) {
   };
 
   return (
-    <TableContainer>
+    <TableContainer ref={reportRef}>
       {categorias.map(categoria => {
         const categoriaContas = despesas.filter(
           despesa => despesa.categoria === categoria

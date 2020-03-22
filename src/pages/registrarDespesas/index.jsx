@@ -1,5 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+
+// PDF libs
+// import html2canvas from "html2canvas";
+// import jsPDF from "jspdf";
 
 // CSS
 import "./style.css";
@@ -7,9 +11,10 @@ import "./style.css";
 // DIALOGS
 import DialogDespesa from "../../dialogs/despesa";
 import DialogExcluirDespesa from "../../dialogs/deletarDespesa";
+import DialogReportConfirm from "../../dialogs/gerarRelatorios";
 
 // REPORTS
-import RelatorioCondominio from "../../reports/relatorioCondominio";
+import RelatorioGeral from "../../reports/relatorioGeral";
 
 export default function RegistrarDespesas(props) {
   const [footbar, setFootbar] = props.buttons;
@@ -34,6 +39,9 @@ export default function RegistrarDespesas(props) {
   const [dialogRegisterDespesaForm, setDialogRegisterDespesaForm] = useState(
     false
   );
+
+  // Boolean for Report Confirmation Dialog
+  const [dialogReportConfirm, setDialogReportConfirm] = useState(false);
 
   // Boolean for Delete Dialog
   const [dialogDeleteDespesa, setDialogDeleteDespesa] = useState(false);
@@ -67,7 +75,7 @@ export default function RegistrarDespesas(props) {
           id: 2,
           position: "right",
           visible: true,
-          enabled: false,
+          enabled: true,
           value: "Finalizar"
         }
       ],
@@ -92,7 +100,7 @@ export default function RegistrarDespesas(props) {
       case 2:
         console.log("RegistrarDespesas - Botão da direita");
         setFootbar({ ...footbar, action: -1 });
-        navigate("/"); // vai pra tela de rateamento de despesas
+        setDialogReportConfirm(true);
         break;
     }
   }, [footbar.action]);
@@ -103,7 +111,8 @@ export default function RegistrarDespesas(props) {
     const allDialogsClosed = !(
       dialogRegisterDespesaForm ||
       dialogDeleteDespesa ||
-      dialogEditDespesaForm
+      dialogEditDespesaForm ||
+      dialogReportConfirm
     );
     if (allDialogsClosed) {
       async function getEverything() {
@@ -127,7 +136,12 @@ export default function RegistrarDespesas(props) {
       }
       getEverything();
     }
-  }, [dialogRegisterDespesaForm, dialogDeleteDespesa, dialogEditDespesaForm]);
+  }, [
+    dialogRegisterDespesaForm,
+    dialogDeleteDespesa,
+    dialogEditDespesaForm,
+    dialogReportConfirm
+  ]);
 
   // This function runs only when something change in Despesas
   useEffect(() => {
@@ -144,8 +158,39 @@ export default function RegistrarDespesas(props) {
     );
   }, [data.allNestedCondominio["Despesas"]]);
 
+  // Stores the general report reference
+  const reportRef = useRef(null);
+
+  // This funcions turns a React Component into a PDF
+  // const getPdf = ref => {
+  //   if (ref.current) {
+  //     html2canvas(ref.current).then(canvas => {
+  //       const imgData = canvas.toDataURL("image/png");
+  //       const pdf = new jsPDF();
+  //       const date = new Date();
+  //       const nd = data.allNestedCondominio["Despesas"].length;
+  //       const nc = categorias.length;
+  //       const h1 = 6; // line height
+  //       const h2 = 3; // between tables height
+  //       let height = nc * (2 * h1 + h2) + nd * h1 + (h1 + h2);
+  //       height = height > 293 ? 293 : height;
+  //       pdf.addImage(imgData, "PNG", 5, 5, 200, height); // máximo 293
+  //       pdf.save(`relatorio_${date.getFullYear()}_${date.getMonth() + 1}.pdf`);
+  //     });
+  //     return true;
+  //   }
+  //   return false;
+  // };
+
   return (
     <>
+      {dialogReportConfirm && (
+        <DialogReportConfirm
+          open={[dialogReportConfirm, setDialogReportConfirm]}
+          categorias={categorias}
+          condominio={data.allNestedCondominio}
+        />
+      )}
       {dialogRegisterDespesaForm && (
         <DialogDespesa
           open={[dialogRegisterDespesaForm, setDialogRegisterDespesaForm]}
@@ -176,8 +221,9 @@ export default function RegistrarDespesas(props) {
         />
       )}
       <h1 className="PageTitle">Registro de Despesas</h1>
-      <RelatorioCondominio
-        pdf={false}
+      <RelatorioGeral
+        editable={false}
+        reportRef={reportRef}
         despesas={data.allNestedCondominio["Despesas"]}
         setSelected={setSelectedDespesa}
         editDialog={[dialogEditDespesaForm, setDialogEditDespesaForm]}
