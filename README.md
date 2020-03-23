@@ -25,6 +25,12 @@ Condominio:
 yarn sequelize model:generate --name Condominio --attributes nome:string,cep:string,uf:string,localidade:string,bairro:string,logradouro:string,numero:string,beneficiarioId:integer
 ```
 
+Relatorio Geral:
+
+```bash
+yarn sequelize model:generate --name RelatorioGeral --attributes report:string,condominioId:integer
+```
+
 Despesa:
 
 ```bash
@@ -43,6 +49,12 @@ Pagante:
 yarn sequelize model:generate --name Pagante --attributes nome:string,cprf:string,complemento:string,fracao:string,condominioId:integer
 ```
 
+Relatorio Individual:
+
+```bash
+yarn sequelize model:generate --name RelatorioIndividual --attributes report:string,paganteId:integer
+```
+
 Boleto:
 
 ```bash
@@ -54,8 +66,10 @@ yarn sequelize model:generate --name Boleto --attributes emissao:string,vencimen
 - Beneficiarios (**1-N**) Condominios
 - Condominios (**1-N**) Pagantes
 - Condominios (**1-N**) Despesas
+- Condominios (**1-N**) Relatorios
 - Despesas (**1-N**) Valors
 - Pagantes (**1-N**) Boletos
+- Pagantes (**1-N**) Relatorios
 
 ## Controllers
 
@@ -65,6 +79,8 @@ yarn sequelize model:generate --name Boleto --attributes emissao:string,vencimen
 - Despesa
 - Boleto
 - Valor
+- RelatorioGeral
+- RelatorioIndividual
 - API \*
 - Email \*
 
@@ -75,8 +91,7 @@ yarn sequelize model:generate --name Boleto --attributes emissao:string,vencimen
 - Visualizar/Registrar/Editar Administrador/Beneficiário
 - Visualizar/Registrar/Editar Condomínio
 - Visualizar/Registrar/Editar Despesas
-- Confirmar Relatório Geral \*
-- Confirmar Relatório Individual \*
+- Confirmar Geração de Relatórios
 - Gerar Boletos \*
 
 \* Por fazer
