@@ -43,17 +43,47 @@ export default function DraggableDialog(props) {
 
   // This function turns the GeneralReport data into a string
   const makeGeneralReportJSON = (categorias, despesas) => {
-    const report = categorias.map(categoria => {
-      const despesaByCategory = despesas.filter(
+    const generalReport = categorias.map(categoria => {
+      const despesasByCategory = despesas.filter(
         despesa => despesa.categoria === categoria
       );
-      return { table: categoria, data: [...despesaByCategory] };
+      return { table: categoria, data: [...despesasByCategory] };
     });
-    return JSON.stringify(report);
+    console.log("GeneralReport:", generalReport);
+    const generalReportJSON = JSON.stringify(generalReport);
+    return generalReportJSON;
   };
 
   // This function turns the IndividualReport data into a string
-  const makeIndividualReportJSON = () => {};
+  const makeIndividualReportJSON = (categorias, despesas, pagantes) => {
+    const individualReportsJSON = pagantes.map(pagante => {
+      const individualReport = categorias.map(categoria => {
+        let despesasByCategory = despesas.filter(
+          despesa => despesa.categoria === categoria
+        );
+        despesasByCategory = despesasByCategory.map(despesa => {
+          return despesa.rateioAutomatico
+            ? {
+                ...despesa,
+                valor: (despesa.valor * pagante.fracao).toFixed(2)
+              }
+            : {
+                ...despesa,
+                valor: despesa["Valores"]
+                  .filter(valor => valor.paganteId === pagante.id)[0]
+                  .toFixed(2)
+              };
+        });
+        return { table: categoria, data: [...despesasByCategory] };
+      });
+      console.log("IndividualReport:", individualReport);
+      return {
+        paganteId: pagante.id,
+        report: JSON.stringify(individualReport)
+      };
+    });
+    return individualReportsJSON;
+  };
 
   // function that runs when the dialog is suposed to close
   function handleClose() {
@@ -68,6 +98,16 @@ export default function DraggableDialog(props) {
         report: makeGeneralReportJSON(categorias, condominio["Despesas"]),
         condominioId: condominio.id
       }
+    });
+    await makeIndividualReportJSON(
+      categorias,
+      condominio["Despesas"],
+      condominio["Pagantes"]
+    ).forEach(individualReport => {
+      window.ipcRenderer.invoke("individualReports", {
+        method: "create",
+        content: { ...individualReport }
+      });
     });
     setDialog(false);
     navigate("/"); // boletos
