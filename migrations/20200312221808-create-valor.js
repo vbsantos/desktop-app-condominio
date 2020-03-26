@@ -8,6 +8,9 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      precoAgua: {
+        type: Sequelize.STRING
+      },
       agua: {
         type: Sequelize.STRING
       },
