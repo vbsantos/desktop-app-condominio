@@ -10,9 +10,9 @@ module.exports = (sequelize, DataTypes) => {
   );
   IndividualReport.associate = function(models) {
     // associations can be defined here
-    IndividualReport.belongsTo(models.Pagante, {
-      foreignKey: "paganteId"
-    });
+    // IndividualReport.belongsTo(models.Pagante, {
+    //   foreignKey: "paganteId"
+    // });
   };
   return IndividualReport;
 };

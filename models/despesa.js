@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       rateioAutomatico: DataTypes.BOOLEAN,
       permanente: DataTypes.BOOLEAN,
       aguaIndividual: DataTypes.BOOLEAN,
+      fundoReserva: DataTypes.BOOLEAN,
       condominioId: DataTypes.INTEGER
     },
     {}

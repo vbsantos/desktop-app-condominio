@@ -39,6 +39,10 @@ module.exports = {
         allowNull: false,
         type: Sequelize.BOOLEAN
       },
+      fundoReserva: {
+        allowNull: false,
+        type: Sequelize.BOOLEAN
+      },
       condominioId: {
         type: Sequelize.INTEGER,
         allowNull: false,

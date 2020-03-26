@@ -10,9 +10,9 @@ module.exports = (sequelize, DataTypes) => {
   );
   GeneralReport.associate = function(models) {
     // associations can be defined here
-    GeneralReport.belongsTo(models.Condominio, {
-      foreignKey: "condominioId"
-    });
+    // GeneralReport.belongsTo(models.Condominio, {
+    //   foreignKey: "condominioId"
+    // });
   };
   return GeneralReport;
 };
