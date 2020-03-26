@@ -3,6 +3,7 @@ module.exports = (sequelize, DataTypes) => {
   const Valor = sequelize.define(
     "Valor",
     {
+      agua: DataTypes.STRING,
       valor: DataTypes.STRING,
       despesaId: DataTypes.INTEGER,
       paganteId: DataTypes.INTEGER

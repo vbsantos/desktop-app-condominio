@@ -37,11 +37,11 @@ class ValorController {
     let response = [];
     for (let dt of data) {
       response.push(
-        await Valor.update(dt, {
+        ...(await Valor.update(dt, {
           where: {
             id: dt.id
           }
-        })
+        }))
       );
     }
     return response;
