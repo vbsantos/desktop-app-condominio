@@ -72,12 +72,10 @@ export default function EscolherCondominio(props) {
   // Boolean for Delete Confirmation Dialog
   const [dialogDeletePagante, setDialogDeletePagante] = useState(false);
 
-  console.log(
-    "Entrou em EscolherCondominio\nFootbar:",
-    footbar,
-    "\nData:",
-    data
-  );
+  console.groupCollapsed("EscolherCondominio: System data");
+  console.log("Footbar:", footbar);
+  console.log("Data:", data);
+  console.groupEnd("EscolherCondominio: System data");
 
   // This function runs only when the component is monted
   useEffect(() => {
@@ -179,7 +177,7 @@ export default function EscolherCondominio(props) {
     );
     if (allDialogsClosed) {
       async function getEverything() {
-        console.time("getEverything");
+        console.time("Get all data from database");
         const response = await window.ipcRenderer.invoke("beneficiarios", {
           method: "showNested",
           content: { id: data.beneficiario.id }
@@ -196,7 +194,7 @@ export default function EscolherCondominio(props) {
                 condominio => condominio.id == selectedCondominio.id
               )[0]
             });
-        console.timeEnd("getEverything");
+        console.timeEnd("Get all data from database");
       }
       getEverything();
     }
@@ -224,7 +222,7 @@ export default function EscolherCondominio(props) {
   };
 
   function handleCondominioEdit(e) {
-    console.log("EDITAR CONDOMINIO", selectedCondominio.id);
+    // console.log("Editar Condomínio", selectedCondominio.id);
     setDialogEditCondominioForm(true);
     if (!e) var e = window.event;
     e.cancelBubble = true;
@@ -232,7 +230,7 @@ export default function EscolherCondominio(props) {
   }
 
   function handleCondominioDelete(e) {
-    console.log("DELETAR CONDOMINIO", selectedCondominio.id);
+    // console.log("Deletar Condomínio", selectedCondominio.id);
     setDialogDeleteCondominio(true);
     if (!e) var e = window.event;
     e.cancelBubble = true;
@@ -240,24 +238,24 @@ export default function EscolherCondominio(props) {
   }
 
   function hadleCondominioRegister() {
-    console.log("CADASTRAR CONDOMINIO");
+    // console.log("Cadastrar Condomínio");
     setDialogRegisterCondominioForm(true);
   }
 
   function handlePaganteEdit(paganteId) {
-    console.log("EDITAR PAGANTE", paganteId);
+    // console.log("Editar Pagante", paganteId);
     setSelectedPagante({ id: paganteId });
     setDialogEditPaganteForm(true);
   }
 
   function handlePaganteDelete(paganteId) {
-    console.log("DELETAR PAGANTE", paganteId);
+    // console.log("Deletar Pagante", paganteId);
     setSelectedPagante({ id: paganteId });
     setDialogDeletePagante(true);
   }
 
   function hadlePaganteRegister() {
-    console.log("CADASTRAR PAGANTE");
+    // console.log("Cadastrar Pagante");
     setDialogRegisterPaganteForm(true);
   }
 

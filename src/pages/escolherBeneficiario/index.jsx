@@ -39,12 +39,10 @@ export default function EscolherBeneficiario(props) {
   // Boolean for Confirmation Dialog
   const [dialogDelete, setDialogDelete] = useState(false);
 
-  console.log(
-    "Entrou em EscolherBeneficiario\nFootbar:",
-    footbar,
-    "\nData:",
-    data
-  );
+  console.groupCollapsed("EscolherBeneficiario: System data");
+  console.log("Footbar:", footbar);
+  console.log("Data:", data);
+  console.groupEnd("EscolherBeneficiario: System data");
 
   // This function runs only when the component is monted
   useEffect(() => {
@@ -86,7 +84,7 @@ export default function EscolherBeneficiario(props) {
     );
     if (allDialogsClosed) {
       async function getBeneficiarios() {
-        console.time("getBeneficiarios");
+        console.time("Get beneficiarios from database");
         const beneficiarios = await window.ipcRenderer.invoke("beneficiarios", {
           method: "index",
           content: null
@@ -99,7 +97,7 @@ export default function EscolherBeneficiario(props) {
         ) {
           setSelected({ id: -1 });
         }
-        console.timeEnd("getBeneficiarios");
+        console.timeEnd("Get beneficiarios from database");
         return beneficiarios.length > 0 ? true : false;
       }
       getBeneficiarios();

@@ -74,13 +74,13 @@ export default function DraggableDialog(props) {
         method: "create",
         content: condominio
       });
-      console.log("Condomínio Cadastrado:", response);
+      console.warn("Condomínio Cadastrado:", response);
     } else {
       const response = await window.ipcRenderer.invoke("condominios", {
         method: "update",
         content: condominio
       });
-      console.log("Condomínio Editado:", response);
+      console.warn("Condomínio Editado:", response);
     }
 
     setDialog(false);

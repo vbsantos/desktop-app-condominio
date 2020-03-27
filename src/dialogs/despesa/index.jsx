@@ -78,25 +78,35 @@ export default function DraggableDialog(props) {
   // function that runs when you click the right button
   async function handleRightButton() {
     if (despesa.id === "") {
+      let response;
       if (despesa.fundoReserva) {
         const fundoReservaId = condominio["Despesas"].filter(
           despesa => despesa.fundoReserva
         )[0];
-        // console.log("existe fundo reserva?", fundoReservaId);
         if (fundoReservaId) {
-          // console.log("já existe fundo reserva!", fundoReservaId.id);
-          const response = await window.ipcRenderer.invoke("despesas", {
-            method: "delete",
-            content: { id: fundoReservaId.id }
+          //if it already exists update
+          despesa.id = fundoReservaId.id;
+          response = await window.ipcRenderer.invoke("despesas", {
+            method: "update",
+            content: despesa
           });
-          // console.log("foi deletado fundo reserva?", response);
+          console.warn("Despesa Editada:", response);
+        } else {
+          // if it doesn't exists create
+          response = await window.ipcRenderer.invoke("despesas", {
+            method: "create",
+            content: despesa
+          });
+          console.warn("Despesa Cadastrada:", response);
         }
+      } else {
+        // if it isn't fundoReserva create
+        response = await window.ipcRenderer.invoke("despesas", {
+          method: "create",
+          content: despesa
+        });
+        console.warn("Despesa Cadastrada:", response);
       }
-      // console.log("Não existia fundo reserva");
-      const response = await window.ipcRenderer.invoke("despesas", {
-        method: "create",
-        content: despesa
-      });
       const neoValores = valores.map(valor => {
         return {
           despesaId: response.id,
@@ -106,39 +116,38 @@ export default function DraggableDialog(props) {
           valor: valor.valor
         };
       });
-      // console.log("CREATE NEO VALORES:", neoValores);
+      // console.warn("CREATE NEO VALORES:", neoValores);
       if (valores.length > 0) {
         const response2 = await window.ipcRenderer.invoke("valores", {
           method: "bulkCreate",
           content: neoValores
         });
-        console.log("Valores Cadastrados:", response2);
+        console.warn("Valores Cadastrados:", response2);
       }
-      console.log("Despesa Cadastrada:", response);
     } else {
-      // console.log("EDIT NEO VALORES:", valores);
+      // console.warn("EDIT NEO VALORES:", valores);
       const response = await window.ipcRenderer.invoke("despesas", {
         method: "update",
         content: despesa
       });
       if (valores.length > 0) {
         if (valores[0].id !== "") {
-          // console.log("JUST AN UPDATE:", valores);
+          // console.warn("JUST AN UPDATE:", valores);
           const response2 = await window.ipcRenderer.invoke("valores", {
             method: "bulkUpdate",
             content: valores
           });
-          console.log("Valores Editados:", response2);
+          console.warn("Valores Editados:", response2);
         } else {
-          // console.log("IT IS A CREATION:", valores);
+          // console.warn("IT IS A CREATION:", valores);
           const response2 = await window.ipcRenderer.invoke("valores", {
             method: "bulkCreate",
             content: valores
           });
-          console.log("Valores Cadastrados:", response2);
+          console.warn("Valores Cadastrados:", response2);
         }
       }
-      console.log("Despesa Editada:", response);
+      console.warn("Despesa Editada:", response);
     }
 
     setDialog(false);

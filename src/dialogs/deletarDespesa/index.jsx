@@ -44,8 +44,8 @@ export default function DraggableDialog(props) {
       content: { id: despesa.id }
     });
     response === 1
-      ? console.warn(`Despesa [${despesa.id}] removida`)
-      : console.warn(`Falha ao remover Despesa [${despesa.id}]`);
+      ? console.warn(`Despesa excluida: [id=${despesa.id}]`)
+      : console.warn(`Falha ao excluir Despesa: [id=${despesa.id}]`);
     setDialog(false);
   }
 

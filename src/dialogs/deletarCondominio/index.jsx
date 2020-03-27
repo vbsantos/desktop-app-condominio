@@ -44,8 +44,8 @@ export default function DraggableDialog(props) {
       content: { id: condominio.id }
     });
     response === 1
-      ? console.warn(`Condomínio [id=${condominio.id}] excluido`)
-      : console.warn(`Falha ao excluir condomínio [id=${condominio.id}]`);
+      ? console.warn(`Condomínio excluido: [id=${condominio.id}]`)
+      : console.warn(`Falha ao excluir Condomínio: [id=${condominio.id}]`);
     setDialog(false);
   }
 

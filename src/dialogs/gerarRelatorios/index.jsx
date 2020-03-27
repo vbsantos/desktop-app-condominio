@@ -69,7 +69,7 @@ export default function DraggableDialog(props) {
       name: "total",
       data: (total + percentage[1]).toFixed(2)
     });
-    console.log("GeneralReport:", generalReport);
+    console.warn("Relatório Geral:", generalReport);
     const generalReportJSON = JSON.stringify(generalReport);
     return generalReportJSON;
   };
@@ -115,7 +115,7 @@ export default function DraggableDialog(props) {
         name: "total",
         data: (totalIndividual + fundoReservaIndividual).toFixed(2)
       });
-      console.log("IndividualReport:", individualReport);
+      console.log("Relatório Individual:", individualReport);
       return {
         paganteId: pagante.id,
         report: JSON.stringify(individualReport)

@@ -73,13 +73,13 @@ export default function DraggableDialog(props) {
         method: "create",
         content: pagante
       });
-      console.log("Pagante Cadastrado:", response);
+      console.warn("Pagante Cadastrado:", response);
     } else {
       const response = await window.ipcRenderer.invoke("pagantes", {
         method: "update",
         content: pagante
       });
-      console.log("Pagante Editado:", response);
+      console.warn("Pagante Editado:", response);
     }
     setDialog(false);
   }

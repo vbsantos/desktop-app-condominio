@@ -44,8 +44,8 @@ export default function DraggableDialog(props) {
       content: { id: beneficiario.id }
     });
     response === 1
-      ? console.warn(`Beneficiário [id=${beneficiario.id}] excluido`)
-      : console.warn(`Falha ao excluir beneficiário [id=${beneficiario.id}]`);
+      ? console.warn(`Beneficiário excluido: [id=${beneficiario.id}]`)
+      : console.warn(`Falha ao excluir Beneficiário: [id=${beneficiario.id}]`);
     setDialog(false);
   }
 

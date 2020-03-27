@@ -44,8 +44,8 @@ export default function DraggableDialog(props) {
       content: { id: pagante.id }
     });
     response === 1
-      ? console.warn(`Pagante [id=${pagante.id}] excluido`)
-      : console.warn(`Falha ao excluir pagante [id=${pagante.id}]`);
+      ? console.warn(`Pagante excluido: [id=${pagante.id}]`)
+      : console.warn(`Falha ao excluir Pagante: [id=${pagante.id}]`);
     setDialog(false);
   }
 

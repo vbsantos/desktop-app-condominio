@@ -49,12 +49,10 @@ export default function RegistrarDespesas(props) {
   // Boolean for Delete Dialog
   const [dialogDeleteDespesa, setDialogDeleteDespesa] = useState(false);
 
-  console.log(
-    "Entrou em RegistrarDespesas\nFootbar:",
-    footbar,
-    "\nData:",
-    data
-  );
+  console.groupCollapsed("RegistrarDespesas: System data");
+  console.log("Footbar:", footbar);
+  console.log("Data:", data);
+  console.groupEnd("RegistrarDespesas: System data");
 
   // This function runs only when the component is monted
   useEffect(() => {
@@ -119,7 +117,7 @@ export default function RegistrarDespesas(props) {
     );
     if (allDialogsClosed) {
       async function getEverything() {
-        console.time("getEverything");
+        console.time("Get all data from database");
         const allNestedBeneficiario = await window.ipcRenderer.invoke(
           "beneficiarios",
           {
@@ -135,7 +133,7 @@ export default function RegistrarDespesas(props) {
           allNestedBeneficiario,
           allNestedCondominio
         });
-        console.timeEnd("getEverything");
+        console.timeEnd("Get all data from database");
       }
       getEverything();
     }
@@ -162,28 +160,15 @@ export default function RegistrarDespesas(props) {
     }
     setTotal(total);
     setPercentage([porcentagem, (porcentagem / 100) * total]);
+    // remove duplicates
     setCategorias([...new Set(allCategorias)]);
 
-    // const allCategorias = data.allNestedCondominio["Despesas"].map(despesa => {
-    //   if (!despesa.fundoReserva) return despesa.categoria;
-    // });
-    // setCategorias(
-    //   allCategorias.filter((a, b) => allCategorias.indexOf(a) === b)
-    // );
-    // setTotal(
-    //   data.allNestedCondominio["Despesas"].reduce((acc, despesa) => {
-    //     if (!despesa.fundoReserva) return acc + Number(despesa.valor);
-    //     else {
-    //       setPercentage(Number(despesa.valor));
-    //       return acc;
-    //     }
-    //   }, 0)
-    // );
-
-    console.log("categorias", categorias);
+    console.groupCollapsed("Dados das Despesas");
     console.log("allCategorias", allCategorias);
+    console.log("categorias", categorias);
     console.log("total", total);
     console.log("percentage", percentage);
+    console.groupEnd("Dados das Despesas");
   }, [data.allNestedCondominio["Despesas"]]);
 
   // Stores the general report reference

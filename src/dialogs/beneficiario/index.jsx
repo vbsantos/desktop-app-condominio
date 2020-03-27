@@ -74,13 +74,13 @@ export default function DraggableDialog(props) {
         method: "create",
         content: beneficiario
       });
-      console.log("Beneficiário Cadastrado:", response);
+      console.warn("Beneficiário Cadastrado:", response);
     } else {
       const response = await window.ipcRenderer.invoke("beneficiarios", {
         method: "update",
         content: beneficiario
       });
-      console.log("Beneficiário Editado:", response);
+      console.warn("Beneficiário Editado:", response);
     }
     setDialog(false);
   }
