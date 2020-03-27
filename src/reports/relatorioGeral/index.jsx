@@ -90,20 +90,30 @@ export default function RelatorioCondominio(props) {
           </Table>
         );
       })}
+      {percentage[0] !== 0 && (
+        <Table key={"fundoReserva"}>
+          <TableHead>
+            <TableRow
+              className="Black"
+              id="fundoReservaRow"
+              onClick={() =>
+                selectAndOpenDialog(
+                  despesas.filter(despesa => despesa.fundoReserva)[0].id || ""
+                )
+              }
+            >
+              <TableCell className="col1">
+                Fundo Reserva - {percentage[0]} %
+              </TableCell>
+              <TableCell className="col2"></TableCell>
+              <TableCell className="col3">
+                {"R$ " + percentage[1].toFixed(2)}
+              </TableCell>
+            </TableRow>
+          </TableHead>
+        </Table>
+      )}
       <Table key={"total"}>
-        <TableHead>
-          <TableRow className="Black">
-            <TableCell className="col1">
-              Fundo Reserva - {percentage[0]} %
-            </TableCell>
-            <TableCell className="col2"></TableCell>
-            <TableCell className="col3">
-              {"R$ " + percentage[1].toFixed(2)}
-            </TableCell>
-          </TableRow>
-        </TableHead>
-      </Table>
-      <Table key={"fundoReserva"}>
         <TableHead>
           <TableRow className="Black">
             <TableCell className="col1">TOTAL:</TableCell>

@@ -78,6 +78,21 @@ export default function DraggableDialog(props) {
   // function that runs when you click the right button
   async function handleRightButton() {
     if (despesa.id === "") {
+      if (despesa.fundoReserva) {
+        const fundoReservaId = condominio["Despesas"].filter(
+          despesa => despesa.fundoReserva
+        )[0];
+        // console.log("existe fundo reserva?", fundoReservaId);
+        if (fundoReservaId) {
+          // console.log("já existe fundo reserva!", fundoReservaId.id);
+          const response = await window.ipcRenderer.invoke("despesas", {
+            method: "delete",
+            content: { id: fundoReservaId.id }
+          });
+          // console.log("foi deletado fundo reserva?", response);
+        }
+      }
+      // console.log("Não existia fundo reserva");
       const response = await window.ipcRenderer.invoke("despesas", {
         method: "create",
         content: despesa

@@ -53,3 +53,7 @@
 .MuiTableCell-root.col3 {
   text-align: center;
 }
+
+#fundoReservaRow {
+  cursor: pointer;
+}
