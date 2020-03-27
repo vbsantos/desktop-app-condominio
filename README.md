@@ -92,6 +92,8 @@ yarn sequelize model:generate --name Boleto --attributes emissao:string,vencimen
 - Visualizar/Registrar/Editar Condomínio
 - Visualizar/Registrar/Editar Despesas
 - Confirmar Geração de Relatórios
+- Relatórios Gerais \*
+- Relatórios Individuais \*
 - Gerar Boletos \*
 
 \* Por fazer
