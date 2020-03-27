@@ -14,9 +14,6 @@ import {
 import "./style.css";
 
 export default function RelatorioCondominio(props) {
-  // If true all buttons and interaction are disabled
-  const { editable } = props;
-
   // Stores the general report reference
   const { reportRef } = props;
 
@@ -35,9 +32,11 @@ export default function RelatorioCondominio(props) {
   // Store the total value
   const [total, setTotal] = props.valorTotal;
 
+  // Store the fundoReserva percentage
+  const [percentage, setPercentage] = props.valorFundoReserva;
+
   // Function that runs when you click in a Conta row
-  const handleClick = id => {
-    console.log("You just clicked Conta id =", id);
+  const selectAndOpenDialog = id => {
     setSelected({ id });
     setDialogEditContaForm(true);
   };
@@ -65,7 +64,7 @@ export default function RelatorioCondominio(props) {
                 <TableRow
                   key={categoria + categoriaConta.id}
                   className="Linha"
-                  onClick={() => handleClick(categoriaConta.id)}
+                  onClick={() => selectAndOpenDialog(categoriaConta.id)}
                 >
                   <TableCell className="col1">{categoriaConta.nome}</TableCell>
                   <TableCell className="col2">
@@ -76,7 +75,7 @@ export default function RelatorioCondominio(props) {
                           categoriaConta.numParcelas}`}
                   </TableCell>
                   <TableCell className="col3">
-                    R$ {Number(categoriaConta.valor).toFixed(2)}
+                    {"R$ " + Number(categoriaConta.valor).toFixed(2)}
                   </TableCell>
                 </TableRow>
               ))}
@@ -84,7 +83,7 @@ export default function RelatorioCondominio(props) {
                 <TableCell className="col1">SUB-TOTAL:</TableCell>
                 <TableCell className="col2"></TableCell>
                 <TableCell className="col3">
-                  R$ {Number(subtotal).toFixed(2)}
+                  {"R$ " + Number(subtotal).toFixed(2)}
                 </TableCell>
               </TableRow>
             </TableBody>
@@ -94,10 +93,23 @@ export default function RelatorioCondominio(props) {
       <Table key={"total"}>
         <TableHead>
           <TableRow className="Black">
+            <TableCell className="col1">
+              Fundo Reserva - {percentage[0]} %
+            </TableCell>
+            <TableCell className="col2"></TableCell>
+            <TableCell className="col3">
+              {"R$ " + percentage[1].toFixed(2)}
+            </TableCell>
+          </TableRow>
+        </TableHead>
+      </Table>
+      <Table key={"fundoReserva"}>
+        <TableHead>
+          <TableRow className="Black">
             <TableCell className="col1">TOTAL:</TableCell>
             <TableCell className="col2"></TableCell>
             <TableCell className="col3">
-              R$ {Number(total).toFixed(2)}
+              {"R$ " + (total + percentage[1]).toFixed(2)}
             </TableCell>
           </TableRow>
         </TableHead>

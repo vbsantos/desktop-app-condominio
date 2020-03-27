@@ -38,6 +38,12 @@ export default function DraggableDialog(props) {
   // All data from this condominio
   const { condominio } = props;
 
+  // Sum of all despesas
+  const [total] = props.valorTotal;
+
+  // Percentage and value of fundoReserva
+  const [percentage] = props.valorFundoReserva;
+
   // React Router Hook for navigation between pages
   const navigate = useNavigate();
 
@@ -47,7 +53,21 @@ export default function DraggableDialog(props) {
       const despesasByCategory = despesas.filter(
         despesa => despesa.categoria === categoria
       );
-      return { table: categoria, data: [...despesasByCategory] };
+      return {
+        table: true,
+        name: categoria,
+        data: [...despesasByCategory]
+      };
+    });
+    generalReport.push({
+      table: false,
+      name: "fundoReserva",
+      data: percentage[1].toFixed(2)
+    });
+    generalReport.push({
+      table: false,
+      name: "total",
+      data: (total + percentage[1]).toFixed(2)
     });
     console.log("GeneralReport:", generalReport);
     const generalReportJSON = JSON.stringify(generalReport);
@@ -57,24 +77,43 @@ export default function DraggableDialog(props) {
   // This function turns the IndividualReport data into a string
   const makeIndividualReportJSON = (categorias, despesas, pagantes) => {
     const individualReportsJSON = pagantes.map(pagante => {
+      let totalIndividual = 0;
       const individualReport = categorias.map(categoria => {
-        let despesasByCategory = despesas.filter(
-          despesa => despesa.categoria === categoria
-        );
-        despesasByCategory = despesasByCategory.map(despesa => {
-          return despesa.rateioAutomatico
-            ? {
-                ...despesa,
-                valor: (despesa.valor * pagante.fracao).toFixed(2)
-              }
-            : {
-                ...despesa,
-                valor: despesa["Valores"]
-                  .filter(valor => valor.paganteId === pagante.id)[0]
-                  .toFixed(2)
-              };
-        });
-        return { table: categoria, data: [...despesasByCategory] };
+        const despesasByCategory = despesas
+          .filter(despesa => despesa.categoria === categoria)
+          .map(despesa => {
+            const valor = despesa.rateioAutomatico
+              ? Number(despesa.valor * pagante.fracao)
+              : Number(
+                  despesa["Valores"].filter(
+                    valor => valor.paganteId === pagante.id
+                  )[0].valor
+                );
+            totalIndividual += valor;
+            return {
+              ...despesa,
+              valor: valor.toFixed(2)
+            };
+          });
+        // const despesasByCategoryEssencial = despesasByCategory.map(
+        //   despesa => delete despesa["Valores"]
+        // );
+        return {
+          table: true,
+          name: categoria,
+          data: [...despesasByCategory]
+        };
+      });
+      const fundoReservaIndividual = (percentage[0] / 100) * totalIndividual;
+      individualReport.push({
+        table: false,
+        name: "fundoReserva",
+        data: fundoReservaIndividual.toFixed(2)
+      });
+      individualReport.push({
+        table: false,
+        name: "total",
+        data: (totalIndividual + fundoReservaIndividual).toFixed(2)
       });
       console.log("IndividualReport:", individualReport);
       return {

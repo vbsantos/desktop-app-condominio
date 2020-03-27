@@ -29,6 +29,9 @@ export default function RegistrarDespesas(props) {
   // Store the total value
   const [total, setTotal] = useState(0);
 
+  // Store the fundoReserva percentage and value
+  const [percentage, setPercentage] = useState([0, 0]);
+
   // ID of the selected Despesa
   const [selectedDespesa, setSelectedDespesa] = useState({ id: -1 });
 
@@ -145,17 +148,42 @@ export default function RegistrarDespesas(props) {
 
   // This function runs only when something change in Despesas
   useEffect(() => {
-    const allCategorias = data.allNestedCondominio["Despesas"].map(
-      despesa => despesa.categoria
-    );
-    setCategorias(
-      allCategorias.filter((a, b) => allCategorias.indexOf(a) === b)
-    );
-    setTotal(
-      data.allNestedCondominio["Despesas"].reduce((acc, despesa) => {
-        return acc + Number(despesa.valor);
-      }, 0)
-    );
+    let total = 0;
+    let allCategorias = [];
+    let porcentagem = 0;
+
+    for (const despesa of data.allNestedCondominio["Despesas"]) {
+      if (!despesa.fundoReserva) {
+        total += Number(despesa.valor);
+        allCategorias.push(despesa.categoria);
+      } else {
+        porcentagem = Number(despesa.valor);
+      }
+    }
+    setTotal(total);
+    setPercentage([porcentagem, (porcentagem / 100) * total]);
+    setCategorias([...new Set(allCategorias)]);
+
+    // const allCategorias = data.allNestedCondominio["Despesas"].map(despesa => {
+    //   if (!despesa.fundoReserva) return despesa.categoria;
+    // });
+    // setCategorias(
+    //   allCategorias.filter((a, b) => allCategorias.indexOf(a) === b)
+    // );
+    // setTotal(
+    //   data.allNestedCondominio["Despesas"].reduce((acc, despesa) => {
+    //     if (!despesa.fundoReserva) return acc + Number(despesa.valor);
+    //     else {
+    //       setPercentage(Number(despesa.valor));
+    //       return acc;
+    //     }
+    //   }, 0)
+    // );
+
+    console.log("categorias", categorias);
+    console.log("allCategorias", allCategorias);
+    console.log("total", total);
+    console.log("percentage", percentage);
   }, [data.allNestedCondominio["Despesas"]]);
 
   // Stores the general report reference
@@ -189,6 +217,8 @@ export default function RegistrarDespesas(props) {
           open={[dialogReportConfirm, setDialogReportConfirm]}
           categorias={categorias}
           condominio={data.allNestedCondominio}
+          valorTotal={[total, setTotal]}
+          valorFundoReserva={[percentage, setPercentage]}
         />
       )}
       {dialogRegisterDespesaForm && (
@@ -222,13 +252,13 @@ export default function RegistrarDespesas(props) {
       )}
       <h1 className="PageTitle">Registro de Despesas</h1>
       <RelatorioGeral
-        editable={false}
         reportRef={reportRef}
         despesas={data.allNestedCondominio["Despesas"]}
         setSelected={setSelectedDespesa}
         editDialog={[dialogEditDespesaForm, setDialogEditDespesaForm]}
         categorias={[categorias, setCategorias]}
         valorTotal={[total, setTotal]}
+        valorFundoReserva={[percentage, setPercentage]}
       />
     </>
   );

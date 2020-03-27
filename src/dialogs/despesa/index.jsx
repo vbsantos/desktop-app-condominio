@@ -51,6 +51,7 @@ export default function DraggableDialog(props) {
       rateioAutomatico: true,
       permanente: true,
       aguaIndividual: false,
+      fundoReserva: false,
       condominioId: condominio.id,
       Valores: []
     }
@@ -85,10 +86,12 @@ export default function DraggableDialog(props) {
         return {
           despesaId: response.id,
           paganteId: valor.paganteId,
+          precoAgua: valor.precoAgua,
+          agua: valor.agua,
           valor: valor.valor
         };
       });
-      console.log("CREATE NEO VALORES:", neoValores);
+      // console.log("CREATE NEO VALORES:", neoValores);
       if (valores.length > 0) {
         const response2 = await window.ipcRenderer.invoke("valores", {
           method: "bulkCreate",

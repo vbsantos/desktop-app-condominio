@@ -1,0 +1,11 @@
+div#containerAgua {
+  display: flex;
+}
+
+div#esquerdaAgua {
+  display: block !important;
+}
+
+div#direitaAgua {
+  display: block !important;
+}
