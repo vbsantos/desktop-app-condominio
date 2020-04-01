@@ -15,11 +15,12 @@ import {
 
 // MATERIAL UI ICONS
 import {
-  Delete,
-  Create,
-  HomeWorkOutlined,
-  PeopleOutlined,
-  PlusOne
+  DeleteTwoTone as Delete,
+  CreateTwoTone as Create,
+  AssessmentTwoTone as Assessment,
+  HomeWorkTwoTone as HomeWork,
+  PeopleTwoTone as People,
+  PlusOneTwoTone as PlusOne
 } from "@material-ui/icons";
 
 // CSS
@@ -221,6 +222,13 @@ export default function EscolherCondominio(props) {
     }
   };
 
+  function handleCondominioReport(e) {
+    console.log("Condomínio reports");
+    if (!e) var e = window.event;
+    e.cancelBubble = true;
+    if (e.stopPropagation) e.stopPropagation();
+  }
+
   function handleCondominioEdit(e) {
     // console.log("Editar Condomínio", selectedCondominio.id);
     setDialogEditCondominioForm(true);
@@ -240,6 +248,10 @@ export default function EscolherCondominio(props) {
   function hadleCondominioRegister() {
     // console.log("Cadastrar Condomínio");
     setDialogRegisterCondominioForm(true);
+  }
+
+  function handlePaganteReport(id) {
+    console.log(`Pagante ${id} reports`);
   }
 
   function handlePaganteEdit(paganteId) {
@@ -327,11 +339,15 @@ export default function EscolherCondominio(props) {
             >
               <ExpansionPanelSummary expandIcon={"+"}>
                 <div className="leftCondominioItens">
-                  <HomeWorkOutlined />
+                  <HomeWork />
                   <h3>{condominio.nome}</h3>
                 </div>
                 {condominio.id === selectedCondominio.id && (
                   <div className="rightCondominioItens">
+                    <p className="ReportIcon" onClick={handleCondominioReport}>
+                      <Assessment />
+                      Relatórios
+                    </p>
                     <p className="EditIcon" onClick={handleCondominioEdit}>
                       <Create />
                       Editar
@@ -350,7 +366,7 @@ export default function EscolherCondominio(props) {
                   {condominio["Pagantes"].map(pagante => (
                     <ListItem key={pagante.id}>
                       <ListItemAvatar>
-                        <PeopleOutlined />
+                        <People />
                       </ListItemAvatar>
                       <p>
                         <strong>{pagante.complemento}</strong>
@@ -358,6 +374,13 @@ export default function EscolherCondominio(props) {
                       </p>
                       <ListItemSecondaryAction>
                         <div className="rightCondominioItens">
+                          <p
+                            className="ReportIcon"
+                            onClick={() => handlePaganteReport(pagante.id)}
+                          >
+                            <Assessment />
+                            Relatórios
+                          </p>
                           <p
                             className="EditIcon"
                             onClick={() => handlePaganteEdit(pagante.id)}

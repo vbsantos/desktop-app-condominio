@@ -76,6 +76,13 @@ h4 {
   padding: 0 4px 0 4px;
 }
 
+.rightCondominioItens *.ReportIcon:hover {
+  color: #1d7e1d;
+  border: 1px solid #1d7e1d;
+  border-radius: 4px;
+  padding: 0 4px 0 4px;
+}
+
 #PaganteRegisterLink {
   cursor: pointer;
   background-color: #e0e0e0;
