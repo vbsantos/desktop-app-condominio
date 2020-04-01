@@ -409,7 +409,7 @@ export default function EscolherCondominio(props) {
                       <PlusOne />
                     </ListItemAvatar>
                     <p>
-                      <strong>Adicionar novo Morador</strong>
+                      <strong>Adicionar Novo Morador</strong>
                     </p>
                   </ListItem>
                 </List>
