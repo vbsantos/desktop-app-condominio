@@ -85,21 +85,23 @@ h4 {
 
 #PaganteRegisterLink {
   cursor: pointer;
-  background-color: #e0e0e0;
+  background-color: transparent;
   border-radius: 5px;
   margin-top: 25px;
+  width: 310px;
 }
 
 #CondominioRegisterLink {
-  background-color: #e0e0e0;
+  background-color: transparent;
   border-radius: 5px;
   margin-top: 25px;
+  width: 350px;
 }
 
 #PaganteRegisterLink:hover {
-  background-color: #ccc;
+  background-color: #bbb;
 }
 
 #CondominioRegisterLink:hover {
-  background-color: #ccc;
+  background-color: #bbb;
 }
