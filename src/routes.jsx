@@ -5,6 +5,7 @@ import { Routes, Route } from "react-router-dom";
 import EscolherBeneficiario from "./pages/escolherBeneficiario";
 import EscolherCondominio from "./pages/escolherCondominio";
 import RegistrarDespesas from "./pages/registrarDespesas";
+import VisualizarRelatorios from "./pages/visualizarRelatorios";
 
 // COMPONENTS
 import Footbar from "./components/footbar";
@@ -71,6 +72,15 @@ export default function MainRoutes(props) {
             path="/RegistrarDespesas"
             element={
               <RegistrarDespesas
+                buttons={[footbarButtons, setFootbarButtons]}
+                data={[data, setData]}
+              />
+            }
+          />
+          <Route
+            path="/VisualizarRelatorios"
+            element={
+              <VisualizarRelatorios
                 buttons={[footbarButtons, setFootbarButtons]}
                 data={[data, setData]}
               />
