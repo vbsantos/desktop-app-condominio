@@ -224,6 +224,7 @@ export default function EscolherCondominio(props) {
 
   function handleCondominioReport(e) {
     console.log("Condomínio reports");
+    navigate("/VisualizarRelatorios");
     if (!e) var e = window.event;
     e.cancelBubble = true;
     if (e.stopPropagation) e.stopPropagation();
@@ -252,6 +253,7 @@ export default function EscolherCondominio(props) {
 
   function handlePaganteReport(id) {
     console.log(`Pagante ${id} reports`);
+    navigate("/VisualizarRelatorios");
   }
 
   function handlePaganteEdit(paganteId) {
