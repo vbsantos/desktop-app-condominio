@@ -17,7 +17,8 @@ export default function MainRoutes(props) {
   const [data, setData] = useState({
     beneficiario: {},
     allNestedBeneficiario: {},
-    allNestedCondominio: {}
+    allNestedCondominio: {},
+    reports: { generalReport: false, reports: [] }
   });
   const [footbarButtons, setFootbarButtons] = useState({
     buttons: [
@@ -59,6 +60,7 @@ export default function MainRoutes(props) {
               />
             }
           />
+
           <Route
             path="/EscolherCondominio"
             element={
@@ -68,19 +70,21 @@ export default function MainRoutes(props) {
               />
             }
           />
+
           <Route
-            path="/RegistrarDespesas"
+            path="/VisualizarRelatorios"
             element={
-              <RegistrarDespesas
+              <VisualizarRelatorios
                 buttons={[footbarButtons, setFootbarButtons]}
                 data={[data, setData]}
               />
             }
           />
+
           <Route
-            path="/VisualizarRelatorios"
+            path="/RegistrarDespesas"
             element={
-              <VisualizarRelatorios
+              <RegistrarDespesas
                 buttons={[footbarButtons, setFootbarButtons]}
                 data={[data, setData]}
               />

@@ -222,8 +222,19 @@ export default function EscolherCondominio(props) {
     }
   };
 
-  function handleCondominioReport(e) {
+  async function handleCondominioReport(e) {
     console.log("Condomínio reports");
+    // TODO: no momento que clica uma função armazena em "data" os relatórios a serem visualizados
+    //juntamente com uma flag indicando se é condomínio ou morador
+    const response = await window.ipcRenderer.invoke("generalReports", {
+      method: "indexByOwnerId",
+      content: { id: data.allNestedCondominio.id }
+    });
+    const reports = {
+      generalReport: true,
+      reports: response
+    };
+    setData({ ...data, reports });
     navigate("/VisualizarRelatorios");
     if (!e) var e = window.event;
     e.cancelBubble = true;
@@ -231,7 +242,6 @@ export default function EscolherCondominio(props) {
   }
 
   function handleCondominioEdit(e) {
-    // console.log("Editar Condomínio", selectedCondominio.id);
     setDialogEditCondominioForm(true);
     if (!e) var e = window.event;
     e.cancelBubble = true;
@@ -239,7 +249,6 @@ export default function EscolherCondominio(props) {
   }
 
   function handleCondominioDelete(e) {
-    // console.log("Deletar Condomínio", selectedCondominio.id);
     setDialogDeleteCondominio(true);
     if (!e) var e = window.event;
     e.cancelBubble = true;
@@ -247,29 +256,36 @@ export default function EscolherCondominio(props) {
   }
 
   function hadleCondominioRegister() {
-    // console.log("Cadastrar Condomínio");
     setDialogRegisterCondominioForm(true);
   }
 
-  function handlePaganteReport(id) {
+  async function handlePaganteReport(id) {
     console.log(`Pagante ${id} reports`);
+    // TODO: no momento que clica uma função armazena em "data" os relatórios a serem visualizados
+    //juntamente com uma flag indicando se é condomínio ou morador
+    const response = await window.ipcRenderer.invoke("individualReports", {
+      method: "indexByOwnerId",
+      content: { id }
+    });
+    const reports = {
+      generalReport: false,
+      reports: response
+    };
+    setData({ ...data, reports });
     navigate("/VisualizarRelatorios");
   }
 
   function handlePaganteEdit(paganteId) {
-    // console.log("Editar Pagante", paganteId);
     setSelectedPagante({ id: paganteId });
     setDialogEditPaganteForm(true);
   }
 
   function handlePaganteDelete(paganteId) {
-    // console.log("Deletar Pagante", paganteId);
     setSelectedPagante({ id: paganteId });
     setDialogDeletePagante(true);
   }
 
   function hadlePaganteRegister() {
-    // console.log("Cadastrar Pagante");
     setDialogRegisterPaganteForm(true);
   }
 
