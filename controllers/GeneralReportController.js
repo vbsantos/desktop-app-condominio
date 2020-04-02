@@ -20,7 +20,7 @@ class GeneralReportController {
     });
     const response = generalreports
       .map(generalreport => generalreport.get())
-      .sort((a, b) => (a.createdAt > b.createdAt ? 1 : -1));
+      .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
     return response;
   };
   show = async id => {

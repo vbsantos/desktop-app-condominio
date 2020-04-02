@@ -22,7 +22,7 @@ class IndividualReportController {
     });
     const response = individualreports
       .map(individualreport => individualreport.get())
-      .sort((a, b) => (a.createdAt > b.createdAt ? 1 : -1));
+      .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
     return response;
   };
   show = async id => {
