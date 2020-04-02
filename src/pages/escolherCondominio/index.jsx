@@ -223,16 +223,13 @@ export default function EscolherCondominio(props) {
   };
 
   async function handleCondominioReport(e) {
-    console.log("Condomínio reports");
-    // TODO: no momento que clica uma função armazena em "data" os relatórios a serem visualizados
-    //juntamente com uma flag indicando se é condomínio ou morador
     const response = await window.ipcRenderer.invoke("generalReports", {
       method: "indexByOwnerId",
       content: { id: data.allNestedCondominio.id }
     });
     const reports = {
       generalReport: true,
-      reports: response
+      data: response
     };
     setData({ ...data, reports });
     navigate("/VisualizarRelatorios");
@@ -260,16 +257,13 @@ export default function EscolherCondominio(props) {
   }
 
   async function handlePaganteReport(id) {
-    console.log(`Pagante ${id} reports`);
-    // TODO: no momento que clica uma função armazena em "data" os relatórios a serem visualizados
-    //juntamente com uma flag indicando se é condomínio ou morador
     const response = await window.ipcRenderer.invoke("individualReports", {
       method: "indexByOwnerId",
       content: { id }
     });
     const reports = {
       generalReport: false,
-      reports: response
+      data: response
     };
     setData({ ...data, reports });
     navigate("/VisualizarRelatorios");

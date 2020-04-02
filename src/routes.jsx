@@ -18,7 +18,7 @@ export default function MainRoutes(props) {
     beneficiario: {},
     allNestedBeneficiario: {},
     allNestedCondominio: {},
-    reports: { generalReport: false, reports: [] }
+    reports: { generalReport: false, data: [] }
   });
   const [footbarButtons, setFootbarButtons] = useState({
     buttons: [
