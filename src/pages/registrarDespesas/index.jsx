@@ -14,7 +14,7 @@ import DialogExcluirDespesa from "../../dialogs/deletarDespesa";
 import DialogReportConfirm from "../../dialogs/gerarRelatorios";
 
 // REPORTS
-import RelatorioGeral from "../../reports/relatorioGeral";
+import RelatorioCondominioRegistrar from "../../reports/relatorioRegistrar";
 
 export default function RegistrarDespesas(props) {
   const [footbar, setFootbar] = props.buttons;
@@ -236,7 +236,7 @@ export default function RegistrarDespesas(props) {
         />
       )}
       <h1 className="PageTitle">Registro de Despesas</h1>
-      <RelatorioGeral
+      <RelatorioCondominioRegistrar
         reportRef={reportRef}
         despesas={data.allNestedCondominio["Despesas"]}
         setSelected={setSelectedDespesa}
