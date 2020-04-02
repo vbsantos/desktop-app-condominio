@@ -323,6 +323,11 @@ ipcMain.handle("individualReports", async (event, arg) => {
         status = await IndividualReport.index();
         console.log("saida:", status);
         break;
+      case "indexByOwnerId":
+        console.log("entrada:", arg);
+        status = await IndividualReport.indexByOwnerId(content.id);
+        console.log("saida:", status);
+        break;
       case "show":
         console.log("entrada:", arg);
         status = await IndividualReport.show(content.id);
@@ -363,6 +368,11 @@ ipcMain.handle("generalReports", async (event, arg) => {
       case "index":
         console.log("entrada:", arg);
         status = await GeneralReport.index();
+        console.log("saida:", status);
+        break;
+      case "indexByOwnerId":
+        console.log("entrada:", arg);
+        status = await GeneralReport.indexByOwnerId(content.id);
         console.log("saida:", status);
         break;
       case "show":
