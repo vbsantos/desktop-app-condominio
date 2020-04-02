@@ -14,6 +14,17 @@ class IndividualReportController {
     );
     return response;
   };
+  indexByOwnerId = async id => {
+    const individualreports = await IndividualReport.findAll({
+      where: {
+        paganteId: id
+      }
+    });
+    const response = individualreports
+      .map(individualreport => individualreport.get())
+      .sort((a, b) => (a.createdAt > b.createdAt ? 1 : -1));
+    return response;
+  };
   show = async id => {
     const individualreport = await IndividualReport.findOne({
       where: {

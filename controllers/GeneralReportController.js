@@ -12,6 +12,17 @@ class GeneralReportController {
     const response = generalreports.map(generalreport => generalreport.get());
     return response;
   };
+  indexByOwnerId = async id => {
+    const generalreports = await GeneralReport.findAll({
+      where: {
+        condominioId: id
+      }
+    });
+    const response = generalreports
+      .map(generalreport => generalreport.get())
+      .sort((a, b) => (a.createdAt > b.createdAt ? 1 : -1));
+    return response;
+  };
   show = async id => {
     const generalreport = await GeneralReport.findOne({
       where: {
