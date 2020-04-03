@@ -1,0 +1,40 @@
+#relatorioIndividual .MuiTableContainer-root {
+  background-color: white;
+  display: flex;
+  overflow: hidden;
+  border: 1px solid black;
+  text-align: center;
+  width: 900px !important;
+  margin: 0 auto 0 auto;
+  padding: 0;
+}
+
+#relatorioIndividual .MuiTableContainer-root #table2 {
+  margin-left: -1px;
+  margin-right: -1px;
+}
+
+#relatorioIndividual .MuiTableRow-head * {
+  background-color: black;
+  color: white;
+}
+
+#relatorioIndividual .MuiTableRow-root * {
+  padding: 1px 8px 1px 8px;
+  font-weight: 600;
+  font-size: 18px !important;
+}
+
+#relatorioIndividual .MuiTableRow-root #nome {
+  text-align: left !important;
+  width: 40% !important;
+}
+
+#relatorioIndividual .MuiTableRow-root #valor {
+  text-align: right !important;
+  width: 10% !important;
+}
+
+#relatorioIndividual #table1 {
+  border-right: 2px solid black;
+}
