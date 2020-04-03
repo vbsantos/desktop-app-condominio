@@ -1,59 +1,59 @@
-.MuiTableContainer-root {
+#relatorioCondominioRegistrar .MuiTableContainer-root {
   text-align: center;
   width: 900px !important;
   margin: 0 auto 0 auto;
   padding: 0;
 }
-.MuiTable-root {
+#relatorioCondominioRegistrar .MuiTable-root {
   background-color: white !important;
   border: 2px solid black;
 }
 
-.MuiTable-root * {
+#relatorioCondominioRegistrar .MuiTable-root * {
   font-size: 18px !important;
   /* font-weight: bolder !important; */
 }
 
-.MuiTable-root {
+#relatorioCondominioRegistrar .MuiTable-root {
   margin-bottom: 10px;
 }
 
-.Black .MuiTableCell-root {
+#relatorioCondominioRegistrar .Black .MuiTableCell-root {
   background-color: black !important;
   color: white !important;
   font-weight: 600 !important;
   padding-top: 1px !important;
 }
 
-.Black .MuiTableCell-root {
+#relatorioCondominioRegistrar .Black .MuiTableCell-root {
   margin: 0;
   padding: 0;
 }
 
-.Linha .MuiTableCell-root {
+#relatorioCondominioRegistrar .Linha .MuiTableCell-root {
   margin: 0;
   padding: 0;
   cursor: pointer;
 }
-.MuiTableCell-root.col1 {
+#relatorioCondominioRegistrar .MuiTableCell-root.col1 {
   padding-left: 10px !important;
   width: 650px !important;
 }
-.MuiTableCell-root.col2 {
+#relatorioCondominioRegistrar .MuiTableCell-root.col2 {
   width: 100px !important;
 }
-.MuiTableCell-root.col3 {
+#relatorioCondominioRegistrar .MuiTableCell-root.col3 {
   width: 150px !important;
 }
 
-.MuiTableCell-root.col2 {
+#relatorioCondominioRegistrar .MuiTableCell-root.col2 {
   text-align: center;
 }
 
-.MuiTableCell-root.col3 {
+#relatorioCondominioRegistrar .MuiTableCell-root.col3 {
   text-align: center;
 }
 
-#fundoReservaRow {
+#relatorioCondominioRegistrar #fundoReservaRow {
   cursor: pointer;
 }
