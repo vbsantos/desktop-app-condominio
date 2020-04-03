@@ -13,10 +13,8 @@ import {
 // CSS
 import "./style.css";
 
-export default function relatorioGeral(props) {
+export default function RelatorioGeral(props) {
   const { report } = props;
-
-  console.log("Report inside relatorioGeral:", report);
 
   return (
     <div id="relatorioGeral">
