@@ -169,6 +169,7 @@ export default function VisualizarRelatorios(props) {
                 .split("-")
                 .join(" / ")
             }
+            title={"Data em que o relatório foi gerado"}
             id={`vertical-tab-${index}`}
             aria-controls={`vertical-tabpanel-${index}`}
           />
@@ -177,12 +178,6 @@ export default function VisualizarRelatorios(props) {
 
       {data.reports.data.map((dt, index) => (
         <TabPanel id="panel" value={value} index={index}>
-          {console.log(JSON.parse(dt.report))}
-
-          {data.reports.generalReport
-            ? console.warn("calling RelatorioGeral:", dt)
-            : console.warn("calling RelatorioIndividual:", dt)}
-
           {data.reports.generalReport ? (
             <RelatorioGeral report={JSON.parse(dt.report)} />
           ) : (
