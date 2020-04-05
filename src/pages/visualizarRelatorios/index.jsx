@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 // MATERIAL UI COMPONENTS
-import { Tabs, Tab, Typography, Box } from "@material-ui/core";
+import { Tabs, Tab } from "@material-ui/core";
 
 // CSS
 import "./style.css";
@@ -10,6 +10,9 @@ import "./style.css";
 // REPORTS
 import RelatorioGeral from "../../reports/relatorioGeral";
 import RelatorioIndividual from "../../reports/relatorioIndividual";
+
+// COMPONENTS
+import TabPanel from "../../components/tabPanel";
 
 export default function VisualizarRelatorios(props) {
   const [footbar, setFootbar] = props.buttons;
@@ -20,6 +23,9 @@ export default function VisualizarRelatorios(props) {
 
   // Used to control the tabs
   const [value, setValue] = useState(0);
+
+  // Stores the general report reference
+  const reportRef = useRef(null);
 
   console.groupCollapsed("VisualizarRelatorios: System data");
   console.log("Footbar:", footbar);
@@ -37,24 +43,24 @@ export default function VisualizarRelatorios(props) {
           position: "left",
           visible: true,
           enabled: true,
-          value: "VOLTAR"
+          value: "VOLTAR",
         },
         {
           id: 1,
           position: "center",
           visible: false,
           enabled: false,
-          value: ""
+          value: "",
         },
         {
           id: 2,
           position: "right",
           visible: true,
           enabled: false,
-          value: "SALVAR PDF"
-        }
+          value: "SALVAR PDF",
+        },
       ],
-      action: -1
+      action: -1,
     });
     return () => console.log("VisualizarRelatorios - Encerrou");
   }, []);
@@ -79,69 +85,6 @@ export default function VisualizarRelatorios(props) {
     }
   }, [footbar.action]);
 
-  function TabPanel(props) {
-    const { children, value, index, ...other } = props;
-
-    return (
-      <Typography
-        component="div"
-        role="tabpanel"
-        hidden={value !== index}
-        id={`vertical-tabpanel-${index}`}
-        aria-labelledby={`vertical-tab-${index}`}
-        {...other}
-      >
-        {value === index && <Box p={3}>{children}</Box>}
-      </Typography>
-    );
-  }
-
-  const getMonth = monthDigit => {
-    let month;
-    switch (Number(monthDigit)) {
-      case 1:
-        month = "Janeiro";
-        break;
-      case 2:
-        month = "Fevereiro";
-        break;
-      case 3:
-        month = "Março";
-        break;
-      case 4:
-        month = "Abril";
-        break;
-      case 5:
-        month = "Maio";
-        break;
-      case 6:
-        month = "Junho";
-        break;
-      case 7:
-        month = "Julho";
-        break;
-      case 8:
-        month = "Agosto";
-        break;
-      case 9:
-        month = "Setembro";
-        break;
-      case 10:
-        month = "Outubro";
-        break;
-      case 11:
-        month = "Novembro";
-        break;
-      case 12:
-        month = "Dezembro";
-        break;
-      default:
-        month = "ERRO";
-        break;
-    }
-    return month;
-  };
-
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -156,19 +99,17 @@ export default function VisualizarRelatorios(props) {
         onChange={handleChange}
         aria-label="Vertical tabs"
       >
-        {/* FIXME - nome do pagante */}
+        {/* TODO - Adicionar algo que diz o nome do condomínio ou do morador ao visualizar */}
         {/* {data.reports.generalReport
           ? "Condomínio " + data.allNestedCondominio.name
           : "Eduardo Batata"} */}
         {data.reports.data.map((report, index) => (
           <Tab
-            label={
-              //getMonth(report.createdAt.split("-")[1])
-              report.createdAt
-                .split("T")[0]
-                .split("-")
-                .join(" / ")
-            }
+            label={report.createdAt
+              .split("T")[0]
+              .split("-")
+              .reverse()
+              .join(" / ")}
             title={"Data em que o relatório foi gerado"}
             id={`vertical-tab-${index}`}
             aria-controls={`vertical-tabpanel-${index}`}
