@@ -343,6 +343,11 @@ ipcMain.handle("individualReports", async (event, arg) => {
         status = await IndividualReport.delete(content.id);
         console.log("saida:", status);
         break;
+      case "makeDocument":
+        console.log("entrada:", arg);
+        status = await IndividualReport.makeDocument(content);
+        console.log("saida:", status);
+        break;
       default:
         console.log({ error: "This method do not exist." });
     }
@@ -388,6 +393,11 @@ ipcMain.handle("generalReports", async (event, arg) => {
       case "delete":
         console.log("entrada:", arg);
         status = await GeneralReport.delete(content.id);
+        console.log("saida:", status);
+        break;
+      case "makeDocument":
+        console.log("entrada:", arg);
+        status = await GeneralReport.makeDocument(content);
         console.log("saida:", status);
         break;
       default:

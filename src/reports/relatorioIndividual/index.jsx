@@ -34,11 +34,9 @@ export default function RelatorioIndividual(props) {
   const table1 = reportData.splice(0, tableSize);
   const table2 = reportData;
 
-  console.warn(table1, table2);
-
   return (
-    <div id="relatorioIndividual" ref={reportRef}>
-      <TableContainer>
+    <div id="relatorioIndividual">
+      <TableContainer ref={reportRef}>
         <Table id="table1">
           <TableHead>
             <TableRow>

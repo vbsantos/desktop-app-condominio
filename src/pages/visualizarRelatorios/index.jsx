@@ -73,8 +73,18 @@ export default function VisualizarRelatorios(props) {
     if (ref.current) {
       html2canvas(ref.current).then((canvas) => {
         const imgData = canvas.toDataURL("image/png");
-        //TODO: save png ou só salva o base64 em uma variável que vai pro backend (faz sentido)
-        console.log("imgData:", imgData);
+        //salva o base64 em uma variável que vai pro backend
+        if (data.reports.generalReport) {
+          window.ipcRenderer.invoke("generalReports", {
+            method: "makeDocument",
+            content: imgData,
+          });
+        } else {
+          window.ipcRenderer.invoke("individualReports", {
+            method: "makeDocument",
+            content: imgData,
+          });
+        }
       });
       return true;
     }

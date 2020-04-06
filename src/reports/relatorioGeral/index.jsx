@@ -18,8 +18,8 @@ export default function RelatorioGeral(props) {
   const { reportRef } = props;
 
   return (
-    <div id="relatorioGeral" ref={reportRef}>
-      <TableContainer>
+    <div id="relatorioGeral">
+      <TableContainer ref={reportRef}>
         {report.map((categoria) => {
           // cada categoria
           let subtotal = 0;
