@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 
 // MATERIAL UI COMPONENTS
 import {
@@ -7,7 +7,7 @@ import {
   TableHead,
   TableBody,
   TableRow,
-  TableCell
+  TableCell,
 } from "@material-ui/core";
 
 // CSS
@@ -15,11 +15,12 @@ import "./style.css";
 
 export default function RelatorioGeral(props) {
   const { report } = props;
+  const { reportRef } = props;
 
   return (
-    <div id="relatorioGeral">
+    <div id="relatorioGeral" ref={reportRef}>
       <TableContainer>
-        {report.map(categoria => {
+        {report.map((categoria) => {
           // cada categoria
           let subtotal = 0;
           return (
@@ -33,7 +34,7 @@ export default function RelatorioGeral(props) {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {categoria.data.map(despesa => {
+                  {categoria.data.map((despesa) => {
                     // cada conta dessa categoria
                     subtotal += Number(despesa.valor);
                     return (
@@ -42,9 +43,11 @@ export default function RelatorioGeral(props) {
                         <TableCell className="col2">
                           {despesa.permanente
                             ? "Fixa"
-                            : `${despesa.parcelaAtual +
+                            : `${
+                                despesa.parcelaAtual +
                                 " de " +
-                                despesa.numParcelas}`}
+                                despesa.numParcelas
+                              }`}
                         </TableCell>
                         <TableCell className="col3">
                           {"R$ " + Number(despesa.valor).toFixed(2)}
@@ -66,7 +69,7 @@ export default function RelatorioGeral(props) {
         })}
 
         {/* fundo reserva e soma total dos valores */}
-        {report.map(info => {
+        {report.map((info) => {
           if (!info.table) {
             if (info.name === "fundoReserva") {
               return (

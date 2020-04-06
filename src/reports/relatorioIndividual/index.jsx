@@ -7,23 +7,24 @@ import {
   TableHead,
   TableBody,
   TableRow,
-  TableCell
+  TableCell,
 } from "@material-ui/core";
 
 // CSS
 import "./style.css";
 
 export default function RelatorioIndividual(props) {
-  const { report } = props;
+  const { reportRef } = props;
+
   const reportData = props.report
-    .map(categoria =>
+    .map((categoria) =>
       categoria.table
-        ? categoria.data.map(despesa => [despesa.nome, despesa.valor])
+        ? categoria.data.map((despesa) => [despesa.nome, despesa.valor])
         : [
             [
               categoria.name === "total" ? "Total" : "Fundo Reserva",
-              categoria.data
-            ]
+              categoria.data,
+            ],
           ]
     )
     .flat(1);
@@ -36,7 +37,7 @@ export default function RelatorioIndividual(props) {
   console.warn(table1, table2);
 
   return (
-    <div id="relatorioIndividual">
+    <div id="relatorioIndividual" ref={reportRef}>
       <TableContainer>
         <Table id="table1">
           <TableHead>
@@ -46,7 +47,7 @@ export default function RelatorioIndividual(props) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {table1.map(despesa => (
+            {table1.map((despesa) => (
               <TableRow>
                 <TableCell id="nome">{despesa[0]}</TableCell>
                 <TableCell id="valor">{"R$ " + despesa[1]}</TableCell>
@@ -62,7 +63,7 @@ export default function RelatorioIndividual(props) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {table2.map(despesa => (
+            {table2.map((despesa) => (
               <TableRow>
                 <TableCell id="nome">{despesa[0]}</TableCell>
                 <TableCell id="valor">{"R$ " + despesa[1]}</TableCell>

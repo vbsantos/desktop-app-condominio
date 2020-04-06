@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 
 // PDF libs
 // import html2canvas from "html2canvas";
-// import jsPDF from "jspdf";
 
 // CSS
 import "./style.css";
@@ -63,24 +62,24 @@ export default function RegistrarDespesas(props) {
           position: "left",
           visible: true,
           enabled: true,
-          value: "VOLTAR"
+          value: "VOLTAR",
         },
         {
           id: 1,
           position: "center",
           visible: true,
           enabled: true,
-          value: "Registrar Nova Despesa"
+          value: "Registrar Nova Despesa",
         },
         {
           id: 2,
           position: "right",
           visible: true,
           enabled: true,
-          value: "Finalizar"
-        }
+          value: "Finalizar",
+        },
       ],
-      action: -1
+      action: -1,
     });
     return () => console.log("RegistrarDespesas - Encerrou");
   }, []);
@@ -122,16 +121,16 @@ export default function RegistrarDespesas(props) {
           "beneficiarios",
           {
             method: "showNested",
-            content: { id: data.beneficiario.id }
+            content: { id: data.beneficiario.id },
           }
         );
         const allNestedCondominio = allNestedBeneficiario["Condominios"].filter(
-          condominio => condominio.id === data.allNestedCondominio.id
+          (condominio) => condominio.id === data.allNestedCondominio.id
         )[0];
         setData({
           ...data,
           allNestedBeneficiario,
-          allNestedCondominio
+          allNestedCondominio,
         });
         console.timeEnd("Get all data from database");
       }
@@ -141,7 +140,7 @@ export default function RegistrarDespesas(props) {
     dialogRegisterDespesaForm,
     dialogDeleteDespesa,
     dialogEditDespesaForm,
-    dialogReportConfirm
+    dialogReportConfirm,
   ]);
 
   // This function runs only when something change in Despesas
@@ -174,6 +173,8 @@ export default function RegistrarDespesas(props) {
   // Stores the general report reference
   const reportRef = useRef(null);
 
+  // TODO: DELETE
+  // ANCHOR: função pra gerar png/pdf
   // This funcions turns a React Component into a PDF
   // const getPdf = ref => {
   //   if (ref.current) {
@@ -220,7 +221,7 @@ export default function RegistrarDespesas(props) {
           condominio={data.allNestedCondominio}
           despesa={
             data.allNestedCondominio["Despesas"].filter(
-              despesa => despesa.id === selectedDespesa.id
+              (despesa) => despesa.id === selectedDespesa.id
             )[0]
           }
         />
@@ -230,7 +231,7 @@ export default function RegistrarDespesas(props) {
           open={[dialogDeleteDespesa, setDialogDeleteDespesa]}
           despesa={
             data.allNestedCondominio["Despesas"].filter(
-              despesa => despesa.id === selectedDespesa.id
+              (despesa) => despesa.id === selectedDespesa.id
             )[0]
           }
         />

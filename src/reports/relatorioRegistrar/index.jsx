@@ -7,7 +7,7 @@ import {
   TableHead,
   TableBody,
   TableRow,
-  TableCell
+  TableCell,
 } from "@material-ui/core";
 
 // CSS
@@ -36,7 +36,7 @@ export default function RelatorioCondominioRegistrar(props) {
   const [percentage, setPercentage] = props.valorFundoReserva;
 
   // Function that runs when you click in a Conta row
-  const selectAndOpenDialog = id => {
+  const selectAndOpenDialog = (id) => {
     setSelected({ id });
     setDialogEditContaForm(true);
   };
@@ -44,9 +44,9 @@ export default function RelatorioCondominioRegistrar(props) {
   return (
     <div id="relatorioCondominioRegistrar">
       <TableContainer ref={reportRef}>
-        {categorias.map(categoria => {
+        {categorias.map((categoria) => {
           const categoriaContas = despesas.filter(
-            despesa => despesa.categoria === categoria
+            (despesa) => despesa.categoria === categoria
           );
           const subtotal = categoriaContas.reduce((acc, despesa) => {
             return acc + Number(despesa.valor);
@@ -61,7 +61,7 @@ export default function RelatorioCondominioRegistrar(props) {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {categoriaContas.map(categoriaConta => (
+                {categoriaContas.map((categoriaConta) => (
                   <TableRow
                     key={categoria + categoriaConta.id}
                     className="Linha"
@@ -73,9 +73,11 @@ export default function RelatorioCondominioRegistrar(props) {
                     <TableCell className="col2">
                       {categoriaConta.permanente
                         ? "Fixa"
-                        : `${categoriaConta.parcelaAtual +
+                        : `${
+                            categoriaConta.parcelaAtual +
                             " de " +
-                            categoriaConta.numParcelas}`}
+                            categoriaConta.numParcelas
+                          }`}
                     </TableCell>
                     <TableCell className="col3">
                       {"R$ " + Number(categoriaConta.valor).toFixed(2)}
@@ -101,7 +103,8 @@ export default function RelatorioCondominioRegistrar(props) {
                 id="fundoReservaRow"
                 onClick={() =>
                   selectAndOpenDialog(
-                    despesas.filter(despesa => despesa.fundoReserva)[0].id || ""
+                    despesas.filter((despesa) => despesa.fundoReserva)[0].id ||
+                      ""
                   )
                 }
               >

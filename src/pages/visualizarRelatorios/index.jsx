@@ -14,6 +14,9 @@ import RelatorioIndividual from "../../reports/relatorioIndividual";
 // COMPONENTS
 import TabPanel from "../../components/tabPanel";
 
+// component to png
+import html2canvas from "html2canvas";
+
 export default function VisualizarRelatorios(props) {
   const [footbar, setFootbar] = props.buttons;
   const [data, setData] = props.data;
@@ -56,7 +59,7 @@ export default function VisualizarRelatorios(props) {
           id: 2,
           position: "right",
           visible: true,
-          enabled: false,
+          enabled: true,
           value: "SALVAR PDF",
         },
       ],
@@ -64,6 +67,20 @@ export default function VisualizarRelatorios(props) {
     });
     return () => console.log("VisualizarRelatorios - Encerrou");
   }, []);
+
+  // This funcions turns a React Component into a PDF
+  const getComponentPrint = (ref) => {
+    if (ref.current) {
+      html2canvas(ref.current).then((canvas) => {
+        console.log("CANVAS:", canvas);
+        const imgData = canvas.toDataURL("image/png");
+        console.log("imgData:", imgData);
+        //TODO: save png ou só salva o base64 em uma variável que vai pro backend (faz sentido)
+      });
+      return true;
+    }
+    return false;
+  };
 
   // This function runs only when there is an interaction with the footbar buttons
   useEffect(() => {
@@ -80,11 +97,13 @@ export default function VisualizarRelatorios(props) {
       case 2:
         console.log("VisualizarRelatorios - Botão da direita");
         setFootbar({ ...footbar, action: -1 });
+        getComponentPrint(reportRef);
         console.log("DOWNLOAD PDF REPORT");
         break;
     }
   }, [footbar.action]);
 
+  // This function that runs when change tab
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -120,9 +139,15 @@ export default function VisualizarRelatorios(props) {
       {data.reports.data.map((dt, index) => (
         <TabPanel id="panel" value={value} index={index}>
           {data.reports.generalReport ? (
-            <RelatorioGeral report={JSON.parse(dt.report)} />
+            <RelatorioGeral
+              reportRef={reportRef}
+              report={JSON.parse(dt.report)}
+            />
           ) : (
-            <RelatorioIndividual report={JSON.parse(dt.report)} />
+            <RelatorioIndividual
+              reportRef={reportRef}
+              report={JSON.parse(dt.report)}
+            />
           )}
         </TabPanel>
       ))}
