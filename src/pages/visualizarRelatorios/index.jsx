@@ -72,10 +72,9 @@ export default function VisualizarRelatorios(props) {
   const getComponentPrint = (ref) => {
     if (ref.current) {
       html2canvas(ref.current).then((canvas) => {
-        console.log("CANVAS:", canvas);
         const imgData = canvas.toDataURL("image/png");
-        console.log("imgData:", imgData);
         //TODO: save png ou só salva o base64 em uma variável que vai pro backend (faz sentido)
+        console.log("imgData:", imgData);
       });
       return true;
     }
