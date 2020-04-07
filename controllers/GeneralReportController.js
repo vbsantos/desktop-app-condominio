@@ -81,8 +81,8 @@ class GeneralReportController {
       // Draw the PNG image near the lower right corner of the JPG image
       page.drawImage(pngImage, {
         x: 10,
-        y: page.getHeight() - pngDims.height - 20,
-        width: 576,
+        y: height - pngDims.height - 20,
+        width: width - 20,
         height: pngDims.height,
       });
 
@@ -92,7 +92,9 @@ class GeneralReportController {
       // Save pdf in downloads folder
       dialog
         .showSaveDialog({
-          title: "RelatorioCondominio.pdf", //FIXME: não ta exibindo
+          title: "Salvar Relatório do Condomínio",
+          defaultPath: "RelatorioCondominio.pdf",
+          buttonLabel: "Salvar",
           filters: [
             { name: "Documents", extensions: ["pdf"] },
             { name: "Custom File Type", extensions: ["as"] },

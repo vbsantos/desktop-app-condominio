@@ -34,6 +34,7 @@ export default function RelatorioIndividual(props) {
   const table1 = reportData.splice(0, tableSize);
   const table2 = reportData;
 
+  // FIXME: THAT SAME KEY PROBLEM
   return (
     <div id="relatorioIndividual">
       <TableContainer ref={reportRef}>

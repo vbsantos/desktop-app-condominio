@@ -107,7 +107,6 @@ export default function VisualizarRelatorios(props) {
         console.log("VisualizarRelatorios - Botão da direita");
         setFootbar({ ...footbar, action: -1 });
         getComponentPrint(reportRef);
-        console.log("DOWNLOAD PDF REPORT");
         break;
     }
   }, [footbar.action]);
@@ -145,6 +144,7 @@ export default function VisualizarRelatorios(props) {
         ))}
       </Tabs>
 
+      {/* TODO: Enviar junto a data do relatório pra ficar no nome do arquivo */}
       {data.reports.data.map((dt, index) => (
         <TabPanel id="panel" value={value} index={index}>
           {data.reports.generalReport ? (

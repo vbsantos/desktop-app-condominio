@@ -173,29 +173,6 @@ export default function RegistrarDespesas(props) {
   // Stores the general report reference
   const reportRef = useRef(null);
 
-  // TODO: DELETE
-  // ANCHOR: função pra gerar png/pdf
-  // This funcions turns a React Component into a PDF
-  // const getPdf = ref => {
-  //   if (ref.current) {
-  //     html2canvas(ref.current).then(canvas => {
-  //       const imgData = canvas.toDataURL("image/png");
-  //       const pdf = new jsPDF();
-  //       const date = new Date();
-  //       const nd = data.allNestedCondominio["Despesas"].length;
-  //       const nc = categorias.length;
-  //       const h1 = 6; // line height
-  //       const h2 = 3; // between tables height
-  //       let height = nc * (2 * h1 + h2) + nd * h1 + (h1 + h2);
-  //       height = height > 293 ? 293 : height;
-  //       pdf.addImage(imgData, "PNG", 5, 5, 200, height); // máximo 293
-  //       pdf.save(`relatorio_${date.getFullYear()}_${date.getMonth() + 1}.pdf`);
-  //     });
-  //     return true;
-  //   }
-  //   return false;
-  // };
-
   return (
     <>
       {dialogReportConfirm && (

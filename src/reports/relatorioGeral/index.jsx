@@ -17,6 +17,7 @@ export default function RelatorioGeral(props) {
   const { report } = props;
   const { reportRef } = props;
 
+  // FIXME: THAT SAME KEY PROBLEM
   return (
     <div id="relatorioGeral">
       <TableContainer ref={reportRef}>
