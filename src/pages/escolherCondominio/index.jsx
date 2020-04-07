@@ -10,7 +10,7 @@ import {
   List,
   ListItem,
   ListItemAvatar,
-  ListItemSecondaryAction
+  ListItemSecondaryAction,
 } from "@material-ui/core";
 
 // MATERIAL UI ICONS
@@ -20,7 +20,7 @@ import {
   AssessmentTwoTone as Assessment,
   HomeWorkTwoTone as HomeWork,
   PeopleTwoTone as People,
-  PlusOneTwoTone as PlusOne
+  PlusOneTwoTone as PlusOne,
 } from "@material-ui/icons";
 
 // CSS
@@ -51,7 +51,7 @@ export default function EscolherCondominio(props) {
   // Boolean for Register Dialog
   const [
     dialogRegisterCondominioForm,
-    setDialogRegisterCondominioForm
+    setDialogRegisterCondominioForm,
   ] = useState(false);
 
   // Boolean for Edit Dialog
@@ -87,24 +87,24 @@ export default function EscolherCondominio(props) {
           position: "left",
           visible: true,
           enabled: true,
-          value: "VOLTAR"
+          value: "VOLTAR",
         },
         {
           id: 1,
           position: "center",
           visible: false,
           enabled: false,
-          value: ""
+          value: "",
         },
         {
           id: 2,
           position: "right",
           visible: true,
           enabled: false,
-          value: "CONTINUAR"
-        }
+          value: "CONTINUAR",
+        },
       ],
-      action: -1
+      action: -1,
     });
     return () => console.log("EscolherCondominio - Encerrou");
   }, []);
@@ -136,23 +136,23 @@ export default function EscolherCondominio(props) {
           position: "left",
           visible: true,
           enabled: true,
-          value: "VOLTAR"
+          value: "VOLTAR",
         },
         {
           id: 1,
           position: "center",
           visible: false,
           enabled: false,
-          value: ""
+          value: "",
         },
         {
           id: 2,
           position: "right",
           visible: true,
           enabled: selectedCondominio.id !== -1,
-          value: "CONTINUAR"
-        }
-      ]
+          value: "CONTINUAR",
+        },
+      ],
     });
   }, [selectedCondominio.id]);
 
@@ -181,19 +181,19 @@ export default function EscolherCondominio(props) {
         console.time("Get all data from database");
         const response = await window.ipcRenderer.invoke("beneficiarios", {
           method: "showNested",
-          content: { id: data.beneficiario.id }
+          content: { id: data.beneficiario.id },
         });
         selectedCondominio.id === -1
           ? setData({
               ...data,
-              allNestedBeneficiario: response
+              allNestedBeneficiario: response,
             })
           : setData({
               ...data,
               allNestedBeneficiario: response,
               allNestedCondominio: response["Condominios"].filter(
-                condominio => condominio.id == selectedCondominio.id
-              )[0]
+                (condominio) => condominio.id == selectedCondominio.id
+              )[0],
             });
         console.timeEnd("Get all data from database");
       }
@@ -205,16 +205,16 @@ export default function EscolherCondominio(props) {
     dialogEditCondominioForm,
     dialogRegisterPaganteForm,
     dialogDeletePagante,
-    dialogEditPaganteForm
+    dialogEditPaganteForm,
   ]);
 
-  const handleCondominioClick = panel => (event, isExpanded) => {
+  const handleCondominioClick = (panel) => (event, isExpanded) => {
     if (isExpanded) {
       setSelectedCondominio({ id: panel });
       setExpanded(panel);
       const allNestedCondominio = data.allNestedBeneficiario[
         "Condominios"
-      ].filter(condominio => condominio.id === panel)[0];
+      ].filter((condominio) => condominio.id === panel)[0];
       setData({ ...data, allNestedCondominio });
     } else {
       setSelectedCondominio({ id: -1 });
@@ -223,33 +223,35 @@ export default function EscolherCondominio(props) {
   };
 
   async function handleCondominioReport(e) {
-    const response = await window.ipcRenderer.invoke("generalReports", {
-      method: "indexByOwnerId",
-      content: { id: data.allNestedCondominio.id }
-    });
-    const reports = {
-      generalReport: true,
-      data: response
-    };
-    setData({ ...data, reports });
-    navigate("/VisualizarRelatorios");
     if (!e) var e = window.event;
     e.cancelBubble = true;
     if (e.stopPropagation) e.stopPropagation();
+    const response = await window.ipcRenderer.invoke("generalReports", {
+      method: "indexByOwnerId",
+      content: { id: data.allNestedCondominio.id },
+    });
+    if (response[0]) {
+      const reports = {
+        generalReport: true,
+        data: response,
+      };
+      setData({ ...data, reports });
+      navigate("/VisualizarRelatorios");
+    }
   }
 
   function handleCondominioEdit(e) {
-    setDialogEditCondominioForm(true);
     if (!e) var e = window.event;
     e.cancelBubble = true;
     if (e.stopPropagation) e.stopPropagation();
+    setDialogEditCondominioForm(true);
   }
 
   function handleCondominioDelete(e) {
-    setDialogDeleteCondominio(true);
     if (!e) var e = window.event;
     e.cancelBubble = true;
     if (e.stopPropagation) e.stopPropagation();
+    setDialogDeleteCondominio(true);
   }
 
   function hadleCondominioRegister() {
@@ -259,14 +261,16 @@ export default function EscolherCondominio(props) {
   async function handlePaganteReport(id) {
     const response = await window.ipcRenderer.invoke("individualReports", {
       method: "indexByOwnerId",
-      content: { id }
+      content: { id },
     });
-    const reports = {
-      generalReport: false,
-      data: response
-    };
-    setData({ ...data, reports });
-    navigate("/VisualizarRelatorios");
+    if (response[0]) {
+      const reports = {
+        generalReport: false,
+        data: response,
+      };
+      setData({ ...data, reports });
+      navigate("/VisualizarRelatorios");
+    }
   }
 
   function handlePaganteEdit(paganteId) {
@@ -322,7 +326,7 @@ export default function EscolherCondominio(props) {
           condominio={selectedCondominio}
           pagante={
             data.allNestedCondominio["Pagantes"].filter(
-              pagante => pagante.id === selectedPagante.id
+              (pagante) => pagante.id === selectedPagante.id
             )[0]
           }
         />
@@ -332,7 +336,7 @@ export default function EscolherCondominio(props) {
           open={[dialogDeletePagante, setDialogDeletePagante]}
           pagante={
             data.allNestedCondominio["Pagantes"].filter(
-              pagante => pagante.id === selectedPagante.id
+              (pagante) => pagante.id === selectedPagante.id
             )[0]
           }
         />
@@ -342,7 +346,7 @@ export default function EscolherCondominio(props) {
       <Container maxWidth="xl">
         {/*CADA CONDOMINIO*/}
         {typeof data.allNestedBeneficiario["Condominios"] !== "undefined" &&
-          data.allNestedBeneficiario["Condominios"].map(condominio => (
+          data.allNestedBeneficiario["Condominios"].map((condominio) => (
             <ExpansionPanel
               elevation={condominio.id === selectedCondominio.id ? 10 : 3}
               key={condominio.id}
@@ -375,7 +379,7 @@ export default function EscolherCondominio(props) {
                 {/* TODOS OS PAGANTES */}
                 <List dense>
                   {/* CADA PAGANTE */}
-                  {condominio["Pagantes"].map(pagante => (
+                  {condominio["Pagantes"].map((pagante) => (
                     <ListItem key={pagante.id}>
                       <ListItemAvatar>
                         <People />
