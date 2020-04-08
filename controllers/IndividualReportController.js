@@ -52,55 +52,6 @@ class IndividualReportController {
     });
     return individualreport;
   };
-  makeDocument = async (base64imageString) => {
-    try {
-      // Create a new PDFDocument
-      const pdfDoc = await PDFDocument.create();
-
-      // Embed the PNG image bytes
-      const pngImage = await pdfDoc.embedPng(base64imageString);
-
-      // Get the width/height of the PNG image scaled down to 50% of its original size
-      const pngDims = pngImage.scale(0.6);
-
-      // Add a blank page to the document
-      const page = pdfDoc.addPage();
-
-      // Get the width and height of the page
-      const { width, height } = page.getSize();
-
-      // Draw the PNG image near the lower right corner of the JPG image
-      page.drawImage(pngImage, {
-        x: 10,
-        y: height - pngDims.height - 20,
-        width: width - 20,
-        height: pngDims.height,
-      });
-
-      // Serialize the PDFDocument to bytes (a Uint8Array)
-      const pdfBytes = await pdfDoc.save();
-
-      // Save pdf in downloads folder
-      dialog
-        .showSaveDialog({
-          title: "Salvar Relatório do Morador",
-          defaultPath: "RelatorioMorador.pdf",
-          buttonLabel: "Salvar",
-          filters: [
-            { name: "Documents", extensions: ["pdf"] },
-            { name: "Custom File Type", extensions: ["as"] },
-            { name: "All Files", extensions: ["*"] },
-          ],
-        })
-        .then(({ filePath }) => fs.writeFileSync(filePath, pdfBytes));
-      //https://github.com/electron/electron/blob/v7.0.0/docs/api/dialog.md
-
-      return true;
-    } catch (error) {
-      console.log(error);
-      return false;
-    }
-  };
 }
 
 module.exports = IndividualReportController;

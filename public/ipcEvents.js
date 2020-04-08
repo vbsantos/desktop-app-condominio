@@ -343,11 +343,6 @@ ipcMain.handle("individualReports", async (event, arg) => {
         status = await IndividualReport.delete(content.id);
         console.log("saida:", status);
         break;
-      case "makeDocument":
-        console.log("entrada:", arg);
-        status = await IndividualReport.makeDocument(content);
-        console.log("saida:", status);
-        break;
       default:
         console.log({ error: "This method do not exist." });
     }
@@ -395,9 +390,31 @@ ipcMain.handle("generalReports", async (event, arg) => {
         status = await GeneralReport.delete(content.id);
         console.log("saida:", status);
         break;
-      case "makeDocument":
+      default:
+        console.log({ error: "This method do not exist." });
+    }
+    return status;
+  } catch (error) {
+    console.log("Erro no ipcEvents:", error);
+    return { error };
+  }
+});
+
+const fileController = require("../controllers/FileController.js");
+const File = new fileController();
+ipcMain.handle("files", async (event, arg) => {
+  const { method, content } = arg;
+  let status;
+  try {
+    switch (method) {
+      case "generateGeneralReport":
         console.log("entrada:", arg);
-        status = await GeneralReport.makeDocument(content);
+        status = await File.generateGeneralReport(content);
+        console.log("saida:", status);
+        break;
+      case "generateIndividualReport":
+        console.log("entrada:", arg);
+        status = await File.generateIndividualReport(content);
         console.log("saida:", status);
         break;
       default:

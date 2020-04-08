@@ -75,13 +75,13 @@ export default function VisualizarRelatorios(props) {
         const imgData = canvas.toDataURL("image/png");
         //salva o base64 em uma variável que vai pro backend
         if (data.reports.generalReport) {
-          window.ipcRenderer.invoke("generalReports", {
-            method: "makeDocument",
+          window.ipcRenderer.invoke("files", {
+            method: "generateGeneralReport",
             content: imgData,
           });
         } else {
-          window.ipcRenderer.invoke("individualReports", {
-            method: "makeDocument",
+          window.ipcRenderer.invoke("files", {
+            method: "generateIndividualReport",
             content: imgData,
           });
         }
