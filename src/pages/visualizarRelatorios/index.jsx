@@ -132,6 +132,7 @@ export default function VisualizarRelatorios(props) {
           : "Eduardo Batata"} */}
         {data.reports.data.map((report, index) => (
           <Tab
+            key={"panelTab" + index}
             label={report.createdAt
               .split("T")[0]
               .split("-")
@@ -146,7 +147,7 @@ export default function VisualizarRelatorios(props) {
 
       {/* TODO: Enviar junto a data do relatório pra ficar no nome do arquivo */}
       {data.reports.data.map((dt, index) => (
-        <TabPanel id="panel" value={value} index={index}>
+        <TabPanel key={"panel" + index} id="panel" value={value} index={index}>
           {data.reports.generalReport ? (
             <RelatorioGeral
               reportRef={reportRef}

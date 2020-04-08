@@ -34,7 +34,6 @@ export default function RelatorioIndividual(props) {
   const table1 = reportData.splice(0, tableSize);
   const table2 = reportData;
 
-  // FIXME: THAT SAME KEY PROBLEM
   return (
     <div id="relatorioIndividual">
       <TableContainer ref={reportRef}>
@@ -42,12 +41,12 @@ export default function RelatorioIndividual(props) {
           <TableHead>
             <TableRow>
               <TableCell id="nome">Despesa</TableCell>
-              <TableCell id="valor">{"Valor (R$) "}</TableCell>
+              <TableCell id="valor">{"Valor "}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {table1.map((despesa) => (
-              <TableRow>
+            {table1.map((despesa, index) => (
+              <TableRow key={"table1row" + index}>
                 <TableCell id="nome">{despesa[0]}</TableCell>
                 <TableCell id="valor">{"R$ " + despesa[1]}</TableCell>
               </TableRow>
@@ -58,12 +57,12 @@ export default function RelatorioIndividual(props) {
           <TableHead>
             <TableRow>
               <TableCell id="nome">Despesa</TableCell>
-              <TableCell id="valor">{"Valor (R$) "}</TableCell>
+              <TableCell id="valor">{"Valor "}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {table2.map((despesa) => (
-              <TableRow>
+            {table2.map((despesa, index) => (
+              <TableRow key={"table2row" + index}>
                 <TableCell id="nome">{despesa[0]}</TableCell>
                 <TableCell id="valor">{"R$ " + despesa[1]}</TableCell>
               </TableRow>
