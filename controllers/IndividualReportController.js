@@ -1,9 +1,6 @@
 "use strict";
 
 const { IndividualReport } = require("../models");
-const { PDFDocument } = require("pdf-lib");
-const fs = require("fs");
-const { dialog } = require("electron");
 
 class IndividualReportController {
   create = async (data) => {

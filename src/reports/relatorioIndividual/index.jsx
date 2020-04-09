@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 // MATERIAL UI COMPONENTS
 import {
@@ -29,9 +29,7 @@ export default function RelatorioIndividual(props) {
     )
     .flat(1);
 
-  const [tableSize, setTableSize] = useState(Math.ceil(reportData.length / 2));
-
-  const table1 = reportData.splice(0, tableSize);
+  const table1 = reportData.splice(0, Math.ceil(reportData.length / 2));
   const table2 = reportData;
 
   return (
