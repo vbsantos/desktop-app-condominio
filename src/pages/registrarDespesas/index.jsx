@@ -1,16 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
-// PDF libs
-// import html2canvas from "html2canvas";
-
 // CSS
 import "./style.css";
 
 // DIALOGS
 import DialogDespesa from "../../dialogs/despesa";
 import DialogExcluirDespesa from "../../dialogs/deletarDespesa";
-import DialogReportConfirm from "../../dialogs/gerarRelatorios";
+import DialogReportConfirm from "../../dialogs/gerarBoletos";
 
 // REPORTS
 import RelatorioCondominioRegistrar from "../../reports/relatorioRegistrar";
@@ -177,6 +174,7 @@ export default function RegistrarDespesas(props) {
     <>
       {dialogReportConfirm && (
         <DialogReportConfirm
+          // FIXME: ENVIAR MAIS DADOS PRA FAZER A REQUISIÇÃO PRA BOLETO.CLOUD
           open={[dialogReportConfirm, setDialogReportConfirm]}
           categorias={categorias}
           condominio={data.allNestedCondominio}

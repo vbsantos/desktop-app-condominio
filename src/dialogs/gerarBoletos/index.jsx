@@ -9,14 +9,17 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  Paper
+  Paper,
 } from "@material-ui/core";
 
-// MATERIAL UI ICONS
-import { AssignmentOutlined } from "@material-ui/icons";
+// FORM COMPONENTS
+import FormBoleto from "../../forms/boleto";
 
 // CSS
 import "./style.css";
+
+// MATERIAL UI ICONS
+import { AssignmentOutlined } from "@material-ui/icons";
 
 function PaperComponent(props) {
   return (
@@ -47,27 +50,42 @@ export default function DraggableDialog(props) {
   // React Router Hook for navigation between pages
   const navigate = useNavigate();
 
+  // True when the form isso all filled
+  const [formCompleted, setFormCompleted] = useState(false);
+
+  // Holds boleto field values
+  const [boleto, setBoleto] = useState({
+    id: "",
+    emissao: "",
+    vencimento: "",
+    documento: "",
+    titulo: "",
+    numero: "",
+    valor: "",
+    paganteId: "",
+  });
+
   // This function turns the GeneralReport data into a string
   const makeGeneralReportJSON = (categorias, despesas) => {
-    const generalReport = categorias.map(categoria => {
+    const generalReport = categorias.map((categoria) => {
       const despesasByCategory = despesas.filter(
-        despesa => despesa.categoria === categoria
+        (despesa) => despesa.categoria === categoria
       );
       return {
         table: true,
         name: categoria,
-        data: [...despesasByCategory]
+        data: [...despesasByCategory],
       };
     });
     generalReport.push({
       table: false,
       name: "fundoReserva",
-      data: percentage[1].toFixed(2)
+      data: percentage[1].toFixed(2),
     });
     generalReport.push({
       table: false,
       name: "total",
-      data: (total + percentage[1]).toFixed(2)
+      data: (total + percentage[1]).toFixed(2),
     });
     console.warn("Relatório Geral:", generalReport);
     const generalReportJSON = JSON.stringify(generalReport);
@@ -76,23 +94,23 @@ export default function DraggableDialog(props) {
 
   // This function turns the IndividualReport data into a string
   const makeIndividualReportJSON = (categorias, despesas, pagantes) => {
-    const individualReportsJSON = pagantes.map(pagante => {
+    const individualReportsJSON = pagantes.map((pagante) => {
       let totalIndividual = 0;
-      const individualReport = categorias.map(categoria => {
+      const individualReport = categorias.map((categoria) => {
         const despesasByCategory = despesas
-          .filter(despesa => despesa.categoria === categoria)
-          .map(despesa => {
+          .filter((despesa) => despesa.categoria === categoria)
+          .map((despesa) => {
             const valor = despesa.rateioAutomatico
               ? Number(despesa.valor * pagante.fracao)
               : Number(
                   despesa["Valores"].filter(
-                    valor => valor.paganteId === pagante.id
+                    (valor) => valor.paganteId === pagante.id
                   )[0].valor
                 );
             totalIndividual += valor;
             return {
               ...despesa,
-              valor: valor.toFixed(2)
+              valor: valor.toFixed(2),
             };
           });
         // const despesasByCategoryEssencial = despesasByCategory.map(
@@ -101,24 +119,24 @@ export default function DraggableDialog(props) {
         return {
           table: true,
           name: categoria,
-          data: [...despesasByCategory]
+          data: [...despesasByCategory],
         };
       });
       const fundoReservaIndividual = (percentage[0] / 100) * totalIndividual;
       individualReport.push({
         table: false,
         name: "fundoReserva",
-        data: fundoReservaIndividual.toFixed(2)
+        data: fundoReservaIndividual.toFixed(2),
       });
       individualReport.push({
         table: false,
         name: "total",
-        data: (totalIndividual + fundoReservaIndividual).toFixed(2)
+        data: (totalIndividual + fundoReservaIndividual).toFixed(2),
       });
       console.log("Relatório Individual:", individualReport);
       return {
         paganteId: pagante.id,
-        report: JSON.stringify(individualReport)
+        report: JSON.stringify(individualReport),
       };
     });
     return individualReportsJSON;
@@ -135,21 +153,27 @@ export default function DraggableDialog(props) {
       method: "create",
       content: {
         report: makeGeneralReportJSON(categorias, condominio["Despesas"]),
-        condominioId: condominio.id
-      }
+        condominioId: condominio.id,
+      },
     });
     await makeIndividualReportJSON(
       categorias,
       condominio["Despesas"],
       condominio["Pagantes"]
-    ).forEach(individualReport => {
+    ).forEach((individualReport) => {
       window.ipcRenderer.invoke("individualReports", {
         method: "create",
-        content: { ...individualReport }
+        content: { ...individualReport },
       });
     });
+    // FIXME: ENVIAR AS INFORMAÇÕES CORRETAS
+    await window.ipcRenderer.invoke("boletoCloudAPI", {
+      method: "getBillet",
+      content: { condominio },
+    });
     setDialog(false);
-    navigate("/"); // boletos
+    // TODO: Finalizar fluxo
+    navigate("/");
   }
 
   return (
@@ -165,11 +189,15 @@ export default function DraggableDialog(props) {
           id="draggable-dialog-title"
           color="inherit"
         >
-          Confirmar despesas e gerar relatórios?
+          Confirmar despesas e gerar boletos?
         </DialogTitle>
         <DialogContent>
-          Ao continuar serão gerados relatórios de despesas para condomínio e
-          moradores que serão utilizados no geração dos boletos.
+          Ao continuar serão gerados os boletos pra cada morador.
+          {/* TODO: formulário */}
+          <FormBoleto
+            boleto={[boleto, setBoleto]}
+            completed={[formCompleted, setFormCompleted]}
+          />
         </DialogContent>
         <DialogActions>
           <Button
