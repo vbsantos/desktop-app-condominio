@@ -3,36 +3,36 @@
 const { Boleto } = require("../models");
 
 class BoletoController {
-  create = async data => {
+  create = async (data) => {
     const boleto = await Boleto.create(data);
     return boleto.get();
   };
   index = async () => {
     const boletos = await Boleto.findAll();
-    const response = boletos.map(boleto => boleto.get());
+    const response = boletos.map((boleto) => boleto.get());
     return response;
   };
-  show = async id => {
+  show = async (id) => {
     const boleto = await Boleto.findOne({
       where: {
-        id
-      }
+        id,
+      },
     });
     return boleto.get();
   };
-  update = async data => {
+  update = async (data) => {
     const boleto = await Boleto.update(data, {
       where: {
-        id: data.id
-      }
+        id: data.id,
+      },
     });
     return boleto;
   };
-  delete = async id => {
+  delete = async (id) => {
     const boleto = await Boleto.destroy({
       where: {
-        id
-      }
+        id,
+      },
     });
     return boleto;
   };

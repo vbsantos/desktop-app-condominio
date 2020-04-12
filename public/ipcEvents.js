@@ -426,3 +426,25 @@ ipcMain.handle("files", async (event, arg) => {
     return { error };
   }
 });
+
+const boletoCloudController = require("../controllers/BoletoCloudController.js");
+const BoletoCloud = new boletoCloudController();
+ipcMain.handle("boletoCloudAPI", async (event, arg) => {
+  const { method, content } = arg;
+  let status;
+  try {
+    switch (method) {
+      case "getBillet":
+        console.log("entrada:", arg);
+        status = await BoletoCloud.getBillet(content);
+        console.log("saida:", status);
+        break;
+      default:
+        console.log({ error: "This method do not exist." });
+    }
+    return status;
+  } catch (error) {
+    console.log("Erro no ipcEvents:", error);
+    return { error };
+  }
+});
