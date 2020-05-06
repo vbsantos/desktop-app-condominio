@@ -84,6 +84,7 @@ class FileController {
       return false;
     }
   };
+  // TODO: CRIAR METODO PRA UNIR/MODIFICAR BOLETO COM RELATÓRIOS
 }
 
 module.exports = FileController;

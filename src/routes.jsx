@@ -6,6 +6,7 @@ import EscolherBeneficiario from "./pages/escolherBeneficiario";
 import EscolherCondominio from "./pages/escolherCondominio";
 import RegistrarDespesas from "./pages/registrarDespesas";
 import VisualizarRelatorios from "./pages/visualizarRelatorios";
+import VisualizarRelatoriosGerados from "./pages/visualizarRelatoriosGerados";
 
 // COMPONENTS
 import Footbar from "./components/footbar";
@@ -18,7 +19,10 @@ export default function MainRoutes(props) {
     beneficiario: {},
     allNestedBeneficiario: {},
     allNestedCondominio: {},
-    reports: { generalReport: false, data: [] }
+    reports: { generalReport: false, data: [] },
+    pagantes: {},
+    boletos: {},
+    lastReports: {},
   });
   const [footbarButtons, setFootbarButtons] = useState({
     buttons: [
@@ -27,24 +31,24 @@ export default function MainRoutes(props) {
         position: "left",
         visible: true,
         enabled: true,
-        value: "LEFT"
+        value: "LEFT",
       },
       {
         id: 1,
         position: "center",
         visible: false,
         enabled: false,
-        value: "CENTER"
+        value: "CENTER",
       },
       {
         id: 2,
         position: "right",
         visible: true,
         enabled: true,
-        value: "RIGHT"
-      }
+        value: "RIGHT",
+      },
     ],
-    action: -1
+    action: -1,
   });
 
   return (
@@ -85,6 +89,16 @@ export default function MainRoutes(props) {
             path="/RegistrarDespesas"
             element={
               <RegistrarDespesas
+                buttons={[footbarButtons, setFootbarButtons]}
+                data={[data, setData]}
+              />
+            }
+          />
+
+          <Route
+            path="/VisualizarRelatoriosGerados"
+            element={
+              <VisualizarRelatoriosGerados
                 buttons={[footbarButtons, setFootbarButtons]}
                 data={[data, setData]}
               />

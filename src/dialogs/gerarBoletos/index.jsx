@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Draggable from "react-draggable";
 import { useNavigate } from "react-router-dom";
 
@@ -35,11 +35,17 @@ function PaperComponent(props) {
 export default function DraggableDialog(props) {
   const [dialog, setDialog] = props.open;
 
+  // app data
+  const [data, setData] = props.data;
+
   // The categories setted during Despesa registration
   const { categorias } = props;
 
   // All data from this condominio
   const { condominio } = props;
+
+  // Both tokens needed to access the API
+  const [accessToken, accountToken] = props.tokens;
 
   // Sum of all despesas
   const [total] = props.valorTotal;
@@ -133,10 +139,10 @@ export default function DraggableDialog(props) {
         name: "total",
         data: (totalIndividual + fundoReservaIndividual).toFixed(2),
       });
-      console.log("Relatório Individual:", individualReport);
+      console.warn("Relatório Individual:", individualReport);
       return {
         paganteId: pagante.id,
-        report: JSON.stringify(individualReport),
+        report: JSON.stringify(individualReport), //FIXME: acho que aqui da pra fazer ele retornar o objeto, pra poder utilizar no momento de pegar o valor "total"
       };
     });
     return individualReportsJSON;
@@ -147,33 +153,114 @@ export default function DraggableDialog(props) {
     setDialog(false);
   }
 
+  // TODO: This funcions turns a React Component into a PDF
+  // const getComponentPrint = (ref) => {
+  //   if (ref.current) {
+  //     html2canvas(ref.current).then((canvas) => {
+  //       const imgData = canvas.toDataURL("image/png");
+  //       //salva o base64 em uma variável que vai pro backend
+  //       if (data.reports.generalReport) {
+  //         window.ipcRenderer.invoke("files", {
+  //           method: "generateGeneralReport",
+  //           content: imgData,
+  //         });
+  //       } else {
+  //         window.ipcRenderer.invoke("files", {
+  //           method: "generateIndividualReport",
+  //           content: imgData,
+  //         });
+  //       }
+  //     });
+  //     return true;
+  //   }
+  //   return false;
+  // };
+
   // function that runs when you click the right button
   async function handleRightButton() {
+    // CRIA RELATORIO GERAL
+    const relatorioGeral = await makeGeneralReportJSON(
+      categorias,
+      condominio["Despesas"]
+    );
+    // TODO REMOVER
+    console.groupCollapsed("RG");
+    console.log(relatorioGeral);
+    console.groupEnd("RG");
+
+    // TODO ARMAZENAR RELATÓRIOS NO DATA PARA USO POSTERIOR
+    // GERA RELATORIO GERAL
     await window.ipcRenderer.invoke("generalReports", {
+      //FIXME e se eu só fizesse isso na proxima tela junto aos boletos?
       method: "create",
       content: {
-        report: makeGeneralReportJSON(categorias, condominio["Despesas"]),
+        report: relatorioGeral,
         condominioId: condominio.id,
       },
     });
-    await makeIndividualReportJSON(
+
+    // CRIA RELATORIOS INDIVIDUAIS
+    const relatoriosIndividuais = await makeIndividualReportJSON(
       categorias,
       condominio["Despesas"],
       condominio["Pagantes"]
-    ).forEach((individualReport) => {
+    );
+    // TODO REMOVER
+    console.groupCollapsed("RIs");
+    console.log(relatoriosIndividuais);
+    console.groupEnd("RIs");
+
+    // TODO ARMAZENAR RELATÓRIOS NO DATA PARA USO POSTERIOR
+    // GERA RELATORIOS INDIVIDUAIS
+    relatoriosIndividuais.forEach((individualReport) => {
       window.ipcRenderer.invoke("individualReports", {
+        //FIXME e se eu só fizesse isso na proxima tela junto aos boletos?
         method: "create",
         content: { ...individualReport },
       });
     });
-    // FIXME: ENVIAR AS INFORMAÇÕES CORRETAS
-    await window.ipcRenderer.invoke("boletoCloudAPI", {
-      method: "getBillet",
-      content: { condominio },
+
+    // CRIA ESTRUTURA COM RELATORIOS EM JSON
+    const lastReports = {
+      rg: relatorioGeral,
+      ris: relatoriosIndividuais,
+    };
+
+    // CRIA ESTRUTURA PARA GERAR BOLETOS
+    const boletos = {
+      accessToken,
+      data: {
+        // [FIXO] BENEFICIARIO
+        accountToken: accountToken,
+        // [FIXO] BOLETO
+        emissao: boleto.emissao,
+        vencimento: boleto.vencimento,
+        documento: boleto.documento,
+        titulo: boleto.titulo,
+        // [FIXO] CONDOMINIO -> ENDERECO
+        cep: condominio.cep,
+        uf: condominio.uf,
+        localidade: condominio.localidade,
+        bairro: condominio.bairro,
+        logradouro: condominio.logradouro,
+        numero: condominio.numero,
+        paganteData: data.pagantes, //array com todas as informações que variam do pagante
+        relatorioGeralBase64: "", //FIXME
+      },
+    };
+
+    // TODO REMOVER
+    console.groupCollapsed("BOLETOS");
+    console.log(boletos);
+    console.groupEnd("BOLETOS");
+
+    setData({
+      ...data,
+      boletos,
+      lastReports,
     });
     setDialog(false);
-    // TODO: Finalizar fluxo
-    navigate("/");
+    navigate("/VisualizarRelatoriosGerados");
   }
 
   return (
@@ -192,8 +279,6 @@ export default function DraggableDialog(props) {
           Confirmar despesas e gerar boletos?
         </DialogTitle>
         <DialogContent>
-          Ao continuar serão gerados os boletos pra cada morador.
-          {/* TODO: formulário */}
           <FormBoleto
             boleto={[boleto, setBoleto]}
             completed={[formCompleted, setFormCompleted]}
@@ -212,9 +297,10 @@ export default function DraggableDialog(props) {
             onClick={handleRightButton}
             variant="contained"
             color="primary"
+            disabled={!formCompleted}
           >
             <AssignmentOutlined />
-            Gerar Relatórios
+            Gerar Boletos
           </Button>
         </DialogActions>
       </Dialog>

@@ -7,7 +7,7 @@ import "./style.css";
 // DIALOGS
 import DialogDespesa from "../../dialogs/despesa";
 import DialogExcluirDespesa from "../../dialogs/deletarDespesa";
-import DialogReportConfirm from "../../dialogs/gerarBoletos";
+import DialogBilletConfirm from "../../dialogs/gerarBoletos";
 
 // REPORTS
 import RelatorioCondominioRegistrar from "../../reports/relatorioRegistrar";
@@ -40,7 +40,7 @@ export default function RegistrarDespesas(props) {
   );
 
   // Boolean for Report Confirmation Dialog
-  const [dialogReportConfirm, setDialogReportConfirm] = useState(false);
+  const [dialogBilletConfirm, setDialogBilletConfirm] = useState(false);
 
   // Boolean for Delete Dialog
   const [dialogDeleteDespesa, setDialogDeleteDespesa] = useState(false);
@@ -81,6 +81,29 @@ export default function RegistrarDespesas(props) {
     return () => console.log("RegistrarDespesas - Encerrou");
   }, []);
 
+  // Function that creates the structure used to make the requests
+  async function getPaganteInfo() {
+    console.groupCollapsed("Dados para criação de boletos");
+    const totalCondominio = total + percentage[1];
+    const pagantes = data.allNestedCondominio["Pagantes"].map((pagante) => {
+      return {
+        valor: (totalCondominio * Number(pagante.fracao)).toFixed(2),
+        nome: pagante.nome,
+        cprf: pagante.cprf,
+        complemento: pagante.complemento,
+        numero: "", //FIXME
+        relatorioIndividualBase64: "", //FIXME
+      };
+    });
+    console.log("Dados dos Pagantes:", pagantes);
+    console.groupEnd("Dados para criação de boletos");
+
+    setData({
+      ...data,
+      pagantes,
+    });
+  }
+
   // This function runs only when there is an interaction with the footbar buttons
   useEffect(() => {
     switch (footbar.action) {
@@ -97,7 +120,8 @@ export default function RegistrarDespesas(props) {
       case 2:
         console.log("RegistrarDespesas - Botão da direita");
         setFootbar({ ...footbar, action: -1 });
-        setDialogReportConfirm(true);
+        getPaganteInfo();
+        setDialogBilletConfirm(true);
         break;
     }
   }, [footbar.action]);
@@ -109,7 +133,7 @@ export default function RegistrarDespesas(props) {
       dialogRegisterDespesaForm ||
       dialogDeleteDespesa ||
       dialogEditDespesaForm ||
-      dialogReportConfirm
+      dialogBilletConfirm
     );
     if (allDialogsClosed) {
       async function getEverything() {
@@ -137,7 +161,7 @@ export default function RegistrarDespesas(props) {
     dialogRegisterDespesaForm,
     dialogDeleteDespesa,
     dialogEditDespesaForm,
-    dialogReportConfirm,
+    dialogBilletConfirm,
   ]);
 
   // This function runs only when something change in Despesas
@@ -172,10 +196,14 @@ export default function RegistrarDespesas(props) {
 
   return (
     <>
-      {dialogReportConfirm && (
-        <DialogReportConfirm
-          // FIXME: ENVIAR MAIS DADOS PRA FAZER A REQUISIÇÃO PRA BOLETO.CLOUD
-          open={[dialogReportConfirm, setDialogReportConfirm]}
+      {dialogBilletConfirm && (
+        <DialogBilletConfirm
+          data={[data, setData]}
+          tokens={[
+            data.allNestedBeneficiario.token_acesso,
+            data.allNestedBeneficiario.token_conta,
+          ]}
+          open={[dialogBilletConfirm, setDialogBilletConfirm]}
           categorias={categorias}
           condominio={data.allNestedCondominio}
           valorTotal={[total, setTotal]}
