@@ -163,49 +163,6 @@ ipcMain.handle("pagantes", async (event, arg) => {
   }
 });
 
-const boletoController = require("../controllers/BoletoController.js");
-const Boleto = new boletoController();
-
-ipcMain.handle("boletos", async (event, arg) => {
-  const { method, content } = arg;
-  let status;
-  try {
-    switch (method) {
-      case "create":
-        console.log("entrada:", arg);
-        status = await Boleto.create(content);
-        console.log("saida:", status);
-        break;
-      case "index":
-        console.log("entrada:", arg);
-        status = await Boleto.index();
-        console.log("saida:", status);
-        break;
-      case "show":
-        console.log("entrada:", arg);
-        status = await Boleto.show(content.id);
-        console.log("saida:", status);
-        break;
-      case "update":
-        console.log("entrada:", arg);
-        status = await Boleto.update(content);
-        console.log("saida:", status);
-        break;
-      case "delete":
-        console.log("entrada:", arg);
-        status = await Boleto.delete(content.id);
-        console.log("saida:", status);
-        break;
-      default:
-        console.log({ error: "This method do not exist." });
-    }
-    return status;
-  } catch (error) {
-    console.log("Erro no ipcEvents:", error);
-    return { error };
-  }
-});
-
 const despesaController = require("../controllers/DespesaController.js");
 const Despesa = new despesaController();
 
@@ -415,28 +372,6 @@ ipcMain.handle("files", async (event, arg) => {
       case "generateIndividualReport":
         console.log("entrada:", arg);
         status = await File.generateIndividualReport(content);
-        console.log("saida:", status);
-        break;
-      default:
-        console.log({ error: "This method do not exist." });
-    }
-    return status;
-  } catch (error) {
-    console.log("Erro no ipcEvents:", error);
-    return { error };
-  }
-});
-
-const boletoCloudController = require("../controllers/BoletoCloudController.js");
-const BoletoCloud = new boletoCloudController();
-ipcMain.handle("boletoCloudAPI", async (event, arg) => {
-  const { method, content } = arg;
-  let status;
-  try {
-    switch (method) {
-      case "getBillet":
-        console.log("entrada:", arg);
-        status = await BoletoCloud.getBillet(content);
         console.log("saida:", status);
         break;
       default:

@@ -4,22 +4,19 @@ module.exports = (sequelize, DataTypes) => {
     "Pagante",
     {
       nome: DataTypes.STRING,
-      cprf: DataTypes.STRING,
       complemento: DataTypes.STRING,
       fracao: DataTypes.STRING,
-      email: DataTypes.STRING,
       leituraAgua: DataTypes.STRING,
-      condominioId: DataTypes.INTEGER
+      condominioId: DataTypes.INTEGER,
     },
     {}
   );
-  Pagante.associate = function(models) {
+  Pagante.associate = function (models) {
     // associations can be defined here
-    Pagante.hasMany(models.Boleto);
     // Pagante.hasMany(models.IndividualReport);
 
     Pagante.belongsTo(models.Condominio, {
-      foreignKey: "condominioId"
+      foreignKey: "condominioId",
     });
   };
   return Pagante;
