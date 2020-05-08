@@ -7,7 +7,6 @@ import "./style.css";
 // DIALOGS
 import DialogDespesa from "../../dialogs/despesa";
 import DialogExcluirDespesa from "../../dialogs/deletarDespesa";
-import DialogBilletConfirm from "../../dialogs/gerarBoletos";
 
 // REPORTS
 import RelatorioCondominioRegistrar from "../../reports/relatorioRegistrar";
@@ -38,9 +37,6 @@ export default function RegistrarDespesas(props) {
   const [dialogRegisterDespesaForm, setDialogRegisterDespesaForm] = useState(
     false
   );
-
-  // Boolean for Report Confirmation Dialog
-  const [dialogBilletConfirm, setDialogBilletConfirm] = useState(false);
 
   // Boolean for Delete Dialog
   const [dialogDeleteDespesa, setDialogDeleteDespesa] = useState(false);
@@ -73,7 +69,7 @@ export default function RegistrarDespesas(props) {
           position: "right",
           visible: true,
           enabled: true,
-          value: "Finalizar",
+          value: "Gerar Relatórios",
         },
       ],
       action: -1,
@@ -81,7 +77,7 @@ export default function RegistrarDespesas(props) {
     return () => console.log("RegistrarDespesas - Encerrou");
   }, []);
 
-  // Function that creates the structure used to make the requests
+  // Function that creates the structure used to make the requests // FIXME: Acho que não é mais necessário
   async function getPaganteInfo() {
     console.groupCollapsed("Dados para criação de boletos");
     const totalCondominio = total + percentage[1];
@@ -121,7 +117,6 @@ export default function RegistrarDespesas(props) {
         console.log("RegistrarDespesas - Botão da direita");
         setFootbar({ ...footbar, action: -1 });
         getPaganteInfo();
-        setDialogBilletConfirm(true);
         break;
     }
   }, [footbar.action]);
@@ -132,8 +127,7 @@ export default function RegistrarDespesas(props) {
     const allDialogsClosed = !(
       dialogRegisterDespesaForm ||
       dialogDeleteDespesa ||
-      dialogEditDespesaForm ||
-      dialogBilletConfirm
+      dialogEditDespesaForm
     );
     if (allDialogsClosed) {
       async function getEverything() {
@@ -157,12 +151,7 @@ export default function RegistrarDespesas(props) {
       }
       getEverything();
     }
-  }, [
-    dialogRegisterDespesaForm,
-    dialogDeleteDespesa,
-    dialogEditDespesaForm,
-    dialogBilletConfirm,
-  ]);
+  }, [dialogRegisterDespesaForm, dialogDeleteDespesa, dialogEditDespesaForm]);
 
   // This function runs only when something change in Despesas
   useEffect(() => {
@@ -196,20 +185,6 @@ export default function RegistrarDespesas(props) {
 
   return (
     <>
-      {dialogBilletConfirm && (
-        <DialogBilletConfirm
-          data={[data, setData]}
-          tokens={[
-            data.allNestedBeneficiario.token_acesso,
-            data.allNestedBeneficiario.token_conta,
-          ]}
-          open={[dialogBilletConfirm, setDialogBilletConfirm]}
-          categorias={categorias}
-          condominio={data.allNestedCondominio}
-          valorTotal={[total, setTotal]}
-          valorFundoReserva={[percentage, setPercentage]}
-        />
-      )}
       {dialogRegisterDespesaForm && (
         <DialogDespesa
           open={[dialogRegisterDespesaForm, setDialogRegisterDespesaForm]}

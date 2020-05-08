@@ -7,7 +7,7 @@ import {
   FormControlLabel,
   Checkbox,
   InputLabel,
-  Input
+  Input,
 } from "@material-ui/core";
 
 // CSS
@@ -57,14 +57,14 @@ export default function FormDespesa(props) {
       let somaValorTotal = 0;
       setValores(
         despesaAgua
-          ? (function() {
+          ? (function () {
               const valorM3Agua = valoresList
-                .filter(field => field.id === "valorAguaCondominio")[0]
+                .filter((field) => field.id === "valorAguaCondominio")[0]
                 .value.replace(",", ".");
-              const valoresAgua = valoresList.filter(field =>
+              const valoresAgua = valoresList.filter((field) =>
                 field.id.includes("aguaIndividual")
               );
-              const valoresFinais = valoresList.filter(field =>
+              const valoresFinais = valoresList.filter((field) =>
                 field.id.includes("valorAguaIndividual")
               );
               return valoresAgua.map((valoraguafield, index) => {
@@ -73,7 +73,7 @@ export default function FormDespesa(props) {
                 );
                 const pagante_id = Number(valoraguafield.id.slice(14));
                 const pagante_leituraAguaAntiga = condominio["Pagantes"].filter(
-                  pagante => pagante.id === pagante_id
+                  (pagante) => pagante.id === pagante_id
                 )[0].leituraAgua;
                 const leituraAguaNova =
                   leituraAguaFormated - Number(pagante_leituraAguaAntiga);
@@ -84,7 +84,7 @@ export default function FormDespesa(props) {
                   id:
                     valores.length > 0 && valores[0].id !== ""
                       ? valores.filter(
-                          valor =>
+                          (valor) =>
                             valor.paganteId === pagante_id &&
                             valor.despesaId === despesa.id
                         )[0].id
@@ -93,11 +93,11 @@ export default function FormDespesa(props) {
                   agua: leituraAguaFormated.toString(),
                   valor: valor.toFixed(2),
                   paganteId: pagante_id,
-                  despesaId: despesa.id
+                  despesaId: despesa.id,
                 };
               });
             })()
-          : valoresList.map(field => {
+          : valoresList.map((field) => {
               const valor = Number(field.value.replace(",", "."));
               const pagante_id = Number(field.id.slice(15));
               somaValorTotal += valor;
@@ -105,7 +105,7 @@ export default function FormDespesa(props) {
                 id:
                   valores.length > 0 && valores[0].id !== ""
                     ? valores.filter(
-                        valor =>
+                        (valor) =>
                           valor.paganteId === pagante_id &&
                           valor.despesaId === despesa.id
                       )[0].id
@@ -114,7 +114,7 @@ export default function FormDespesa(props) {
                 agua: null,
                 valor: valor.toFixed(2),
                 paganteId: pagante_id,
-                despesaId: despesa.id
+                despesaId: despesa.id,
               };
             })
       );
@@ -124,21 +124,18 @@ export default function FormDespesa(props) {
     setDespesa({
       id: despesa.id,
       nome: formList[0].value,
-      categoria: formList[1].value,
+      categoria: despesaFundoReserva ? "" : formList[1].value,
       rateioAutomatico: formList[2].checked,
       permanente: formList[3].checked,
       aguaIndividual: formList[4].checked,
       fundoReserva: formList[5].checked,
       valor: despesaFundoReserva
-        ? formList[6].value
-            .replace(",", ".")
-            .replace("%", "")
-            .replace(" ", "")
+        ? formList[6].value.replace(",", ".").replace("%", "").replace(" ", "")
         : rateioAuto
         ? formList[6].value.replace(",", ".")
         : despesaAgua
         ? valoresList
-            .filter(field => field.id.includes("valorAguaIndividual"))
+            .filter((field) => field.id.includes("valorAguaIndividual"))
             .reduce((acc, field) => {
               return Number(acc) + Number(field.value.substring(3));
             }, 0)
@@ -151,11 +148,11 @@ export default function FormDespesa(props) {
       parcelaAtual: despesaPermanente ? null : formList[7].value,
       numParcelas: despesaPermanente ? null : formList[8].value,
       Valores: valores,
-      condominioId: condominio.id
+      condominioId: condominio.id,
     });
 
     setFormCompleted(
-      formList.filter(field => !field.disabled && field.value === "")[0] ===
+      formList.filter((field) => !field.disabled && field.value === "")[0] ===
         undefined
     );
   }
@@ -193,7 +190,7 @@ export default function FormDespesa(props) {
             <FormControlLabel
               control={
                 <Checkbox
-                  onChange={e => setRateioAuto(e.target.checked)}
+                  onChange={(e) => setRateioAuto(e.target.checked)}
                   value="cb1"
                   checked={despesa.rateioAutomatico}
                   disabled={despesaFundoReserva}
@@ -207,7 +204,7 @@ export default function FormDespesa(props) {
             <FormControlLabel
               control={
                 <Checkbox
-                  onChange={e => setDespesaPermanente(e.target.checked)}
+                  onChange={(e) => setDespesaPermanente(e.target.checked)}
                   value="cb2"
                   checked={despesa.permanente}
                   disabled={despesaFundoReserva}
@@ -221,7 +218,7 @@ export default function FormDespesa(props) {
             <FormControlLabel
               control={
                 <Checkbox
-                  onChange={e => setDespesaAgua(e.target.checked)}
+                  onChange={(e) => setDespesaAgua(e.target.checked)}
                   value="cb3"
                   checked={despesa.aguaIndividual}
                   disabled={despesaFundoReserva || rateioAuto}
@@ -235,7 +232,7 @@ export default function FormDespesa(props) {
             <FormControlLabel
               control={
                 <Checkbox
-                  onChange={e => setDespesaFundoReserva(e.target.checked)}
+                  onChange={(e) => setDespesaFundoReserva(e.target.checked)}
                   value="cb4"
                   checked={despesa.fundoReserva}
                   color="primary"
@@ -313,7 +310,7 @@ export default function FormDespesa(props) {
               </FormControl>
               <div id="containerAgua">
                 <div id="esquerdaAgua">
-                  {condominio["Pagantes"].map(pagante => (
+                  {condominio["Pagantes"].map((pagante) => (
                     <FormControl key={"aguaIndividualForm" + pagante.id}>
                       <InputLabel htmlFor={"aguaIndividual" + pagante.id}>
                         Registro de água para {pagante.complemento}
@@ -323,7 +320,7 @@ export default function FormDespesa(props) {
                           valores.length > 0 && valores[0].id !== ""
                             ? String(
                                 valores.filter(
-                                  valorIndividual =>
+                                  (valorIndividual) =>
                                     valorIndividual["paganteId"] === pagante.id
                                 )[0].agua
                               )
@@ -335,7 +332,7 @@ export default function FormDespesa(props) {
                   ))}
                 </div>
                 <div id="direitaAgua">
-                  {condominio["Pagantes"].map(pagante => (
+                  {condominio["Pagantes"].map((pagante) => (
                     <FormControl key={"aguaIndividualForm" + pagante.id}>
                       <InputLabel>Custo para {pagante.complemento}</InputLabel>
                       <Input
@@ -344,7 +341,7 @@ export default function FormDespesa(props) {
                             ? "R$ " +
                               Number(
                                 valores.filter(
-                                  valor => valor["paganteId"] === pagante.id
+                                  (valor) => valor["paganteId"] === pagante.id
                                 )[0].valor
                               ).toFixed(2)
                             : " "
@@ -364,7 +361,7 @@ export default function FormDespesa(props) {
                   ? "Divisão Manual de Valores"
                   : "Divisão Manual de Valores da Parcela Atual"}
               </DialogContentText>
-              {condominio["Pagantes"].map(pagante => (
+              {condominio["Pagantes"].map((pagante) => (
                 <FormControl key={"valorIndividualForm" + pagante.id}>
                   <InputLabel htmlFor={"valorIndividual" + pagante.id}>
                     Custo para {pagante.complemento}
@@ -375,7 +372,7 @@ export default function FormDespesa(props) {
                       valores.length > 0 && valores[0].id !== ""
                         ? Number(
                             valores.filter(
-                              valor => valor["paganteId"] === pagante.id
+                              (valor) => valor["paganteId"] === pagante.id
                             )[0].valor
                           ).toFixed(2)
                         : ""

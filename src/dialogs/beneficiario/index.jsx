@@ -8,7 +8,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  Paper
+  Paper,
 } from "@material-ui/core";
 
 // FORM COMPONENTS
@@ -40,16 +40,6 @@ export default function DraggableDialog(props) {
     props.beneficiario || {
       id: "",
       nome: "",
-      cprf: "",
-      token_acesso: "",
-      token_conta: "",
-      cep: "",
-      uf: "",
-      localidade: "",
-      bairro: "",
-      logradouro: "",
-      numero: "",
-      complemento: ""
     }
   );
 
@@ -72,13 +62,13 @@ export default function DraggableDialog(props) {
     if (beneficiario.id === "") {
       const response = await window.ipcRenderer.invoke("beneficiarios", {
         method: "create",
-        content: beneficiario
+        content: beneficiario,
       });
       console.warn("Beneficiário Cadastrado:", response);
     } else {
       const response = await window.ipcRenderer.invoke("beneficiarios", {
         method: "update",
-        content: beneficiario
+        content: beneficiario,
       });
       console.warn("Beneficiário Editado:", response);
     }

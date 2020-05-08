@@ -8,7 +8,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  Paper
+  Paper,
 } from "@material-ui/core";
 
 // FORM COMPONENTS
@@ -46,13 +46,7 @@ export default function DraggableDialog(props) {
     props.condominio || {
       id: "",
       nome: "",
-      cep: "",
-      uf: "",
-      localidade: "",
-      bairro: "",
-      logradouro: "",
-      numero: "",
-      beneficiarioId: beneficiario.id
+      beneficiarioId: beneficiario.id,
     }
   );
 
@@ -72,13 +66,13 @@ export default function DraggableDialog(props) {
     if (condominio.id === "") {
       const response = await window.ipcRenderer.invoke("condominios", {
         method: "create",
-        content: condominio
+        content: condominio,
       });
       console.warn("Condomínio Cadastrado:", response);
     } else {
       const response = await window.ipcRenderer.invoke("condominios", {
         method: "update",
-        content: condominio
+        content: condominio,
       });
       console.warn("Condomínio Editado:", response);
     }

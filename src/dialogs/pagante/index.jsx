@@ -8,7 +8,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  Paper
+  Paper,
 } from "@material-ui/core";
 
 // FORM COMPONENTS
@@ -43,12 +43,10 @@ export default function DraggableDialog(props) {
     props.pagante || {
       id: "",
       nome: "",
-      cprf: "",
       complemento: "",
       fracao: "",
-      email: "",
       leituraAgua: "",
-      condominioId: condominio.id
+      condominioId: condominio.id,
     }
   );
 
@@ -71,13 +69,13 @@ export default function DraggableDialog(props) {
     if (pagante.id === "") {
       const response = await window.ipcRenderer.invoke("pagantes", {
         method: "create",
-        content: pagante
+        content: pagante,
       });
       console.warn("Pagante Cadastrado:", response);
     } else {
       const response = await window.ipcRenderer.invoke("pagantes", {
         method: "update",
-        content: pagante
+        content: pagante,
       });
       console.warn("Pagante Editado:", response);
     }

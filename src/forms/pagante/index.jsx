@@ -5,7 +5,7 @@ import {
   DialogContentText,
   FormControl,
   InputLabel,
-  Input
+  Input,
 } from "@material-ui/core";
 
 export default function FormPagante(props) {
@@ -26,33 +26,23 @@ export default function FormPagante(props) {
     setPagante({
       id: pagante.id,
       nome: formList[0].value,
-      cprf: formList[1].value,
-      email: formList[2].value,
-      complemento: formList[3].value,
-      fracao: formList[4].value.replace(",", "."),
-      leituraAgua: formList[5].value.replace(",", "."),
-      condominioId: condominio.id
+      complemento: formList[1].value,
+      fracao: formList[2].value.replace(",", "."),
+      leituraAgua: formList[3].value.replace(",", "."),
+      condominioId: condominio.id,
     });
-    setFormCompleted(formList.filter(f => f.value === "")[0] === undefined);
+    setFormCompleted(formList.filter((f) => f.value === "")[0] === undefined);
   }
 
   return (
     <form ref={formRef} onChange={formOnChange}>
       <section>
         <DialogContentText color="inherit">
-          Informações Pessoais
+          Informações do Morador Atual
         </DialogContentText>
         <FormControl>
           <InputLabel htmlFor="nome">Nome</InputLabel>
           <Input autoFocus defaultValue={pagante.nome} id="nome"></Input>
-        </FormControl>
-        <FormControl>
-          <InputLabel htmlFor="cprf">CPF</InputLabel>
-          <Input defaultValue={pagante.cprf} id="cprf"></Input>
-        </FormControl>
-        <FormControl>
-          <InputLabel htmlFor="email">Email</InputLabel>
-          <Input defaultValue={pagante.email} type="email" id="email"></Input>
         </FormControl>
       </section>
       <section>

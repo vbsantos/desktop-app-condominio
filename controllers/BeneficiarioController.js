@@ -3,46 +3,45 @@
 const { Beneficiario } = require("../models");
 
 class BeneficiarioController {
-  create = async data => {
+  create = async (data) => {
     const beneficiario = await Beneficiario.create(data);
     return beneficiario.get();
   };
   index = async () => {
     const beneficiarios = await Beneficiario.findAll();
-    const response = beneficiarios.map(beneficiario => beneficiario.get());
+    const response = beneficiarios.map((beneficiario) => beneficiario.get());
     return response;
   };
-  show = async id => {
+  show = async (id) => {
     const beneficiario = await Beneficiario.findOne({
       where: {
-        id
-      }
+        id,
+      },
     });
     return beneficiario.get();
   };
-  showNested = async id => {
+  showNested = async (id) => {
     const beneficiario = await Beneficiario.findOne({
       where: {
-        id
+        id,
       },
       include: {
         all: true,
-        nested: true
-      }
+        nested: true,
+      },
     });
-    let Boletos = [];
     let Pagantes = [];
     let Despesas = [];
     let Valores = [];
     let Condominios = [];
     // let RelatorioGeral = [];
     // let RelatorioIndividual = [];
-    beneficiario.Condominios.forEach(condominio => {
+    beneficiario.Condominios.forEach((condominio) => {
       // condominio.GeneralReports.forEach(generalReport => {
       //   RelatorioGeral.push(generalReport.get());
       // });
-      condominio.Despesas.forEach(despesa => {
-        despesa.Valors.forEach(valor => {
+      condominio.Despesas.forEach((despesa) => {
+        despesa.Valors.forEach((valor) => {
           Valores.push(valor.get());
         });
         const temp3 = despesa.get();
@@ -51,16 +50,11 @@ class BeneficiarioController {
         Despesas.push(temp3);
         Valores = [];
       });
-      condominio.Pagantes.forEach(pagante => {
+      condominio.Pagantes.forEach((pagante) => {
         // pagante.IndividualReports.forEach(individualReport => {
         // RelatorioIndividual.push(individualReport.get());
         // });
-        pagante.Boletos.forEach(boleto => {
-          Boletos.push(boleto.get());
-        });
         const temp1 = pagante.get();
-        temp1.Boletos = Boletos;
-        Boletos = [];
         // temp1.Relatorios = RelatorioIndividual;
         // RelatorioIndividual = [];
         // delete temp1.IndividualReports;
@@ -85,19 +79,19 @@ class BeneficiarioController {
     Response.Condominios = Condominios;
     return Response;
   };
-  update = async data => {
+  update = async (data) => {
     const beneficiario = await Beneficiario.update(data, {
       where: {
-        id: data.id
-      }
+        id: data.id,
+      },
     });
     return beneficiario;
   };
-  delete = async id => {
+  delete = async (id) => {
     const beneficiario = await Beneficiario.destroy({
       where: {
-        id
-      }
+        id,
+      },
     });
     return beneficiario;
   };
