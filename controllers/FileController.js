@@ -84,7 +84,7 @@ class FileController {
       return false;
     }
   };
-  // TODO: CRIAR METODO PRA UNIR/MODIFICAR BOLETO COM RELATÓRIOS
+  // TODO: Criar um método para unir todos os RI com o RG e salvar no local determinado
 }
 
 module.exports = FileController;

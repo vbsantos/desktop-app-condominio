@@ -77,29 +77,6 @@ export default function RegistrarDespesas(props) {
     return () => console.log("RegistrarDespesas - Encerrou");
   }, []);
 
-  // Function that creates the structure used to make the requests // FIXME: Acho que não é mais necessário
-  async function getPaganteInfo() {
-    console.groupCollapsed("Dados para criação de boletos");
-    const totalCondominio = total + percentage[1];
-    const pagantes = data.allNestedCondominio["Pagantes"].map((pagante) => {
-      return {
-        valor: (totalCondominio * Number(pagante.fracao)).toFixed(2),
-        nome: pagante.nome,
-        cprf: pagante.cprf,
-        complemento: pagante.complemento,
-        numero: "", //FIXME
-        relatorioIndividualBase64: "", //FIXME
-      };
-    });
-    console.log("Dados dos Pagantes:", pagantes);
-    console.groupEnd("Dados para criação de boletos");
-
-    setData({
-      ...data,
-      pagantes,
-    });
-  }
-
   // This function runs only when there is an interaction with the footbar buttons
   useEffect(() => {
     switch (footbar.action) {
@@ -116,7 +93,11 @@ export default function RegistrarDespesas(props) {
       case 2:
         console.log("RegistrarDespesas - Botão da direita");
         setFootbar({ ...footbar, action: -1 });
-        getPaganteInfo();
+        //getPaganteInfo();
+        // FIXME GERA RELATÓRIOS MAS NÃO SALVA AINDA, SÓ SALVA DEPOIS DE IMPRIMIR/CONFIRMAR NA PRÓXIMA TELA
+        // TODO vai pra página de visualização de todos os relatórios e dá a opção de imprimir
+        console.log("reportRef.current:", reportRef.current);
+        // navigate("/VisualizarRelatoriosGerados");
         break;
     }
   }, [footbar.action]);
