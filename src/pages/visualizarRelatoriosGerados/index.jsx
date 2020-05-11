@@ -1,14 +1,18 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 // CSS
 import "./style.css";
 
-// TODO REPORTS
+// DIALOGS
+import DialogSaveReports from "../../dialogs/salvarRelatorios";
+
+// REPORTS
 import RelatorioGeral from "../../reports/relatorioGeral";
 import RelatorioIndividual from "../../reports/relatorioIndividual";
 
 // TODO component to png
+// FIXME isso vai pro dialog?
 import html2canvas from "html2canvas";
 
 export default function VisualizarRelatoriosGerados(props) {
@@ -19,6 +23,9 @@ export default function VisualizarRelatoriosGerados(props) {
   const navigate = useNavigate();
 
   data.beneficiario.id || navigate("/");
+
+  // Boolean for Save Reports Dialog
+  const [dialogSaveReports, setDialogSaveReports] = useState(false);
 
   console.groupCollapsed("VisualizarRelatoriosGerados: System data");
   console.log("Footbar:", footbar);
@@ -55,7 +62,7 @@ export default function VisualizarRelatoriosGerados(props) {
           position: "right",
           visible: true,
           enabled: true,
-          value: "SAIR",
+          value: "SALVAR",
         },
       ],
       action: -1,
@@ -74,17 +81,17 @@ export default function VisualizarRelatoriosGerados(props) {
       case 2:
         console.log("VisualizarRelatoriosGerados - Botão da direita");
         setFootbar({ ...footbar, action: -1 });
-        console.log("SAIR");
+        setDialogSaveReports(true);
         break;
     }
   }, [footbar.action]);
 
-  // TODO: aqui vai mostrar todos os relatórios recém gerados. Relatório Geral e Individuais
-  // DONE: utilizando estrutura data.lastReports eu renderizo todos os relatórios
-  // FIXME: usando html2canvas e useRef pego a string base64 deles e armazeno junto na estrutura data.boletos
-  // FIXME: e envio a requisição pro backend
   return (
-    <div id="visualizarRelatoriosGerados">
+    <>
+      {dialogSaveReports && (
+        // FIXME: enviar todos os dados necessários
+        <DialogSaveReports open={[dialogSaveReports, setDialogSaveReports]} />
+      )}
       <div>
         <h3 className="PageTitle">Relatório das Despesas do Condomínio</h3>
         <RelatorioGeral
@@ -110,6 +117,6 @@ export default function VisualizarRelatoriosGerados(props) {
           </div>
         ))}
       </div>
-    </div>
+    </>
   );
 }

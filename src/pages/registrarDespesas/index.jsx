@@ -165,9 +165,8 @@ export default function RegistrarDespesas(props) {
   // Stores the general report reference
   const reportRef = useRef(null);
 
-  //---
-
-  // This function turns the GeneralReport data into a string FIXME: adicionar informações ao JSON do report
+  // This function turns the GeneralReport data into a string
+  // FIXME: adicionar informações ao JSON do report (nome do condominio?)
   const makeGeneralReportJSON = async (categorias, despesas) => {
     const generalReport = categorias.map((categoria) => {
       const despesasByCategory = despesas.filter(
@@ -194,7 +193,8 @@ export default function RegistrarDespesas(props) {
     return generalReportJSON;
   };
 
-  // This function turns the IndividualReport data into a string FIXME: adicionar informações ao JSON do report
+  // This function turns the IndividualReport data into a string
+  // FIXME: adicionar informações ao JSON do report (nome do morador.)
   const makeIndividualReportJSON = async (categorias, despesas, pagantes) => {
     const individualReportsJSON = pagantes.map((pagante) => {
       let totalIndividual = 0;
@@ -215,9 +215,6 @@ export default function RegistrarDespesas(props) {
               valor: valor.toFixed(2),
             };
           });
-        // const despesasByCategoryEssencial = despesasByCategory.map( // FIXME
-        //   despesa => delete despesa["Valores"]
-        // );
         return {
           table: true,
           name: categoria,
@@ -238,7 +235,7 @@ export default function RegistrarDespesas(props) {
       // console.warn("Relatório Individual:", individualReport);
       return {
         paganteId: pagante.id,
-        report: JSON.stringify(individualReport), //FIXME: acho que aqui da pra fazer ele retornar o objeto, pra poder utilizar no momento de pegar o valor "total"
+        report: JSON.stringify(individualReport),
       };
     });
     return individualReportsJSON;
@@ -269,8 +266,6 @@ export default function RegistrarDespesas(props) {
 
     setData({ ...data, lastReports });
   }
-
-  //---
 
   return (
     <>
