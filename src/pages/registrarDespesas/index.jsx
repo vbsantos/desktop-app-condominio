@@ -93,11 +93,12 @@ export default function RegistrarDespesas(props) {
       case 2:
         console.log("RegistrarDespesas - Botão da direita");
         setFootbar({ ...footbar, action: -1 });
-        //getPaganteInfo();
-        // FIXME GERA RELATÓRIOS MAS NÃO SALVA AINDA, SÓ SALVA DEPOIS DE IMPRIMIR/CONFIRMAR NA PRÓXIMA TELA
-        // TODO vai pra página de visualização de todos os relatórios e dá a opção de imprimir
-        console.log("reportRef.current:", reportRef.current);
-        // navigate("/VisualizarRelatoriosGerados");
+
+        (async () => {
+          await putReportsOnLastReports(categorias, data.allNestedCondominio);
+          navigate("/VisualizarRelatoriosGerados");
+        })();
+
         break;
     }
   }, [footbar.action]);
@@ -163,6 +164,113 @@ export default function RegistrarDespesas(props) {
 
   // Stores the general report reference
   const reportRef = useRef(null);
+
+  //---
+
+  // This function turns the GeneralReport data into a string FIXME: adicionar informações ao JSON do report
+  const makeGeneralReportJSON = async (categorias, despesas) => {
+    const generalReport = categorias.map((categoria) => {
+      const despesasByCategory = despesas.filter(
+        (despesa) => despesa.categoria === categoria
+      );
+      return {
+        table: true,
+        name: categoria,
+        data: [...despesasByCategory],
+      };
+    });
+    generalReport.push({
+      table: false,
+      name: "fundoReserva",
+      data: percentage[1].toFixed(2),
+    });
+    generalReport.push({
+      table: false,
+      name: "total",
+      data: (total + percentage[1]).toFixed(2),
+    });
+    // console.warn("Relatório Geral:", generalReport);
+    const generalReportJSON = JSON.stringify(generalReport);
+    return generalReportJSON;
+  };
+
+  // This function turns the IndividualReport data into a string FIXME: adicionar informações ao JSON do report
+  const makeIndividualReportJSON = async (categorias, despesas, pagantes) => {
+    const individualReportsJSON = pagantes.map((pagante) => {
+      let totalIndividual = 0;
+      const individualReport = categorias.map((categoria) => {
+        const despesasByCategory = despesas
+          .filter((despesa) => despesa.categoria === categoria)
+          .map((despesa) => {
+            const valor = despesa.rateioAutomatico
+              ? Number(despesa.valor * pagante.fracao)
+              : Number(
+                  despesa["Valores"].filter(
+                    (valor) => valor.paganteId === pagante.id
+                  )[0].valor
+                );
+            totalIndividual += valor;
+            return {
+              ...despesa,
+              valor: valor.toFixed(2),
+            };
+          });
+        // const despesasByCategoryEssencial = despesasByCategory.map( // FIXME
+        //   despesa => delete despesa["Valores"]
+        // );
+        return {
+          table: true,
+          name: categoria,
+          data: [...despesasByCategory],
+        };
+      });
+      const fundoReservaIndividual = (percentage[0] / 100) * totalIndividual;
+      individualReport.push({
+        table: false,
+        name: "fundoReserva",
+        data: fundoReservaIndividual.toFixed(2),
+      });
+      individualReport.push({
+        table: false,
+        name: "total",
+        data: (totalIndividual + fundoReservaIndividual).toFixed(2),
+      });
+      // console.warn("Relatório Individual:", individualReport);
+      return {
+        paganteId: pagante.id,
+        report: JSON.stringify(individualReport), //FIXME: acho que aqui da pra fazer ele retornar o objeto, pra poder utilizar no momento de pegar o valor "total"
+      };
+    });
+    return individualReportsJSON;
+  };
+
+  async function putReportsOnLastReports(categorias, condominio) {
+    const relatorioGeral = await makeGeneralReportJSON(
+      categorias,
+      condominio["Despesas"]
+    );
+    console.groupCollapsed("RG");
+    console.log(relatorioGeral);
+    console.groupEnd("RG");
+
+    const relatoriosIndividuais = await makeIndividualReportJSON(
+      categorias,
+      condominio["Despesas"],
+      condominio["Pagantes"]
+    );
+    console.groupCollapsed("RIs");
+    console.log(relatoriosIndividuais);
+    console.groupEnd("RIs");
+
+    const lastReports = {
+      rg: relatorioGeral,
+      ris: relatoriosIndividuais,
+    };
+
+    setData({ ...data, lastReports });
+  }
+
+  //---
 
   return (
     <>
