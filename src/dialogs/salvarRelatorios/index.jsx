@@ -30,6 +30,9 @@ function PaperComponent(props) {
 
 export default function DraggableDialog(props) {
   const [dialog, setDialog] = props.open;
+  const { lastReports } = props;
+  const { base64Reports } = props;
+  const { condominioId } = props;
 
   // function that runs when the dialog is suposed to close
   function handleClose() {
@@ -38,8 +41,27 @@ export default function DraggableDialog(props) {
 
   // function that runs when you click the right button
   async function handleRightButton() {
+    // FIXME: deletar debugs
     console.warn("SALVA TUDO, CRIA OS PDF E TERMINA");
+    console.log("condominioId:", condominioId); // id pra salvar lastReports.rg no database
+    console.log("lastReports:", lastReports); // lastReports pra salvar no database
+    console.log("base64Reports:", base64Reports); // relatórios pra criar os PDFs
+
     // TODO passo 2 - se confirmar salva relatórios de data.lastReports no database
+    await window.ipcRenderer.invoke("generalReports", {
+      method: "create",
+      content: {
+        report: lastReports.rg,
+        condominioId,
+      },
+    });
+    for (const individualReport of lastReports.ris) {
+      await window.ipcRenderer.invoke("individualReports", {
+        method: "create",
+        content: { ...individualReport },
+      });
+    }
+
     // TODO passo 3 - após salvar, atualizar todos os parcelaAtual (+1) e deletar parcelaAtual === parcelaTotal
     // TODO passo 4 - envia reports para o backend criar os PDFs (usando html2canvas e useRef pego a string base64 deles)
     // TODO passo 5 - abre dialog pra escolher lugar para salvar os PDFs

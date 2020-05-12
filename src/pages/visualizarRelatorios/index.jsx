@@ -14,7 +14,7 @@ import RelatorioIndividual from "../../reports/relatorioIndividual";
 // COMPONENTS
 import TabPanel from "../../components/tabPanel";
 
-// component to png
+// COMPONENT TO PNG
 import html2canvas from "html2canvas";
 
 export default function VisualizarRelatorios(props) {

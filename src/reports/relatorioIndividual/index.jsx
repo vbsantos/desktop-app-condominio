@@ -15,6 +15,7 @@ import "./style.css";
 
 export default function RelatorioIndividual(props) {
   const { reportRef } = props;
+  const { reportClass } = props;
 
   const reportData = props.report
     .map((categoria) =>
@@ -34,7 +35,7 @@ export default function RelatorioIndividual(props) {
 
   return (
     <div id="relatorioIndividual">
-      <TableContainer ref={reportRef}>
+      <TableContainer className={reportClass} ref={reportRef}>
         <Table id="table1">
           <TableHead>
             <TableRow>

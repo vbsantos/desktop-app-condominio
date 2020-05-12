@@ -17,7 +17,7 @@ export default function App() {
         console.time("runMigrations");
         const migrations = await window.ipcRenderer.invoke("database", {
           method: "migrations",
-          content: null
+          content: null,
         });
         console.timeEnd("runMigrations");
         return migrations;
@@ -368,7 +368,7 @@ export default function App() {
   return (
     <div id="App">
       <HashRouter>
-        {config.done ? <Routes /> : <h1 id="Loading">LOADING</h1>}
+        {config.done ? <Routes /> : <h1 id="Loading">CONFIGURANDO</h1>}
       </HashRouter>
     </div>
   );

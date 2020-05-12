@@ -11,8 +11,7 @@ import DialogSaveReports from "../../dialogs/salvarRelatorios";
 import RelatorioGeral from "../../reports/relatorioGeral";
 import RelatorioIndividual from "../../reports/relatorioIndividual";
 
-// TODO component to png
-// FIXME isso vai pro dialog?
+// COMPONENT TO PNG
 import html2canvas from "html2canvas";
 
 export default function VisualizarRelatoriosGerados(props) {
@@ -31,13 +30,6 @@ export default function VisualizarRelatoriosGerados(props) {
   console.log("Footbar:", footbar);
   console.log("Data:", data);
   console.groupEnd("VisualizarRelatoriosGerados: System data");
-
-  // const refs = useRef([]);
-
-  // // This function runs only when the generated reports change
-  // useEffect(() => {
-  //   refs.
-  // }, [data.lastReports]);
 
   // This function runs only when the component is monted
   useEffect(() => {
@@ -81,20 +73,57 @@ export default function VisualizarRelatoriosGerados(props) {
       case 2:
         console.log("VisualizarRelatoriosGerados - Botão da direita");
         setFootbar({ ...footbar, action: -1 });
-        setDialogSaveReports(true);
+
+        (async () => {
+          await getReportsBase64();
+          setDialogSaveReports(true);
+        })();
+
         break;
     }
   }, [footbar.action]);
 
+  // This function turns HTML Objects in PNG (base64)
+  const htmlObjectToPng = async (htmlObject) => {
+    const canvas = await html2canvas(htmlObject);
+    const png = await canvas.toDataURL("image/png");
+    return png;
+  };
+
+  // This function turns the reports tables in an object with them base64 string
+  const getReportsBase64 = async () => {
+    const tablesHTML = Array.from(
+      document.getElementsByClassName("reportbase64")
+    );
+    const tablesPng = [];
+    for (const tableHTML of tablesHTML) {
+      const stringBase64 = await htmlObjectToPng(tableHTML);
+      tablesPng.push(stringBase64);
+    }
+    const base64Reports = {
+      rg: tablesPng.shift(),
+      ris: tablesPng,
+    };
+    setData({
+      ...data,
+      base64Reports,
+    });
+  };
+
   return (
     <>
       {dialogSaveReports && (
-        // FIXME: enviar todos os dados necessários
-        <DialogSaveReports open={[dialogSaveReports, setDialogSaveReports]} />
+        <DialogSaveReports
+          open={[dialogSaveReports, setDialogSaveReports]}
+          condominioId={data.allNestedCondominio.id}
+          lastReports={data.lastReports}
+          base64Reports={data.base64Reports}
+        />
       )}
       <div>
         <h3 className="PageTitle">Relatório das Despesas do Condomínio</h3>
         <RelatorioGeral
+          reportClass="reportbase64"
           reportRef={null}
           report={JSON.parse(data.lastReports.rg)}
         />
@@ -111,6 +140,7 @@ export default function VisualizarRelatoriosGerados(props) {
               }
             </h3>
             <RelatorioIndividual
+              reportClass="reportbase64"
               reportRef={null}
               report={JSON.parse(ri.report)}
             />

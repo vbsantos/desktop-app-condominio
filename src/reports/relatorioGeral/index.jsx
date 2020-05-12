@@ -16,10 +16,11 @@ import "./style.css";
 export default function RelatorioGeral(props) {
   const { report } = props;
   const { reportRef } = props;
+  const { reportClass } = props;
 
   return (
     <div id="relatorioGeral">
-      <TableContainer ref={reportRef}>
+      <TableContainer className={reportClass} ref={reportRef}>
         {report.map((categoria) => {
           // cada categoria
           let subtotal = 0;

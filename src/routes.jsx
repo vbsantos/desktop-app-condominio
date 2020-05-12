@@ -21,6 +21,7 @@ export default function MainRoutes(props) {
     allNestedCondominio: {},
     reports: { generalReport: false, data: [] },
     lastReports: {},
+    base64Reports: {},
   });
   const [footbarButtons, setFootbarButtons] = useState({
     buttons: [
