@@ -41,15 +41,29 @@ export default function DraggableDialog(props) {
 
   // function that runs when you click the right button
   async function handleRightButton() {
-    // FIXME: deletar debugs
-    console.warn("SALVA TUDO, CRIA OS PDF E TERMINA");
-    console.log("condominioId:", condominioId); // id pra salvar lastReports.rg no database
-    console.log("lastReports:", lastReports); // lastReports pra salvar no database
-    console.log("base64Reports:", base64Reports); // relatórios pra criar os PDFs
+    const reportsSaved = await saveAllReportsDisk();
+    if (reportsSaved) {
+      await saveAllReportsDatabase();
+      await updateAllDespesas();
+    }
 
-    // FIXME tirar alguns dos "await" desnecessários e permitir paralelismo
+    // TODO passo 6 - fecha sistema
+    // FIXME dialog pergunta se quer sair ou voltar pro selecionarCondominio
+    // FIXME loading screen
+    setDialog(false);
+  }
 
-    // salva relatórios de data.lastReports no database
+  // this function saves the reports as PDFs
+  const saveAllReportsDisk = async () => {
+    const status = await window.ipcRenderer.invoke("files", {
+      method: "generateAllReports",
+      content: base64Reports,
+    });
+    return status;
+  };
+
+  // this function saves de reports (data.lastReports) on the database
+  const saveAllReportsDatabase = async () => {
     await window.ipcRenderer.invoke("generalReports", {
       method: "create",
       content: {
@@ -63,16 +77,12 @@ export default function DraggableDialog(props) {
         content: { ...individualReport },
       });
     }
+  };
 
-    // salvar PDFs dos relatórios no PC do administrador
-    await window.ipcRenderer.invoke("files", {
-      method: "generateAllReports",
-      content: base64Reports,
-    });
-
-    // TODO passo 5 - atualizar todos os parcelaAtual (+1) e deletar parcelaAtual === parcelaTotal
-    setDialog(false); // TODO passo 6 - fecha sistema
-  }
+  const updateAllDespesas = async () => {
+    // FIXME passo 5 - atualizar todos os parcelaAtual (+1) e deletar parcelaAtual === parcelaTotal
+    console.error("update despenses");
+  };
 
   return (
     <div id="dialogSalvarRelatorios">

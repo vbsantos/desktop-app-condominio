@@ -116,6 +116,7 @@ class FileController {
       const reports = [];
       // Choose path to save documento
       const filePath = await this.saveReportsDialog();
+      if (typeof filePath === "undefined") return false;
       // Create PDF and embed PNGs
       const generalReportBase64 = base64reports.rg;
       for (const individualReportBase64 of base64reports.ris) {
