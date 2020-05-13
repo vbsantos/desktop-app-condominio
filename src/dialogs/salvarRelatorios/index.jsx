@@ -48,9 +48,8 @@ export default function DraggableDialog(props) {
       await updateAllDespesas();
     }
 
-    // TODO passo 6 - fecha sistema
     // FIXME loading screen
-    // FIXME dialog pergunta se quer sair ou voltar pro selecionarCondominio
+    // dialog pergunta se quer sair ou voltar pro selecionarCondominio
     setDialogCloseSystem(true);
     setDialog(false);
   }
@@ -83,6 +82,10 @@ export default function DraggableDialog(props) {
 
   const updateAllDespesas = async () => {
     // FIXME passo 5 - atualizar todos os parcelaAtual (+1) e deletar parcelaAtual === parcelaTotal
+    // Pra funcionar tem que receber:
+    // - dados de todas as despesas (parcelas)
+    // - pagantes (água)
+    // - zerar valores das despesas
     console.error("update despenses");
   };
 

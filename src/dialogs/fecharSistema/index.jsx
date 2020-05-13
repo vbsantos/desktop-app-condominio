@@ -7,7 +7,6 @@ import {
   Button,
   Dialog,
   DialogActions,
-  DialogContent,
   DialogTitle,
   Paper,
 } from "@material-ui/core";
@@ -37,12 +36,8 @@ export default function DraggableDialog(props) {
 
   // function that runs when the dialog is suposed to close
   function handleClose() {
-    setDialog(false);
-  }
-
-  // function that runs when you click the right button
-  async function handleLeftButton() {
     navigate("/EscolherCondominio"); // vai pra tela de condominios
+    setDialog(false);
   }
 
   // function that runs when you click the right button
@@ -65,11 +60,10 @@ export default function DraggableDialog(props) {
         >
           Deseja sair?
         </DialogTitle>
-        {/* <DialogContent>Essa ação não poderá ser desfeita.</DialogContent> */}
         <DialogActions>
           <Button
             autoFocus
-            onClick={handleLeftButton}
+            onClick={handleClose}
             variant="contained"
             color="primary"
           >
