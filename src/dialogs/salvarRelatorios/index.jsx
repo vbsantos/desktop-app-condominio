@@ -12,7 +12,7 @@ import {
 } from "@material-ui/core";
 
 // MATERIAL UI ICONS
-import { CreateOutlined } from "@material-ui/icons";
+import { AssessmentOutlined } from "@material-ui/icons";
 
 // CSS
 import "./style.css";
@@ -30,6 +30,7 @@ function PaperComponent(props) {
 
 export default function DraggableDialog(props) {
   const [dialog, setDialog] = props.open;
+  const [dialogCloseSystem, setDialogCloseSystem] = props.closeDialog;
   const { lastReports } = props;
   const { base64Reports } = props;
   const { condominioId } = props;
@@ -48,8 +49,9 @@ export default function DraggableDialog(props) {
     }
 
     // TODO passo 6 - fecha sistema
-    // FIXME dialog pergunta se quer sair ou voltar pro selecionarCondominio
     // FIXME loading screen
+    // FIXME dialog pergunta se quer sair ou voltar pro selecionarCondominio
+    setDialogCloseSystem(true);
     setDialog(false);
   }
 
@@ -114,7 +116,7 @@ export default function DraggableDialog(props) {
             variant="contained"
             color="primary"
           >
-            <CreateOutlined />
+            <AssessmentOutlined />
             Salvar
           </Button>
         </DialogActions>

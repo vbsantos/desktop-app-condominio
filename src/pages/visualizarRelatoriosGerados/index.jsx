@@ -6,6 +6,7 @@ import "./style.css";
 
 // DIALOGS
 import DialogSaveReports from "../../dialogs/salvarRelatorios";
+import DialogCloseSystem from "../../dialogs/fecharSistema";
 
 // REPORTS
 import RelatorioGeral from "../../reports/relatorioGeral";
@@ -25,6 +26,9 @@ export default function VisualizarRelatoriosGerados(props) {
 
   // Boolean for Save Reports Dialog
   const [dialogSaveReports, setDialogSaveReports] = useState(false);
+
+  // Boolean for Close System Dialog
+  const [dialogCloseSystem, setDialogCloseSystem] = useState(false);
 
   console.groupCollapsed("VisualizarRelatoriosGerados: System data");
   console.log("Footbar:", footbar);
@@ -115,10 +119,14 @@ export default function VisualizarRelatoriosGerados(props) {
       {dialogSaveReports && (
         <DialogSaveReports
           open={[dialogSaveReports, setDialogSaveReports]}
+          closeDialog={[dialogCloseSystem, setDialogCloseSystem]}
           condominioId={data.allNestedCondominio.id}
           lastReports={data.lastReports}
           base64Reports={data.base64Reports}
         />
+      )}
+      {dialogCloseSystem && (
+        <DialogCloseSystem open={[dialogCloseSystem, setDialogCloseSystem]} />
       )}
       <div>
         <h3 className="PageTitle">Relatório das Despesas do Condomínio</h3>
