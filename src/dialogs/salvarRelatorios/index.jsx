@@ -47,7 +47,9 @@ export default function DraggableDialog(props) {
     console.log("lastReports:", lastReports); // lastReports pra salvar no database
     console.log("base64Reports:", base64Reports); // relatórios pra criar os PDFs
 
-    // TODO passo 2 - se confirmar salva relatórios de data.lastReports no database
+    // FIXME tirar alguns dos "await" desnecessários e permitir paralelismo
+
+    // salva relatórios de data.lastReports no database
     await window.ipcRenderer.invoke("generalReports", {
       method: "create",
       content: {
@@ -62,10 +64,14 @@ export default function DraggableDialog(props) {
       });
     }
 
-    // TODO passo 3 - após salvar, atualizar todos os parcelaAtual (+1) e deletar parcelaAtual === parcelaTotal
-    // TODO passo 4 - envia reports para o backend criar os PDFs (usando html2canvas e useRef pego a string base64 deles)
-    // TODO passo 5 - abre dialog pra escolher lugar para salvar os PDFs
-    setDialog(false);
+    // salvar PDFs dos relatórios no PC do administrador
+    await window.ipcRenderer.invoke("files", {
+      method: "generateAllReports",
+      content: base64Reports,
+    });
+
+    // TODO passo 5 - atualizar todos os parcelaAtual (+1) e deletar parcelaAtual === parcelaTotal
+    setDialog(false); // TODO passo 6 - fecha sistema
   }
 
   return (

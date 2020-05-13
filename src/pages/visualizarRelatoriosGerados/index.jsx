@@ -90,7 +90,7 @@ export default function VisualizarRelatoriosGerados(props) {
     return png;
   };
 
-  // This function turns the reports tables in an object with them base64 string
+  // This function turns the html tables in an object with them base64 string
   const getReportsBase64 = async () => {
     const tablesHTML = Array.from(
       document.getElementsByClassName("reportbase64")
