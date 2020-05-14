@@ -120,9 +120,10 @@ export default function VisualizarRelatoriosGerados(props) {
         <DialogSaveReports
           open={[dialogSaveReports, setDialogSaveReports]}
           closeDialog={[dialogCloseSystem, setDialogCloseSystem]}
-          condominioId={data.allNestedCondominio.id}
           lastReports={data.lastReports}
           base64Reports={data.base64Reports}
+          condominioId={data.allNestedCondominio.id}
+          despesas={data.allNestedCondominio["Despesas"]}
         />
       )}
       {dialogCloseSystem && (
@@ -130,6 +131,7 @@ export default function VisualizarRelatoriosGerados(props) {
       )}
       <div>
         <h3 className="PageTitle">Relatório das Despesas do Condomínio</h3>
+        {/* FIXME: colocar o fundo em branco */}
         <RelatorioGeral
           reportClass="reportbase64"
           reportRef={null}

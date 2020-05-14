@@ -34,25 +34,7 @@ export default function DraggableDialog(props) {
   const { lastReports } = props;
   const { base64Reports } = props;
   const { condominioId } = props;
-
-  // function that runs when the dialog is suposed to close
-  function handleClose() {
-    setDialog(false);
-  }
-
-  // function that runs when you click the right button
-  async function handleRightButton() {
-    const reportsSaved = await saveAllReportsDisk();
-    if (reportsSaved) {
-      await saveAllReportsDatabase();
-      await updateAllDespesas();
-    }
-
-    // FIXME loading screen
-    // dialog pergunta se quer sair ou voltar pro selecionarCondominio
-    setDialogCloseSystem(true);
-    setDialog(false);
-  }
+  const { despesas } = props;
 
   // this function saves the reports as PDFs
   const saveAllReportsDisk = async () => {
@@ -80,14 +62,89 @@ export default function DraggableDialog(props) {
     }
   };
 
-  const updateAllDespesas = async () => {
-    // FIXME passo 5 - atualizar todos os parcelaAtual (+1) e deletar parcelaAtual === parcelaTotal
-    // Pra funcionar tem que receber:
-    // - dados de todas as despesas (parcelas)
-    // - pagantes (água)
-    // - zerar valores das despesas
-    console.error("update despenses");
+  const deleteDespesa = async (id) => {
+    await window.ipcRenderer.invoke("despesas", {
+      method: "delete",
+      content: { id },
+    });
   };
+
+  const updateDespesaParcelada = async (despesa) => {
+    if (despesa.parcelaAtual === despesa.numParcelas) {
+      deleteDespesa(despesa.id);
+    } else {
+      const novaParcela = +despesa.parcelaAtual + 1;
+      await window.ipcRenderer.invoke("despesas", {
+        method: "update",
+        content: { id: despesa.id, parcelaAtual: novaParcela },
+      });
+    }
+  };
+
+  const updateRegistroPagante = async (id, novoRegistro) => {
+    await window.ipcRenderer.invoke("pagantes", {
+      method: "update",
+      content: { id, leituraAgua: novoRegistro },
+    });
+  };
+
+  const updateValorDespesaToZero = async (id, valores) => {
+    await window.ipcRenderer.invoke("despesas", {
+      method: "update",
+      content: { id, valor: "0" },
+    });
+    if (valores.length > 0) {
+      for (const valor of valores) {
+        //FIXME: usar bulkUpdate (?)
+        await window.ipcRenderer.invoke("valores", {
+          method: "update",
+          content: { id: valor.id, valor: "0" },
+        });
+      }
+    }
+  };
+
+  // this function update all Despesas
+  const updateAllDespesas = async (despesas) => {
+    console.warn("DESPESAS:", despesas);
+    for (const despesa of despesas) {
+      // NÃO FAZ ALTERAÇÕES NO FUNDO RESERVA
+      if (despesa.fundoReserva) continue;
+      // SALVAR NOVO REGISTRO DE ÁGUA
+      if (despesa.aguaIndividual) {
+        for (const despesaIndividual of despesa["Valores"]) {
+          await updateRegistroPagante(
+            despesaIndividual.paganteId,
+            despesaIndividual.agua
+          );
+        }
+      }
+      // ATUALIZAR DESPESAS PARCELADAS
+      if (!despesa.permanente) {
+        await updateDespesaParcelada(despesa);
+      }
+      // ZERAR VALORES
+      await updateValorDespesaToZero(despesa.id, despesa["Valores"]);
+    }
+  };
+
+  // function that runs when the dialog is suposed to close
+  function handleClose() {
+    setDialog(false);
+  }
+
+  // function that runs when you click the right button
+  async function handleRightButton() {
+    const reportsSaved = await saveAllReportsDisk();
+    if (reportsSaved) {
+      await saveAllReportsDatabase();
+      await updateAllDespesas(despesas);
+      // FIXME loading screen
+      // dialog pergunta se quer sair ou voltar pro selecionarCondominio
+      setDialogCloseSystem(true);
+      setDialog(false);
+    }
+  }
 
   return (
     <div id="dialogSalvarRelatorios">
