@@ -81,17 +81,17 @@ export default function DraggableDialog(props) {
     }
   };
 
-  const updateRegistroPagante = async (id, novoRegistro) => {
+  const updateRegistroPagante = async (paganteId, novoRegistro) => {
     await window.ipcRenderer.invoke("pagantes", {
       method: "update",
-      content: { id, leituraAgua: novoRegistro },
+      content: { id: paganteId, leituraAgua: novoRegistro },
     });
   };
 
-  const updateValorDespesaToZero = async (id, valores) => {
+  const updateValorDespesaToZero = async (despesaId, valores) => {
     await window.ipcRenderer.invoke("despesas", {
       method: "update",
-      content: { id, valor: "0" },
+      content: { id: despesaId, valor: "0" },
     });
     if (valores.length > 0) {
       for (const valor of valores) {
@@ -104,27 +104,19 @@ export default function DraggableDialog(props) {
     }
   };
 
-  // this function update all Despesas
+  // function that update all Despesas
   const updateAllDespesas = async (despesas) => {
-    console.warn("DESPESAS:", despesas);
     for (const despesa of despesas) {
-      // NÃO FAZ ALTERAÇÕES NO FUNDO RESERVA
-      if (despesa.fundoReserva) continue;
-      // SALVAR NOVO REGISTRO DE ÁGUA
+      if (despesa.fundoReserva) continue; // NÃO FAZ ALTERAÇÕES NO FUNDO RESERVA
       if (despesa.aguaIndividual) {
-        for (const despesaIndividual of despesa["Valores"]) {
-          await updateRegistroPagante(
-            despesaIndividual.paganteId,
-            despesaIndividual.agua
-          );
+        for (const individual of despesa["Valores"]) {
+          await updateRegistroPagante(individual.paganteId, individual.agua); // SALVAR NOVO REGISTRO DE ÁGUA
         }
       }
-      // ATUALIZAR DESPESAS PARCELADAS
+      await updateValorDespesaToZero(despesa.id, despesa["Valores"]); // ZERAR VALORES
       if (!despesa.permanente) {
-        await updateDespesaParcelada(despesa);
+        await updateDespesaParcelada(despesa); // ATUALIZAR DESPESAS PARCELADAS
       }
-      // ZERAR VALORES
-      await updateValorDespesaToZero(despesa.id, despesa["Valores"]);
     }
   };
 
