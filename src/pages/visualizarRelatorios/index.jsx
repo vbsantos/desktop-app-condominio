@@ -116,6 +116,14 @@ export default function VisualizarRelatorios(props) {
     setValue(newValue);
   };
 
+  const getTimestamp = (date) => {
+    const tzoffset = new Date().getTimezoneOffset() * 60000;
+    const localISOTime = new Date(new Date(date) - tzoffset)
+      .toISOString()
+      .slice(0, -1);
+    return localISOTime;
+  };
+
   return (
     <div id="visualizarRelatorios">
       <Tabs
@@ -129,7 +137,7 @@ export default function VisualizarRelatorios(props) {
         {data.reports.data.map((report, index) => (
           <Tab
             key={"panelTab" + index}
-            label={report.createdAt //FIXME: esse timestamp tá +3 horas
+            label={getTimestamp(report.createdAt)
               .split("T")[0]
               .split("-")
               .reverse()
