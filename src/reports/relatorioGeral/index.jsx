@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React from "react";
 
 // MATERIAL UI COMPONENTS
 import {
@@ -10,6 +10,9 @@ import {
   TableCell,
 } from "@material-ui/core";
 
+// COMPONENTS
+import GeneralReportHeader from "../../components/headerGeneralReport";
+
 // CSS
 import "./style.css";
 
@@ -18,9 +21,16 @@ export default function RelatorioGeral(props) {
   const { reportRef } = props;
   const { reportClass } = props;
 
+  const info =
+    report[report.length - 1].name === "info" ? report.pop().data : null;
+
   return (
     <div id="relatorioGeral">
       <TableContainer className={reportClass} ref={reportRef}>
+        <GeneralReportHeader
+          nomeCondominio={info.nameCondominio}
+          nomeAdministrador={info.nameAdministrador}
+        />
         {report.map((categoria) => {
           // cada categoria
           let subtotal = 0;

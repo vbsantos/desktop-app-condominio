@@ -45,6 +45,7 @@ class FileController {
     const { width, height } = page.getSize();
     // Draw the PNG image near the lower right corner of the JPG image
     page.drawImage(pngImage, {
+      // FIXME aumentar margens
       x: 10,
       y: height - pngDims.height - 20,
       width: width - 20,
@@ -69,6 +70,7 @@ class FileController {
     const { width, height } = page1.getSize();
     // Draw the PNG image near the lower right corner of the JPG image
     page1.drawImage(pngImage1, {
+      // FIXME aumentar margens
       x: 10,
       y: height - pngDims1.height - 20,
       width: width - 20,
@@ -128,7 +130,7 @@ class FileController {
       }
       // Save reports
       for (const index in reports) {
-        const path = filePath + "/report_" + index + ".pdf"; // FIXME: trocar o 'index' pelo 'complemento' e 'data do relatorio'
+        const path = filePath + "/report_" + index + ".pdf"; // FIXME: trocar o 'index' pelo 'complemento' e 'data do relatorio'z
         await fs.writeFileSync(path, reports[index]);
       }
       return true;

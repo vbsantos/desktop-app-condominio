@@ -1,17 +1,13 @@
-#relatorioIndividual .MuiTableContainer-root {
-  background-color: white;
+#relatorioIndividual #duasTabelas {
   display: flex;
-  overflow: hidden;
-  border: 1px solid black;
-  text-align: center;
-  width: 900px !important;
-  margin: 0 auto 0 auto;
-  padding: 0;
 }
 
-#relatorioIndividual .MuiTableContainer-root #table2 {
-  margin-left: -1px;
-  margin-right: -1px;
+#relatorioIndividual .MuiTableContainer-root {
+  overflow: hidden;
+  text-align: center;
+  width: 900px !important;
+  margin: 0 auto 10px auto;
+  padding: 0;
 }
 
 #relatorioIndividual .MuiTableRow-head * {
@@ -35,6 +31,24 @@
   width: 10% !important;
 }
 
+#relatorioIndividual .MuiTableRow-root #agua {
+  text-align: center !important;
+  width: 20% !important;
+}
+
 #relatorioIndividual #table1 {
-  border-right: 2px solid black;
+  background-color: white;
+  border: 2px solid black;
+}
+
+#relatorioIndividual #table2 {
+  margin-left: -2px;
+  background-color: white;
+  border: 2px solid black;
+}
+
+#relatorioIndividual #table3 {
+  background-color: white;
+  border: 2px solid black;
+  margin-top: 10px;
 }

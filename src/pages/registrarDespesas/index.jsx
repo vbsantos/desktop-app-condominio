@@ -166,7 +166,6 @@ export default function RegistrarDespesas(props) {
   const reportRef = useRef(null);
 
   // This function turns the GeneralReport data into a string
-  // FIXME: adicionar informações ao JSON do report (nome do condominio?)
   const makeGeneralReportJSON = async (categorias, despesas) => {
     const generalReport = categorias.map((categoria) => {
       const despesasByCategory = despesas.filter(
@@ -188,13 +187,19 @@ export default function RegistrarDespesas(props) {
       name: "total",
       data: (total + percentage[1]).toFixed(2),
     });
-    // console.warn("Relatório Geral:", generalReport);
+    generalReport.push({
+      table: false,
+      name: "info",
+      data: {
+        nameCondominio: data.allNestedCondominio.nome,
+        nameAdministrador: data.allNestedBeneficiario.nome,
+      },
+    });
     const generalReportJSON = JSON.stringify(generalReport);
     return generalReportJSON;
   };
 
   // This function turns the IndividualReport data into a string
-  // FIXME: adicionar informações ao JSON do report (nome do morador.)
   const makeIndividualReportJSON = async (categorias, despesas, pagantes) => {
     const individualReportsJSON = pagantes.map((pagante) => {
       let totalIndividual = 0;
@@ -231,6 +236,28 @@ export default function RegistrarDespesas(props) {
         table: false,
         name: "total",
         data: (totalIndividual + fundoReservaIndividual).toFixed(2),
+      });
+      const despesaAgua = despesas.find(
+        (despesa) => despesa.aguaIndividual === true
+      );
+      const valorAgua = despesaAgua
+        ? despesaAgua["Valores"].find(
+            (despesa) => despesa.paganteId === pagante.id
+          )
+        : null;
+      individualReport.push({
+        table: false,
+        name: "info",
+        data: {
+          complementoPagante: pagante.complemento,
+          nomePagante: pagante.nome,
+          aguaAnterior: pagante.leituraAgua,
+          aguaAtual: despesaAgua ? valorAgua.agua : null,
+          aguaConsumo: despesaAgua
+            ? Number(valorAgua.agua) - Number(pagante.leituraAgua)
+            : null,
+          aguaValorUnitario: despesaAgua ? valorAgua.precoAgua : null,
+        },
       });
       // console.warn("Relatório Individual:", individualReport);
       return {

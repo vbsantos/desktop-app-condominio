@@ -130,8 +130,7 @@ export default function VisualizarRelatoriosGerados(props) {
         <DialogCloseSystem open={[dialogCloseSystem, setDialogCloseSystem]} />
       )}
       <div>
-        <h3 className="PageTitle">Relatório das Despesas do Condomínio</h3>
-        {/* FIXME: colocar o fundo em branco */}
+        {/* <h3 className="PageTitle">Relatório das Despesas do Condomínio</h3> */}
         <RelatorioGeral
           reportClass="reportbase64"
           reportRef={null}
@@ -141,14 +140,14 @@ export default function VisualizarRelatoriosGerados(props) {
       <div>
         {data.lastReports.ris.map((ri) => (
           <div key={"ri" + ri.paganteId}>
-            <h3 className="PageTitle">
+            {/* <h3 className="PageTitle">
               {"Relatório Individual de "}
               {
                 data.allNestedCondominio["Pagantes"].filter(
                   (pagante) => pagante.id === ri.paganteId
                 )[0].complemento
               }
-            </h3>
+            </h3> */}
             <RelatorioIndividual
               reportClass="reportbase64"
               reportRef={null}
