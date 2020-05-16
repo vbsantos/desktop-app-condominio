@@ -36,11 +36,26 @@ export default function DraggableDialog(props) {
   const { condominioId } = props;
   const { despesas } = props;
 
+  const getPagantesInfo = async () => {
+    const complementos = [];
+    for (let reportString of lastReports.ris) {
+      const reportObj = JSON.parse(reportString.report);
+      complementos.push(
+        reportObj[reportObj.length - 1].data.complementoPagante
+      );
+    }
+    return complementos;
+  };
+
   // this function saves the reports as PDFs
   const saveAllReportsDisk = async () => {
+    const infos = await getPagantesInfo();
     const status = await window.ipcRenderer.invoke("files", {
       method: "generateAllReports",
-      content: base64Reports,
+      content: {
+        base64Reports,
+        infos,
+      },
     });
     return status;
   };

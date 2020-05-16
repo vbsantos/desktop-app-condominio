@@ -5,6 +5,13 @@ const { dialog } = require("electron");
 const fs = require("fs");
 
 class FileController {
+  getTimestamp = () => {
+    const tzoffset = new Date().getTimezoneOffset() * 60000;
+    const localISOTime = new Date(Date.now() - tzoffset)
+      .toISOString()
+      .slice(0, -1);
+    return localISOTime;
+  };
   saveReportAsDialog = async (filename) => {
     // Dialog title, filename and button label
     const dialogConfig = {
@@ -45,10 +52,9 @@ class FileController {
     const { width, height } = page.getSize();
     // Draw the PNG image near the lower right corner of the JPG image
     page.drawImage(pngImage, {
-      // FIXME aumentar margens
-      x: 10,
+      x: 20,
       y: height - pngDims.height - 20,
-      width: width - 20,
+      width: width - 40,
       height: pngDims.height,
     });
     // Serialize the PDFDocument to bytes (a Uint8Array)
@@ -70,16 +76,15 @@ class FileController {
     const { width, height } = page1.getSize();
     // Draw the PNG image near the lower right corner of the JPG image
     page1.drawImage(pngImage1, {
-      // FIXME aumentar margens
-      x: 10,
+      x: 20,
       y: height - pngDims1.height - 20,
-      width: width - 20,
+      width: width - 40,
       height: pngDims1.height,
     });
     page2.drawImage(pngImage2, {
-      x: 10,
+      x: 20,
       y: height - pngDims2.height - 20,
-      width: width - 20,
+      width: width - 40,
       height: pngDims2.height,
     });
     // Serialize the PDFDocument to bytes (a Uint8Array)
@@ -88,7 +93,9 @@ class FileController {
   generateGeneralReport = async (base64imageString) => {
     try {
       // Choose path to save documento
-      const filePath = await this.saveReportAsDialog("RelatorioCondominio");
+      const filePath = await this.saveReportAsDialog(
+        "RelatorioCondominio_" + this.getTimestamp()
+      );
       // Create PDF and embed PNG
       const pdfBytes = await this.createSinglePagePdf(base64imageString);
       // Save document
@@ -102,7 +109,9 @@ class FileController {
   generateIndividualReport = async (base64imageString) => {
     try {
       // Choose path to save documento
-      const filePath = await this.saveReportAsDialog("RelatorioMorador");
+      const filePath = await this.saveReportAsDialog(
+        "RelatorioIndividual_" + this.getTimestamp()
+      );
       // Create PDF and embed PNG
       const pdfBytes = await this.createSinglePagePdf(base64imageString);
       // Save document
@@ -113,24 +122,35 @@ class FileController {
       return false;
     }
   };
-  generateAllReports = async (base64reports) => {
+  generateAllReports = async (reportDatas) => {
     try {
+      const { base64Reports } = reportDatas;
+      const { infos } = reportDatas;
       const reports = [];
       // Choose path to save documento
       const filePath = await this.saveReportsDialog();
       if (typeof filePath === "undefined") return false;
       // Create PDF and embed PNGs
-      const generalReportBase64 = base64reports.rg;
-      for (const individualReportBase64 of base64reports.ris) {
+      const generalReportBase64 = base64Reports.rg;
+      for (const individualReportBase64 of base64Reports.ris) {
         const report = await this.createTwoPagePdf(
           generalReportBase64,
           individualReportBase64
         );
         reports.push(report);
       }
+
+      // timestamp
+
       // Save reports
       for (const index in reports) {
-        const path = filePath + "/report_" + index + ".pdf"; // FIXME: trocar o 'index' pelo 'complemento' e 'data do relatorio'z
+        const path =
+          filePath +
+          "/relatorio_" +
+          infos[index] +
+          "_" +
+          this.getTimestamp() +
+          ".pdf";
         await fs.writeFileSync(path, reports[index]);
       }
       return true;

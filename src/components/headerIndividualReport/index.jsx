@@ -12,10 +12,17 @@ export default function IndividualReportHeader(props) {
 
   return (
     <div id="IndividualReportHeader">
-      <div id="header-line1">{"Relatório Individual"}</div>
-      <div id="header-line2">{"Apartamento " + complementoPagante}</div>
-      {"Morador " + nomePagante}
-      <div id="header-line3"></div>
+      <div className="bold" id="header-line1">
+        Relatório Individual
+      </div>
+      <div id="header-line2">
+        <span className="bold">Apartamento:</span>
+        {" " + complementoPagante}
+      </div>
+      <div id="header-line3">
+        <span className="bold">Morador:</span>
+        {" " + nomePagante}
+      </div>
     </div>
   );
 }

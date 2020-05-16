@@ -126,14 +126,10 @@ export default function VisualizarRelatorios(props) {
         onChange={handleChange}
         aria-label="Vertical tabs"
       >
-        {/* TODO - Adicionar algo que diz o nome do condomínio ou do morador ao visualizar */}
-        {/* {data.reports.generalReport
-          ? "Condomínio " + data.allNestedCondominio.name
-          : "Eduardo Batata"} */}
         {data.reports.data.map((report, index) => (
           <Tab
             key={"panelTab" + index}
-            label={report.createdAt
+            label={report.createdAt //FIXME: esse timestamp tá +3 horas
               .split("T")[0]
               .split("-")
               .reverse()
@@ -145,7 +141,6 @@ export default function VisualizarRelatorios(props) {
         ))}
       </Tabs>
 
-      {/* TODO: Enviar junto a data do relatório pra ficar no nome do arquivo */}
       {data.reports.data.map((dt, index) => (
         <TabPanel key={"panel" + index} id="panel" value={value} index={index}>
           {data.reports.generalReport ? (
