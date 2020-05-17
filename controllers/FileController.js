@@ -8,10 +8,14 @@ const fs = require("fs");
 class FileController {
   getTimestamp = () => {
     const tzoffset = new Date().getTimezoneOffset() * 60000;
-    const localISOTime = new Date(Date.now() - tzoffset)
-      .toISOString()
-      .slice(0, -1);
-    return localISOTime;
+    const localISOTime = new Date(Date.now() - tzoffset).toISOString();
+    const formatedTime = localISOTime
+      .slice(0, -1)
+      .split(".")[0]
+      .replace(":", "-")
+      .replace(":", "-")
+      .replace("T", "_");
+    return formatedTime;
   };
   saveReportAsDialog = async (filename) => {
     // Dialog title, filename and button label
@@ -143,11 +147,18 @@ class FileController {
 
       // Save reports
       for (const index in reports) {
-        const path = Path.join(
+        const path = Path.resolve(
           filePath,
           "relatorio_" + infos[index] + "_" + this.getTimestamp() + ".pdf"
         );
-        await fs.writeFileSync(path, reports[index]);
+        // await fs.writeFileSync(path, reports[index]);
+        await fs.writeFile(path, reports[index], function (err) {
+          if (err) {
+            console.log("Error saving file '" + path + "'");
+            throw new Error(err);
+          }
+          console.log("The file '" + path + "' was saved!");
+        });
       }
       return true;
     } catch (error) {
