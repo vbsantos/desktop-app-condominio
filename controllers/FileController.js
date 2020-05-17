@@ -2,6 +2,7 @@
 
 const { PDFDocument } = require("pdf-lib");
 const { dialog } = require("electron");
+const Path = require("path");
 const fs = require("fs");
 
 class FileController {
@@ -140,17 +141,12 @@ class FileController {
         reports.push(report);
       }
 
-      // timestamp
-
       // Save reports
       for (const index in reports) {
-        const path =
-          filePath +
-          "/relatorio_" +
-          infos[index] +
-          "_" +
-          this.getTimestamp() +
-          ".pdf";
+        const path = Path.join(
+          filePath,
+          "relatorio_" + infos[index] + "_" + this.getTimestamp() + ".pdf"
+        );
         await fs.writeFileSync(path, reports[index]);
       }
       return true;
