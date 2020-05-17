@@ -296,6 +296,7 @@ export default function RegistrarDespesas(props) {
 
   return (
     <>
+      {/* FIXME: adicionar um dialog pra escolher o tipo de despesa e redirecione pra um dialog especifico daquela despesa */}
       {dialogRegisterDespesaForm && (
         <DialogDespesa
           open={[dialogRegisterDespesaForm, setDialogRegisterDespesaForm]}

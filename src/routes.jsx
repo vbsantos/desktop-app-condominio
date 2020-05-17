@@ -23,6 +23,7 @@ export default function MainRoutes(props) {
     lastReports: {},
     base64Reports: {},
   });
+
   const [footbarButtons, setFootbarButtons] = useState({
     buttons: [
       {

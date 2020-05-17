@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Draggable from "react-draggable";
 
 // MATERIAL UI COMPONENTS
@@ -16,6 +16,9 @@ import { AssessmentOutlined } from "@material-ui/icons";
 
 // CSS
 import "./style.css";
+
+// DIALOGS
+import Loading from "../../dialogs/carregando";
 
 function PaperComponent(props) {
   return (
@@ -35,6 +38,8 @@ export default function DraggableDialog(props) {
   const { base64Reports } = props;
   const { condominioId } = props;
   const { despesas } = props;
+
+  const [loading, setLoading] = useState(false);
 
   const getPagantesInfo = async () => {
     const complementos = [];
@@ -142,18 +147,25 @@ export default function DraggableDialog(props) {
 
   // function that runs when you click the right button
   async function handleRightButton() {
+    setLoading(true);
     const reportsSaved = await saveAllReportsDisk();
     if (reportsSaved) {
       await saveAllReportsDatabase();
       await updateAllDespesas(despesas);
-      // FIXME loading screen
-      // dialog pergunta se quer sair ou voltar pro selecionarCondominio
+      setLoading(false);
       setDialogCloseSystem(true);
       setDialog(false);
+    } else {
+      setLoading(false);
     }
   }
 
-  return (
+  return loading ? (
+    <Loading
+      title={"Por favor aguarde enquanto os relatórios são salvos"}
+      open={[loading, setLoading]}
+    />
+  ) : (
     <div id="dialogSalvarRelatorios">
       <Dialog
         open={dialog}

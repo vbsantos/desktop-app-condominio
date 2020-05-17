@@ -7,6 +7,7 @@ import "./style.css";
 // DIALOGS
 import DialogSaveReports from "../../dialogs/salvarRelatorios";
 import DialogCloseSystem from "../../dialogs/fecharSistema";
+import Loading from "../../dialogs/carregando";
 
 // REPORTS
 import RelatorioGeral from "../../reports/relatorioGeral";
@@ -18,6 +19,8 @@ import html2canvas from "html2canvas";
 export default function VisualizarRelatoriosGerados(props) {
   const [footbar, setFootbar] = props.buttons;
   const [data, setData] = props.data;
+
+  const [loading, setLoading] = useState(false);
 
   // React Router Hook for navigation between pages
   const navigate = useNavigate();
@@ -79,7 +82,9 @@ export default function VisualizarRelatoriosGerados(props) {
         setFootbar({ ...footbar, action: -1 });
 
         (async () => {
+          setLoading(true);
           await getReportsBase64();
+          setLoading(false);
           setDialogSaveReports(true);
         })();
 
@@ -115,7 +120,13 @@ export default function VisualizarRelatoriosGerados(props) {
   };
 
   return (
-    <>
+    <div id="VisualizarRelatoriosGerados">
+      {loading && (
+        <Loading
+          title={"Por favor aguarde enquanto os relatórios são processados"}
+          open={[loading, setLoading]}
+        />
+      )}
       {dialogSaveReports && (
         <DialogSaveReports
           open={[dialogSaveReports, setDialogSaveReports]}
@@ -147,6 +158,6 @@ export default function VisualizarRelatoriosGerados(props) {
           </div>
         ))}
       </div>
-    </>
+    </div>
   );
 }

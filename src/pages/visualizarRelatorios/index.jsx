@@ -116,12 +116,18 @@ export default function VisualizarRelatorios(props) {
     setValue(newValue);
   };
 
-  const getTimestamp = (date) => {
-    const tzoffset = new Date().getTimezoneOffset() * 60000;
-    const localISOTime = new Date(new Date(date) - tzoffset)
+  // This functions turns "2020-05-16T23:39:25.808Z" to "17 / 05 / 2020"
+  const getDate = (dateIsoString) => {
+    const timeZoneOffset = new Date().getTimezoneOffset() * 60000;
+    const localISOTime = new Date(new Date(dateIsoString) - timeZoneOffset)
       .toISOString()
       .slice(0, -1);
-    return localISOTime;
+    const simpleLocalTime = localISOTime
+      .split("T")[0]
+      .split("-")
+      .reverse()
+      .join(" / ");
+    return simpleLocalTime;
   };
 
   return (
@@ -137,11 +143,7 @@ export default function VisualizarRelatorios(props) {
         {data.reports.data.map((report, index) => (
           <Tab
             key={"panelTab" + index}
-            label={getTimestamp(report.createdAt)
-              .split("T")[0]
-              .split("-")
-              .reverse()
-              .join(" / ")}
+            label={getDate(report.createdAt)}
             title={"Data em que o relatório foi gerado"}
             id={`vertical-tab-${index}`}
             aria-controls={`vertical-tabpanel-${index}`}
