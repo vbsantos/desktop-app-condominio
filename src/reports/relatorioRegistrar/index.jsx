@@ -24,7 +24,22 @@ export default function RelatorioCondominioRegistrar(props) {
   const { setSelected } = props;
 
   // Function that when setted to true opens Conta Edit Dialog
-  const [dialogEditContaForm, setDialogEditContaForm] = props.editDialog;
+  const [
+    dialogEditDespesaFixa,
+    setDialogEditDespesaFixa,
+  ] = props.dialogEditDespesaFixa;
+  const [
+    dialogEditDespesaParcelada,
+    setDialogEditDespesaParcelada,
+  ] = props.dialogEditDespesaParcelada;
+  const [
+    dialogEditDespesaAgua,
+    setDialogEditDespesaAgua,
+  ] = props.dialogEditDespesaAgua;
+  const [
+    dialogEditDespesaFundoReserva,
+    setDialogEditDespesaFundoReserva,
+  ] = props.dialogEditDespesaFundoReserva;
 
   // Store the Contas by Categoria
   const [categorias, setCategorias] = props.categorias;
@@ -37,8 +52,20 @@ export default function RelatorioCondominioRegistrar(props) {
 
   // Function that runs when you click in a Conta row
   const selectAndOpenDialog = (id) => {
-    setSelected({ id });
-    setDialogEditContaForm(true);
+    setSelected({ id }); // pega o id da despesa
+    const despesa = despesas.find((despesa) => despesa.id === id);
+
+    console.log(despesa);
+
+    if (despesa.fundoReserva) {
+      setDialogEditDespesaFundoReserva(true);
+    } else if (despesa.aguaIndividual) {
+      setDialogEditDespesaAgua(true);
+    } else if (despesa.permanente) {
+      setDialogEditDespesaFixa(true);
+    } else {
+      setDialogEditDespesaParcelada(true);
+    }
   };
 
   return (

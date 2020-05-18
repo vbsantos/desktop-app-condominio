@@ -5,8 +5,13 @@ import { useNavigate } from "react-router-dom";
 import "./style.css";
 
 // DIALOGS
-import DialogDespesa from "../../dialogs/despesa";
 import DialogExcluirDespesa from "../../dialogs/deletarDespesa";
+import DialogEscolherDespesa from "../../dialogs/escolherDespesa";
+
+import DialogDespesaFixa from "../../dialogs/despesaFixa";
+import DialogDespesaParcelada from "../../dialogs/despesaParcelada";
+import DialogDespesaAgua from "../../dialogs/despesaAgua";
+import DialogDespesaFundoReserva from "../../dialogs/despesaFundoReserva";
 
 // REPORTS
 import RelatorioCondominioRegistrar from "../../reports/relatorioRegistrar";
@@ -30,13 +35,35 @@ export default function RegistrarDespesas(props) {
   // ID of the selected Despesa
   const [selectedDespesa, setSelectedDespesa] = useState({ id: -1 });
 
-  // Boolean for Edit Dialog
-  const [dialogEditDespesaForm, setDialogEditDespesaForm] = useState(false);
+  // Boolean for Choose Dialog
+  const [dialogEscolherDespesa, setDialogEscolherDespesa] = useState(false);
 
-  // Boolean for Register Dialog
-  const [dialogRegisterDespesaForm, setDialogRegisterDespesaForm] = useState(
+  // CADASTRAR DESPESA
+  // Boolean for Despesa Fixa Dialog
+  const [dialogDespesaFixa, setDialogDespesaFixa] = useState(false);
+  // Boolean for Despesa Parcelada Dialog
+  const [dialogDespesaParcelada, setDialogDespesaParcelada] = useState(false);
+  // Boolean for Despesa Agua Dialog
+  const [dialogDespesaAgua, setDialogDespesaAgua] = useState(false);
+  // Boolean for Fundo Reserva Dialog
+  const [dialogDespesaFundoReserva, setDialogDespesaFundoReserva] = useState(
     false
   );
+
+  // EDITAR DESPESA
+  // Boolean for Despesa Fixa Dialog
+  const [dialogEditDespesaFixa, setDialogEditDespesaFixa] = useState(false);
+  // Boolean for Despesa Parcelada Dialog
+  const [dialogEditDespesaParcelada, setDialogEditDespesaParcelada] = useState(
+    false
+  );
+  // Boolean for Despesa Agua Dialog
+  const [dialogEditDespesaAgua, setDialogEditDespesaAgua] = useState(false);
+  // Boolean for Fundo Reserva Dialog
+  const [
+    dialogEditDespesaFundoReserva,
+    setDialogEditDespesaFundoReserva,
+  ] = useState(false);
 
   // Boolean for Delete Dialog
   const [dialogDeleteDespesa, setDialogDeleteDespesa] = useState(false);
@@ -88,7 +115,7 @@ export default function RegistrarDespesas(props) {
       case 1:
         console.log("RegistrarDespesas - Botão do Centro");
         setFootbar({ ...footbar, action: -1 });
-        setDialogRegisterDespesaForm(true);
+        setDialogEscolherDespesa(true);
         break;
       case 2:
         console.log("RegistrarDespesas - Botão da direita");
@@ -103,13 +130,19 @@ export default function RegistrarDespesas(props) {
     }
   }, [footbar.action]);
 
-  // This function runs only when the all dialogs are closed
+  // This function runs only when the dialogs are closed
   useEffect(() => {
     data.beneficiario.id || navigate("/");
     const allDialogsClosed = !(
-      dialogRegisterDespesaForm ||
-      dialogDeleteDespesa ||
-      dialogEditDespesaForm
+      dialogDespesaFixa ||
+      dialogDespesaParcelada ||
+      dialogDespesaAgua ||
+      dialogDespesaFundoReserva ||
+      dialogEditDespesaFixa ||
+      dialogEditDespesaParcelada ||
+      dialogEditDespesaAgua ||
+      dialogEditDespesaFundoReserva ||
+      dialogDeleteDespesa
     );
     if (allDialogsClosed) {
       async function getEverything() {
@@ -133,7 +166,17 @@ export default function RegistrarDespesas(props) {
       }
       getEverything();
     }
-  }, [dialogRegisterDespesaForm, dialogDeleteDespesa, dialogEditDespesaForm]);
+  }, [
+    dialogDespesaFixa,
+    dialogDespesaParcelada,
+    dialogDespesaAgua,
+    dialogDespesaFundoReserva,
+    dialogEditDespesaFixa,
+    dialogEditDespesaParcelada,
+    dialogEditDespesaAgua,
+    dialogEditDespesaFundoReserva,
+    dialogDeleteDespesa,
+  ]);
 
   // This function runs only when something change in Despesas
   useEffect(() => {
@@ -300,17 +343,54 @@ export default function RegistrarDespesas(props) {
 
   return (
     <>
-      {/* FIXME: adicionar um dialog pra escolher o tipo de despesa e redirecione pra um dialog especifico daquela despesa */}
-      {dialogRegisterDespesaForm && (
-        <DialogDespesa
-          open={[dialogRegisterDespesaForm, setDialogRegisterDespesaForm]}
+      {/* ESCOLHER O TIPO DE DESPESA */}
+      {dialogEscolherDespesa && (
+        <DialogEscolherDespesa
+          open={[dialogEscolherDespesa, setDialogEscolherDespesa]}
+          despesaFixa={[dialogDespesaFixa, setDialogDespesaFixa]}
+          despesaParcelada={[dialogDespesaParcelada, setDialogDespesaParcelada]}
+          despesaAgua={[dialogDespesaAgua, setDialogDespesaAgua]}
+          despesaFundoReserva={[
+            dialogDespesaFundoReserva,
+            setDialogDespesaFundoReserva,
+          ]}
+        />
+      )}
+
+      {/* CADASTRA A DESPESA */}
+      {dialogDespesaFixa && (
+        <DialogDespesaFixa
+          open={[dialogDespesaFixa, setDialogDespesaFixa]}
           delete={[dialogDeleteDespesa, setDialogDeleteDespesa]}
           condominio={data.allNestedCondominio}
         />
       )}
-      {dialogEditDespesaForm && (
-        <DialogDespesa
-          open={[dialogEditDespesaForm, setDialogEditDespesaForm]}
+      {dialogDespesaParcelada && (
+        <DialogDespesaParcelada
+          open={[dialogDespesaParcelada, setDialogDespesaParcelada]}
+          delete={[dialogDeleteDespesa, setDialogDeleteDespesa]}
+          condominio={data.allNestedCondominio}
+        />
+      )}
+      {dialogDespesaAgua && (
+        <DialogDespesaAgua
+          open={[dialogDespesaAgua, setDialogDespesaAgua]}
+          delete={[dialogDeleteDespesa, setDialogDeleteDespesa]}
+          condominio={data.allNestedCondominio}
+        />
+      )}
+      {dialogDespesaFundoReserva && (
+        <DialogDespesaFundoReserva
+          open={[dialogDespesaFundoReserva, setDialogDespesaFundoReserva]}
+          delete={[dialogDeleteDespesa, setDialogDeleteDespesa]}
+          condominio={data.allNestedCondominio}
+        />
+      )}
+
+      {/* EDITA A DESPESA */}
+      {dialogEditDespesaFixa && (
+        <DialogDespesaFixa
+          open={[dialogEditDespesaFixa, setDialogEditDespesaFixa]}
           delete={[dialogDeleteDespesa, setDialogDeleteDespesa]}
           condominio={data.allNestedCondominio}
           despesa={
@@ -320,6 +400,47 @@ export default function RegistrarDespesas(props) {
           }
         />
       )}
+      {dialogEditDespesaParcelada && (
+        <DialogDespesaParcelada
+          open={[dialogEditDespesaParcelada, setDialogEditDespesaParcelada]}
+          delete={[dialogDeleteDespesa, setDialogDeleteDespesa]}
+          condominio={data.allNestedCondominio}
+          despesa={
+            data.allNestedCondominio["Despesas"].filter(
+              (despesa) => despesa.id === selectedDespesa.id
+            )[0]
+          }
+        />
+      )}
+      {dialogEditDespesaAgua && (
+        <DialogDespesaAgua
+          open={[dialogEditDespesaAgua, setDialogEditDespesaAgua]}
+          delete={[dialogDeleteDespesa, setDialogDeleteDespesa]}
+          condominio={data.allNestedCondominio}
+          despesa={
+            data.allNestedCondominio["Despesas"].filter(
+              (despesa) => despesa.id === selectedDespesa.id
+            )[0]
+          }
+        />
+      )}
+      {dialogEditDespesaFundoReserva && (
+        <DialogDespesaFundoReserva
+          open={[
+            dialogEditDespesaFundoReserva,
+            setDialogEditDespesaFundoReserva,
+          ]}
+          delete={[dialogDeleteDespesa, setDialogDeleteDespesa]}
+          condominio={data.allNestedCondominio}
+          despesa={
+            data.allNestedCondominio["Despesas"].filter(
+              (despesa) => despesa.id === selectedDespesa.id
+            )[0]
+          }
+        />
+      )}
+
+      {/* DELETA A DESPESA */}
       {dialogDeleteDespesa && (
         <DialogExcluirDespesa
           open={[dialogDeleteDespesa, setDialogDeleteDespesa]}
@@ -330,12 +451,28 @@ export default function RegistrarDespesas(props) {
           }
         />
       )}
+
       <h1 className="PageTitle">Registro de Despesas</h1>
       <RelatorioCondominioRegistrar
         reportRef={reportRef}
         despesas={data.allNestedCondominio["Despesas"]}
         setSelected={setSelectedDespesa}
-        editDialog={[dialogEditDespesaForm, setDialogEditDespesaForm]}
+        dialogEditDespesaFixa={[
+          dialogEditDespesaFixa,
+          setDialogEditDespesaFixa,
+        ]}
+        dialogEditDespesaParcelada={[
+          dialogEditDespesaParcelada,
+          setDialogEditDespesaParcelada,
+        ]}
+        dialogEditDespesaAgua={[
+          dialogEditDespesaAgua,
+          setDialogEditDespesaAgua,
+        ]}
+        dialogEditDespesaFundoReserva={[
+          dialogEditDespesaFundoReserva,
+          setDialogEditDespesaFundoReserva,
+        ]}
         categorias={[categorias, setCategorias]}
         valorTotal={[total, setTotal]}
         valorFundoReserva={[percentage, setPercentage]}

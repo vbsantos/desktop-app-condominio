@@ -8,14 +8,11 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  Paper
+  Paper,
 } from "@material-ui/core";
 
 // FORM COMPONENTS
-import FormDespesa from "../../forms/despesa";
-
-// CSS
-import "./style.css";
+import FormDespesaFixa from "../../forms/despesaFixa";
 
 // MATERIAL UI ICONS
 import { DeleteOutlined } from "@material-ui/icons";
@@ -46,14 +43,14 @@ export default function DraggableDialog(props) {
       nome: "",
       categoria: "",
       valor: "",
-      parcelaAtual: "",
-      numParcelas: "",
+      parcelaAtual: null,
+      numParcelas: null,
       rateioAutomatico: true,
       permanente: true,
       aguaIndividual: false,
       fundoReserva: false,
       condominioId: condominio.id,
-      Valores: []
+      Valores: [],
     }
   );
 
@@ -81,21 +78,21 @@ export default function DraggableDialog(props) {
       let response;
       if (despesa.fundoReserva) {
         const fundoReservaId = condominio["Despesas"].filter(
-          despesa => despesa.fundoReserva
+          (despesa) => despesa.fundoReserva
         )[0];
         if (fundoReservaId) {
           //if it already exists update
           despesa.id = fundoReservaId.id;
           response = await window.ipcRenderer.invoke("despesas", {
             method: "update",
-            content: despesa
+            content: despesa,
           });
           console.warn("Despesa Editada:", response);
         } else {
           // if it doesn't exists create
           response = await window.ipcRenderer.invoke("despesas", {
             method: "create",
-            content: despesa
+            content: despesa,
           });
           console.warn("Despesa Cadastrada:", response);
         }
@@ -103,24 +100,24 @@ export default function DraggableDialog(props) {
         // if it isn't fundoReserva create
         response = await window.ipcRenderer.invoke("despesas", {
           method: "create",
-          content: despesa
+          content: despesa,
         });
         console.warn("Despesa Cadastrada:", response);
       }
-      const neoValores = valores.map(valor => {
+      const neoValores = valores.map((valor) => {
         return {
           despesaId: response.id,
           paganteId: valor.paganteId,
           precoAgua: valor.precoAgua,
           agua: valor.agua,
-          valor: valor.valor
+          valor: valor.valor,
         };
       });
       // console.warn("CREATE NEO VALORES:", neoValores);
       if (valores.length > 0) {
         const response2 = await window.ipcRenderer.invoke("valores", {
           method: "bulkCreate",
-          content: neoValores
+          content: neoValores,
         });
         console.warn("Valores Cadastrados:", response2);
       }
@@ -128,21 +125,21 @@ export default function DraggableDialog(props) {
       // console.warn("EDIT NEO VALORES:", valores);
       const response = await window.ipcRenderer.invoke("despesas", {
         method: "update",
-        content: despesa
+        content: despesa,
       });
       if (valores.length > 0) {
         if (valores[0].id !== "") {
           // console.warn("JUST AN UPDATE:", valores);
           const response2 = await window.ipcRenderer.invoke("valores", {
             method: "bulkUpdate",
-            content: valores
+            content: valores,
           });
           console.warn("Valores Editados:", response2);
         } else {
           // console.warn("IT IS A CREATION:", valores);
           const response2 = await window.ipcRenderer.invoke("valores", {
             method: "bulkCreate",
-            content: valores
+            content: valores,
           });
           console.warn("Valores Cadastrados:", response2);
         }
@@ -154,7 +151,7 @@ export default function DraggableDialog(props) {
   }
 
   return (
-    <div id="dialogRegistrarDespesas">
+    <div id="dialogRegistrarDespesaFixa">
       <Dialog
         open={dialog}
         onClose={handleClose}
@@ -166,10 +163,10 @@ export default function DraggableDialog(props) {
           id="draggable-dialog-title"
           color="inherit"
         >
-          {despesa.id === "" ? "Cadastrar Nova Despesa" : "Editar Despesa"}
+          {despesa.id === "" ? "Cadastrar Despesa Fixa" : "Editar Despesa Fixa"}
         </DialogTitle>
         <DialogContent>
-          <FormDespesa
+          <FormDespesaFixa
             condominio={condominio}
             despesa={[despesa, setDespesa]}
             valores={[valores, setValores]}
