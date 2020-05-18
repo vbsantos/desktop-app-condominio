@@ -33,15 +33,10 @@ export default function FormCondominio(props) {
 
   return (
     <form ref={formRef} onChange={formOnChange}>
-      <section>
-        <DialogContentText color="inherit">
-          Informações do Condomínio
-        </DialogContentText>
-        <FormControl>
-          <InputLabel htmlFor="nome">Nome</InputLabel>
-          <Input autoFocus defaultValue={condominio.nome} id="nome"></Input>
-        </FormControl>
-      </section>
+      <FormControl>
+        <InputLabel htmlFor="nome">Nome</InputLabel>
+        <Input autoFocus defaultValue={condominio.nome} id="nome"></Input>
+      </FormControl>
     </form>
   );
 }

@@ -29,15 +29,10 @@ export default function FormBeneficiario(props) {
 
   return (
     <form ref={formRef} onChange={formOnChange}>
-      <section>
-        <DialogContentText color="inherit">
-          Informações Pessoais
-        </DialogContentText>
-        <FormControl>
-          <InputLabel htmlFor="nome">Nome</InputLabel>
-          <Input autoFocus defaultValue={beneficiario.nome} id="nome"></Input>
-        </FormControl>
-      </section>
+      <FormControl>
+        <InputLabel htmlFor="nome">Nome</InputLabel>
+        <Input autoFocus defaultValue={beneficiario.nome} id="nome"></Input>
+      </FormControl>
     </form>
   );
 }
