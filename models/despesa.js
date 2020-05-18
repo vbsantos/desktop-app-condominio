@@ -12,15 +12,15 @@ module.exports = (sequelize, DataTypes) => {
       permanente: DataTypes.BOOLEAN,
       aguaIndividual: DataTypes.BOOLEAN,
       fundoReserva: DataTypes.BOOLEAN,
-      condominioId: DataTypes.INTEGER
+      condominioId: DataTypes.INTEGER,
     },
     {}
   );
-  Despesa.associate = function(models) {
+  Despesa.associate = function (models) {
     // associations can be defined here
     Despesa.hasMany(models.Valor);
     Despesa.belongsTo(models.Condominio, {
-      foreignKey: "condominioId"
+      foreignKey: "condominioId",
     });
   };
   return Despesa;

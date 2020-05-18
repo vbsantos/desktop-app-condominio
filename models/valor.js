@@ -7,14 +7,14 @@ module.exports = (sequelize, DataTypes) => {
       agua: DataTypes.STRING,
       valor: DataTypes.STRING,
       despesaId: DataTypes.INTEGER,
-      paganteId: DataTypes.INTEGER
+      paganteId: DataTypes.INTEGER,
     },
     {}
   );
-  Valor.associate = function(models) {
+  Valor.associate = function (models) {
     // associations can be defined here
     Valor.belongsTo(models.Despesa, {
-      foreignKey: "despesaId"
+      foreignKey: "despesaId",
     });
   };
   return Valor;

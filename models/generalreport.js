@@ -4,11 +4,11 @@ module.exports = (sequelize, DataTypes) => {
     "GeneralReport",
     {
       report: DataTypes.STRING,
-      condominioId: DataTypes.INTEGER
+      condominioId: DataTypes.INTEGER,
     },
     {}
   );
-  GeneralReport.associate = function(models) {
+  GeneralReport.associate = function (models) {
     // associations can be defined here
     // GeneralReport.belongsTo(models.Condominio, {
     //   foreignKey: "condominioId"

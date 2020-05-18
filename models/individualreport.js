@@ -4,11 +4,11 @@ module.exports = (sequelize, DataTypes) => {
     "IndividualReport",
     {
       report: DataTypes.STRING,
-      paganteId: DataTypes.INTEGER
+      paganteId: DataTypes.INTEGER,
     },
     {}
   );
-  IndividualReport.associate = function(models) {
+  IndividualReport.associate = function (models) {
     // associations can be defined here
     // IndividualReport.belongsTo(models.Pagante, {
     //   foreignKey: "paganteId"

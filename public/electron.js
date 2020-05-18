@@ -19,7 +19,7 @@ const ipcEvents = require("./ipcEvents.js");
 autoUpdater.logger = Log;
 autoUpdater.logger.transports.file.level = "info";
 
-const sendStatusToWindow = text => {
+const sendStatusToWindow = (text) => {
   Log.info(text);
   win.webContents.send("message", text);
 };
@@ -28,19 +28,19 @@ autoUpdater.on("checking-for-update", () => {
   sendStatusToWindow("Checking for update...");
 });
 
-autoUpdater.on("update-available", info => {
+autoUpdater.on("update-available", (info) => {
   sendStatusToWindow("Update available.");
 });
 
-autoUpdater.on("update-not-available", info => {
+autoUpdater.on("update-not-available", (info) => {
   sendStatusToWindow("Update not available.");
 });
 
-autoUpdater.on("error", err => {
+autoUpdater.on("error", (err) => {
   sendStatusToWindow("Error in auto-updater. " + err);
 });
 
-autoUpdater.on("download-progress", progressObj => {
+autoUpdater.on("download-progress", (progressObj) => {
   let log_message = "Download speed: " + progressObj.bytesPerSecond;
   log_message = log_message + " - Downloaded " + progressObj.percent + "%";
   log_message =
@@ -53,7 +53,7 @@ autoUpdater.on("download-progress", progressObj => {
   sendStatusToWindow(log_message);
 });
 
-autoUpdater.on("update-downloaded", info => {
+autoUpdater.on("update-downloaded", (info) => {
   sendStatusToWindow("Update downloaded");
 });
 
@@ -67,8 +67,8 @@ const createDefaultWindow = () => {
     height: 680,
     webPreferences: {
       nodeIntegration: true,
-      preload: Path.join(__dirname, "preload.js")
-    }
+      preload: Path.join(__dirname, "preload.js"),
+    },
   });
 
   // page zoom disabled

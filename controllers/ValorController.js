@@ -3,62 +3,62 @@
 const { Valor } = require("../models");
 
 class ValorController {
-  create = async data => {
+  create = async (data) => {
     const valor = await Valor.create(data);
     return valor.get();
   };
-  bulkCreate = async data => {
+  bulkCreate = async (data) => {
     const valores = await Valor.bulkCreate(data);
-    const response = valores.map(valor => valor.get());
+    const response = valores.map((valor) => valor.get());
     return response;
   };
   index = async () => {
     const valores = await Valor.findAll();
-    const response = valores.map(valor => valor.get());
+    const response = valores.map((valor) => valor.get());
     return response;
   };
-  show = async id => {
+  show = async (id) => {
     const valor = await Valor.findOne({
       where: {
-        id
-      }
+        id,
+      },
     });
     return valor.get();
   };
-  update = async data => {
+  update = async (data) => {
     const valor = await Valor.update(data, {
       where: {
-        id: data.id
-      }
+        id: data.id,
+      },
     });
     return valor;
   };
-  bulkUpdate = async data => {
+  bulkUpdate = async (data) => {
     let response = [];
     for (let dt of data) {
       response.push(
         ...(await Valor.update(dt, {
           where: {
-            id: dt.id
-          }
+            id: dt.id,
+          },
         }))
       );
     }
     return response;
   };
-  delete = async id => {
+  delete = async (id) => {
     const valor = await Valor.destroy({
       where: {
-        id
-      }
+        id,
+      },
     });
     return valor;
   };
-  bulkDelete = async id => {
+  bulkDelete = async (id) => {
     const valor = await Valor.destroy({
       where: {
-        DespesaId: id
-      }
+        DespesaId: id,
+      },
     });
     return valor;
   };

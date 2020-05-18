@@ -3,36 +3,36 @@
 const { Despesa } = require("../models");
 
 class DespesaController {
-  create = async data => {
+  create = async (data) => {
     const despesa = await Despesa.create(data);
     return despesa.get();
   };
   index = async () => {
     const despesas = await Despesa.findAll();
-    const response = despesas.map(despesa => despesa.get());
+    const response = despesas.map((despesa) => despesa.get());
     return response;
   };
-  show = async id => {
+  show = async (id) => {
     const despesa = await Despesa.findOne({
       where: {
-        id
-      }
+        id,
+      },
     });
     return despesa.get();
   };
-  update = async data => {
+  update = async (data) => {
     const despesa = await Despesa.update(data, {
       where: {
-        id: data.id
-      }
+        id: data.id,
+      },
     });
     return despesa;
   };
-  delete = async id => {
+  delete = async (id) => {
     const despesa = await Despesa.destroy({
       where: {
-        id
-      }
+        id,
+      },
     });
     return despesa;
   };

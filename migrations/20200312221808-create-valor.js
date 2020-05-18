@@ -6,17 +6,17 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       precoAgua: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       agua: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       valor: {
         allowNull: false,
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       despesaId: {
         allowNull: false,
@@ -24,24 +24,24 @@ module.exports = {
         onDelete: "CASCADE",
         references: {
           model: "Despesas",
-          key: "id"
-        }
+          key: "id",
+        },
       },
       paganteId: {
         allowNull: false,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable("Valors");
-  }
+  },
 };
