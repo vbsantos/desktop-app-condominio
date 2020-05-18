@@ -212,12 +212,12 @@ export default function FormDespesa(props) {
             </div>
           </div>
         </section>
-        <section>
+        {/* <section>
           <DialogContentText key={"valoresTitle"} color="inherit">
             Registros do Condomínio
           </DialogContentText>
-          {/* FIXME */}
-        </section>
+          FIXME
+        </section> */}
       </form>
     </div>
   );

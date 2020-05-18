@@ -95,6 +95,8 @@ const createDefaultWindow = () => {
       : `file://${Path.join(__dirname, "..", "build", "index.html")}`
   );
 
+  sendStatusToWindow("Sistema na versão " + app.getVersion());
+
   return win;
 };
 

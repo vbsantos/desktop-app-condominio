@@ -7,7 +7,7 @@ import {
   InputLabel,
   NativeSelect,
   ButtonGroup,
-  Button
+  Button,
 } from "@material-ui/core";
 
 // CSS
@@ -53,24 +53,24 @@ export default function EscolherBeneficiario(props) {
           position: "left",
           visible: true,
           enabled: true,
-          value: "SAIR"
+          value: "SAIR",
         },
         {
           id: 1,
           position: "center",
           visible: false,
           enabled: false,
-          value: ""
+          value: "",
         },
         {
           id: 2,
           position: "right",
           visible: true,
           enabled: false,
-          value: "CONTINUAR"
-        }
+          value: "CONTINUAR",
+        },
       ],
-      action: -1
+      action: -1,
     });
     return () => console.log("EscolherBeneficiário - Encerrou");
   }, []);
@@ -87,12 +87,12 @@ export default function EscolherBeneficiario(props) {
         console.time("Get beneficiarios from database");
         const beneficiarios = await window.ipcRenderer.invoke("beneficiarios", {
           method: "index",
-          content: null
+          content: null,
         });
         setList([...beneficiarios]);
         if (
           beneficiarios.filter(
-            beneficiario => beneficiario.id === selected.id
+            (beneficiario) => beneficiario.id === selected.id
           )[0] === undefined
         ) {
           setSelected({ id: -1 });
@@ -121,11 +121,11 @@ export default function EscolherBeneficiario(props) {
         console.log("EscolherBeneficiario - Botão da direita");
         setData({
           ...data,
-          beneficiario: list.filter(a => a.id === selected.id)[0]
+          beneficiario: list.filter((a) => a.id === selected.id)[0],
         });
         setFootbar({
           ...footbar,
-          action: -1
+          action: -1,
         });
         navigate("/EscolherCondominio"); // vai pra tela de condominios
         break;
@@ -143,23 +143,23 @@ export default function EscolherBeneficiario(props) {
           position: "left",
           visible: true,
           enabled: true,
-          value: "SAIR"
+          value: "SAIR",
         },
         {
           id: 1,
           position: "center",
           visible: false,
           enabled: false,
-          value: ""
+          value: "",
         },
         {
           id: 2,
           position: "right",
           visible: true,
           enabled: selected.id !== -1,
-          value: "CONTINUAR"
-        }
-      ]
+          value: "CONTINUAR",
+        },
+      ],
     });
   }, [selected.id]);
 
@@ -177,14 +177,14 @@ export default function EscolherBeneficiario(props) {
       )}
       {dialogEditForm && (
         <DialogBeneficiario
-          beneficiario={list.filter(a => a.id === selected.id)[0]}
+          beneficiario={list.filter((a) => a.id === selected.id)[0]}
           open={[dialogEditForm, setDialogEditForm]}
           delete={[dialogDelete, setDialogDelete]}
         />
       )}
       {dialogDelete && (
         <DialogExcluirBeneficiario
-          beneficiario={list.filter(a => a.id === selected.id)[0]}
+          beneficiario={list.filter((a) => a.id === selected.id)[0]}
           open={[dialogDelete, setDialogDelete]}
         />
       )}
@@ -195,12 +195,12 @@ export default function EscolherBeneficiario(props) {
           <NativeSelect
             id="administrator"
             className="Selector"
-            onChange={e => beneficiarioSelected(e.target.value)}
+            onChange={(e) => beneficiarioSelected(e.target.value)}
           >
             <option key={-1} value={-1}>
               {""}
             </option>
-            {list.map(beneficiario => (
+            {list.map((beneficiario) => (
               <option key={beneficiario.id} value={beneficiario.id}>
                 {beneficiario.nome}
               </option>
