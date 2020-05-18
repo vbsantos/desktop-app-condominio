@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 
 // MATERIAL UI COMPONENTS
 import {
@@ -31,7 +31,14 @@ export default function FormPagante(props) {
       leituraAgua: formList[3].value.replace(",", "."),
       condominioId: condominio.id,
     });
-    setFormCompleted(formList.filter((f) => f.value === "")[0] === undefined);
+    // não permite fração que não seja entre 0 e 1
+    // não permite registro de água menor que 0
+    setFormCompleted(
+      formList.filter((f) => f.value === "")[0] === undefined &&
+        formList[2].value.replace(",", ".") > 0 &&
+        formList[2].value.replace(",", ".") <= 1 &&
+        formList[3].value.replace(",", ".") >= 0
+    );
   }
 
   return (
@@ -42,24 +49,41 @@ export default function FormPagante(props) {
         </DialogContentText>
         <FormControl>
           <InputLabel htmlFor="nome">Nome</InputLabel>
-          <Input autoFocus defaultValue={pagante.nome} id="nome"></Input>
+          <Input
+            title="Nome do atual dono do Apartamento"
+            autoFocus
+            defaultValue={pagante.nome}
+            id="nome"
+          ></Input>
         </FormControl>
       </section>
       <section>
         <DialogContentText color="inherit">
-          Informações Relativas ao condomínio
+          Informações do Apartamento
         </DialogContentText>
         <FormControl>
           <InputLabel htmlFor="complemento">Número do apartamento</InputLabel>
-          <Input defaultValue={pagante.complemento} id="complemento"></Input>
+          <Input
+            title="Número identificador do Apartamento"
+            defaultValue={pagante.complemento}
+            id="complemento"
+          ></Input>
         </FormControl>
         <FormControl>
           <InputLabel htmlFor="fracao">Fração</InputLabel>
-          <Input defaultValue={pagante.fracao} id="fracao"></Input>
+          <Input
+            title="Entre 0 e 1"
+            defaultValue={pagante.fracao}
+            id="fracao"
+          ></Input>
         </FormControl>
         <FormControl>
           <InputLabel htmlFor="leituraAgua">Leitura da Água</InputLabel>
-          <Input defaultValue={pagante.leituraAgua} id="leituraAgua"></Input>
+          <Input
+            title="Valor no medidor de água (m³)"
+            defaultValue={pagante.leituraAgua}
+            id="leituraAgua"
+          ></Input>
         </FormControl>
       </section>
     </form>
