@@ -177,11 +177,13 @@ export default function RegistrarDespesas(props) {
         data: [...despesasByCategory],
       };
     });
-    generalReport.push({
-      table: false,
-      name: "fundoReserva",
-      data: percentage[1].toFixed(2),
-    });
+    if (percentage[0] !== 0) {
+      generalReport.push({
+        table: false,
+        name: "fundoReserva",
+        data: percentage[1].toFixed(2),
+      });
+    }
     generalReport.push({
       table: false,
       name: "total",
@@ -227,11 +229,13 @@ export default function RegistrarDespesas(props) {
         };
       });
       const fundoReservaIndividual = (percentage[0] / 100) * totalIndividual;
-      individualReport.push({
-        table: false,
-        name: "fundoReserva",
-        data: fundoReservaIndividual.toFixed(2),
-      });
+      if (percentage[0] !== 0) {
+        individualReport.push({
+          table: false,
+          name: "fundoReserva",
+          data: fundoReservaIndividual.toFixed(2),
+        });
+      }
       individualReport.push({
         table: false,
         name: "total",

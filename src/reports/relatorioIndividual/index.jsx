@@ -39,7 +39,7 @@ export default function RelatorioIndividual(props) {
     )
     .flat(1);
 
-  // console.warn("RI:", reportData);
+  // console.warn("RI:", JSON.parse(JSON.stringify(reportData)));
 
   const table1 = reportData.splice(0, Math.ceil(reportData.length / 2));
   const table2 = reportData;
@@ -86,7 +86,7 @@ export default function RelatorioIndividual(props) {
           </Table>
         </div>
 
-        {info && (
+        {info.aguaConsumo !== null && (
           <TableContainer>
             <Table id="table3">
               <TableHead>
