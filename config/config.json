@@ -2,16 +2,16 @@
   "development": {
     "host": "database.sqlite",
     "dialect": "sqlite",
-    "storage": "../database.sqlite"
+    "storage": "../condominio.sqlite"
   },
   "test": {
     "host": "database.sqlite",
     "dialect": "sqlite",
-    "storage": "../database.sqlite"
+    "storage": "../condominio.sqlite"
   },
   "production": {
     "host": "database.sqlite",
     "dialect": "sqlite",
-    "storage": "../database.sqlite"
+    "storage": "../condominio.sqlite"
   }
 }
