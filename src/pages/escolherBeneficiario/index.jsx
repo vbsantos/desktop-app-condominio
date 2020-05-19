@@ -188,11 +188,7 @@ export default function EscolherBeneficiario(props) {
           open={[dialogDelete, setDialogDelete]}
         />
       )}
-<<<<<<< Updated upstream
-      <h1 className="PageTitle">Gerenciador de Condomínios v0.9.4</h1>
-=======
       <h1 className="PageTitle">Gerenciador de Condomínios v0.9.6</h1>
->>>>>>> Stashed changes
       <div className="UserInputs">
         <FormControl>
           <InputLabel htmlFor="administrator">Administrador</InputLabel>
