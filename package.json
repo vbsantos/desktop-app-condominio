@@ -40,7 +40,7 @@
     "dist-windows": "yarn react-build && electron-builder -w --ia32 exe",
     "dist-macos": "yarn react-build && electron-builder -m tar.gz",
     "dist-linux": "yarn react-build && electron-builder -l deb",
-    "publish": "electron-builder --win --ia32 -p always"
+    "publish": "yarn react-build && electron-builder --win --ia32 -p always"
   },
   "dependencies": {
     "@material-ui/core": "^4.9.3",
