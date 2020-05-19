@@ -30,3 +30,7 @@
   line-height: calc(110px / 3);
   font-size: 20px;
 }
+
+#IndividualReportHeader #header-line2 span {
+  padding: 0 10px 0 10px;
+}

@@ -47,7 +47,7 @@ export default function EscolherCondominio(props) {
   const [selectedPagante, setSelectedPagante] = useState({ id: -1 });
 
   // Boolean for Condominio expanded panels
-  const [expanded, setExpanded] = React.useState(false);
+  const [expanded, setExpanded] = useState(false);
 
   // Boolean for Register Dialog
   const [

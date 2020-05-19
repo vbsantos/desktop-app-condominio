@@ -50,6 +50,7 @@ export default function RelatorioIndividual(props) {
         <IndividualReportHeader
           complementoPagante={info.complementoPagante}
           nomePagante={info.nomePagante}
+          fracaoPagante={info.fracaoPagante}
         />
         <div id="duasTabelas">
           <Table id="table1">

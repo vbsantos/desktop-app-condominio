@@ -306,6 +306,7 @@ export default function RegistrarDespesas(props) {
         data: {
           complementoPagante: pagante.complemento,
           nomePagante: pagante.nome,
+          fracaoPagante: pagante.fracao,
           aguaAnterior: pagante.leituraAgua,
           aguaAtual: despesaAgua ? valorAgua.agua : null,
           aguaConsumo: despesaAgua

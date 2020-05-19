@@ -9,6 +9,9 @@ import "./style.css";
 export default function IndividualReportHeader(props) {
   const { complementoPagante } = props;
   const { nomePagante } = props;
+  const { fracaoPagante } = props;
+
+  console.warn(props);
 
   return (
     <div id="IndividualReportHeader">
@@ -16,8 +19,8 @@ export default function IndividualReportHeader(props) {
         Relatório Individual
       </div>
       <div id="header-line2">
-        <span className="bold">Apartamento:</span>
-        {" " + complementoPagante}
+        <span className="bold">{"Apartamento: " + complementoPagante}</span>
+        <span className="bold">{"Fração: " + fracaoPagante}</span>
       </div>
       <div id="header-line3">
         <span className="bold">Morador:</span>
