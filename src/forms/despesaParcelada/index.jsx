@@ -200,7 +200,7 @@ export default function FormDespesa(props) {
         ) : (
           <section>
             <DialogContentText key={"controleTitle"} color="inherit">
-              Custo da Primeira Parcela
+              Custo da Parcela Atual
             </DialogContentText>
             <FormControl>
               <InputLabel htmlFor="valor">Valor (R$)</InputLabel>
