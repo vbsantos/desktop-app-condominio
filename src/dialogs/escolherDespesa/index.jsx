@@ -84,7 +84,7 @@ export default function DraggableDialog(props) {
           id="draggable-dialog-title"
           color="inherit"
         >
-          Escolha o tipo de despesa
+          Escolha o tipo de despesa:
         </DialogTitle>
         <DialogContent>
           <ButtonGroup

@@ -7,11 +7,11 @@ import "./style.css";
 // DIALOGS
 import DialogExcluirDespesa from "../../dialogs/deletarDespesa";
 import DialogEscolherDespesa from "../../dialogs/escolherDespesa";
-
 import DialogDespesaFixa from "../../dialogs/despesaFixa";
 import DialogDespesaParcelada from "../../dialogs/despesaParcelada";
 import DialogDespesaAgua from "../../dialogs/despesaAgua";
 import DialogDespesaFundoReserva from "../../dialogs/despesaFundoReserva";
+import DialogAlerta from "../../dialogs/alerta";
 
 // REPORTS
 import RelatorioCondominioRegistrar from "../../reports/relatorioRegistrar";
@@ -68,6 +68,9 @@ export default function RegistrarDespesas(props) {
   // Boolean for Delete Dialog
   const [dialogDeleteDespesa, setDialogDeleteDespesa] = useState(false);
 
+  // Boolean for Alert Dialog
+  const [dialogAlert, setDialogAlert] = useState(false);
+
   console.groupCollapsed("RegistrarDespesas: System data");
   console.log("Footbar:", footbar);
   console.log("Data:", data);
@@ -122,8 +125,13 @@ export default function RegistrarDespesas(props) {
         setFootbar({ ...footbar, action: -1 });
 
         (async () => {
-          await putReportsOnLastReports(categorias, data.allNestedCondominio);
-          navigate("/VisualizarRelatoriosGerados");
+          const despesas = data.allNestedCondominio["Despesas"];
+          if (despesas.length > 0) {
+            await putReportsOnLastReports(categorias, data.allNestedCondominio);
+            navigate("/VisualizarRelatoriosGerados");
+          } else {
+            setDialogAlert(true);
+          }
         })();
 
         break;
@@ -343,6 +351,14 @@ export default function RegistrarDespesas(props) {
 
   return (
     <>
+      {/* ALERTA */}
+      {dialogAlert && (
+        <DialogAlerta
+          open={[dialogAlert, setDialogAlert]}
+          title="Não há despesas cadastradas"
+          // content="Para cadastrar novos Moradores é necessário deletar as despesas (com rateio manual) já cadastradas."
+        />
+      )}
       {/* ESCOLHER O TIPO DE DESPESA */}
       {dialogEscolherDespesa && (
         <DialogEscolherDespesa

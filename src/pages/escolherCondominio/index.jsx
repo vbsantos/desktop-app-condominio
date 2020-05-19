@@ -31,6 +31,7 @@ import DialogCondominio from "../../dialogs/condominio";
 import DialogExcluirCondominio from "../../dialogs/deletarCondominio";
 import DialogPagante from "../../dialogs/pagante";
 import DialogExcluirPagante from "../../dialogs/deletarPagante";
+import DialogAlerta from "../../dialogs/alerta";
 
 export default function EscolherCondominio(props) {
   const [footbar, setFootbar] = props.buttons;
@@ -72,6 +73,9 @@ export default function EscolherCondominio(props) {
 
   // Boolean for Delete Confirmation Dialog
   const [dialogDeletePagante, setDialogDeletePagante] = useState(false);
+
+  // Boolean for Alert Dialog
+  const [dialogAlert, setDialogAlert] = useState(false);
 
   console.groupCollapsed("EscolherCondominio: System data");
   console.log("Footbar:", footbar);
@@ -284,11 +288,26 @@ export default function EscolherCondominio(props) {
   }
 
   function hadlePaganteRegister() {
-    setDialogRegisterPaganteForm(true);
+    const despesas = data.allNestedCondominio["Despesas"];
+    const registerPagante = despesas.every(
+      (despesa) => despesa.rateioAutomatico === true
+    );
+    if (registerPagante) {
+      setDialogRegisterPaganteForm(true);
+    } else {
+      setDialogAlert(true);
+    }
   }
 
   return (
     <div id="EscolherCondominio">
+      {/* ALERTA */}
+      {dialogAlert && (
+        <DialogAlerta
+          open={[dialogAlert, setDialogAlert]}
+          content="Para cadastrar novos Moradores é necessário deletar as despesas (com rateio manual) já cadastradas."
+        />
+      )}
       {/* CONDOMINIO DIALOGS */}
       {dialogRegisterCondominioForm && (
         <DialogCondominio
