@@ -99,9 +99,15 @@ export default function RelatorioIndividual(props) {
               </TableHead>
               <TableBody>
                 <TableRow key={"table3row"}>
-                  <TableCell id="agua">{info.aguaAnterior + "m³"}</TableCell>
-                  <TableCell id="agua">{info.aguaAtual + "m³"}</TableCell>
-                  <TableCell id="agua">{info.aguaConsumo + "m³"}</TableCell>
+                  <TableCell id="agua">
+                    {Number(info.aguaAnterior).toFixed(3) + "m³"}
+                  </TableCell>
+                  <TableCell id="agua">
+                    {Number(info.aguaAtual).toFixed(3) + "m³"}
+                  </TableCell>
+                  <TableCell id="agua">
+                    {Number(info.aguaConsumo).toFixed(3) + "m³"}
+                  </TableCell>
                   <TableCell id="agua">
                     {"R$ " + Number(info.aguaValorUnitario).toFixed(2)}
                   </TableCell>

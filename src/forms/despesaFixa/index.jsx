@@ -133,7 +133,7 @@ export default function FormDespesa(props) {
         ? formList[3].value.replace(",", ".")
         : valoresList
             .reduce((acc, field) => {
-              return Number(acc) + Number(field.value);
+              return Number(acc) + Number(field.value.replace(",", "."));
             }, 0)
             .toFixed(2),
       parcelaAtual: null,

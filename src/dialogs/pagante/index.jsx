@@ -127,7 +127,7 @@ export default function DraggableDialog(props) {
             disabled={!formCompleted}
           >
             <CreateOutlined />
-            {pagante.id === "" ? "Cadastrar" : "Editar"}
+            {pagante.id === "" ? "Cadastrar" : "Salvar"}
           </Button>
         </DialogActions>
       </Dialog>
