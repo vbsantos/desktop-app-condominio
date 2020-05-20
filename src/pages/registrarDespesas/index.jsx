@@ -357,7 +357,6 @@ export default function RegistrarDespesas(props) {
         <DialogAlerta
           open={[dialogAlert, setDialogAlert]}
           title="Não há despesas cadastradas"
-          // content="Para cadastrar novos Moradores é necessário deletar as despesas (com rateio manual) já cadastradas."
         />
       )}
       {/* ESCOLHER O TIPO DE DESPESA */}

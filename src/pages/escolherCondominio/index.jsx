@@ -75,7 +75,8 @@ export default function EscolherCondominio(props) {
   const [dialogDeletePagante, setDialogDeletePagante] = useState(false);
 
   // Boolean for Alert Dialog
-  const [dialogAlert, setDialogAlert] = useState(false);
+  const [dialogAlertDespesa, setDialogAlertDespesa] = useState(false);
+  const [dialogAlertNoReports, setDialogAlertNoReports] = useState(false);
 
   console.groupCollapsed("EscolherCondominio: System data");
   console.log("Footbar:", footbar);
@@ -241,6 +242,8 @@ export default function EscolherCondominio(props) {
       };
       setData({ ...data, reports });
       navigate("/VisualizarRelatorios");
+    } else {
+      setDialogAlertNoReports(true);
     }
   }
 
@@ -274,6 +277,8 @@ export default function EscolherCondominio(props) {
       };
       setData({ ...data, reports });
       navigate("/VisualizarRelatorios");
+    } else {
+      setDialogAlertNoReports(true);
     }
   }
 
@@ -295,17 +300,23 @@ export default function EscolherCondominio(props) {
     if (registerPagante) {
       setDialogRegisterPaganteForm(true);
     } else {
-      setDialogAlert(true);
+      setDialogAlertDespesa(true);
     }
   }
 
   return (
     <div id="EscolherCondominio">
       {/* ALERTA */}
-      {dialogAlert && (
+      {dialogAlertDespesa && (
         <DialogAlerta
-          open={[dialogAlert, setDialogAlert]}
-          content="Para cadastrar novos Moradores é necessário deletar as despesas (com rateio manual) já cadastradas."
+          open={[dialogAlertDespesa, setDialogAlertDespesa]}
+          content="Para cadastrar novos Moradores é necessário deletar as despesas (com rateio manual) já cadastradas"
+        />
+      )}
+      {dialogAlertNoReports && (
+        <DialogAlerta
+          open={[dialogAlertNoReports, setDialogAlertNoReports]}
+          title="Não há relatórios para visualizar"
         />
       )}
       {/* CONDOMINIO DIALOGS */}
