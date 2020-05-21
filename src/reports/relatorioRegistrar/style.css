@@ -6,7 +6,7 @@
 }
 #relatorioCondominioRegistrar .MuiTable-root {
   background-color: white !important;
-  border: 2px solid black;
+  border: 2px solid var(--report-color);
 }
 
 #relatorioCondominioRegistrar .MuiTable-root * {
@@ -19,7 +19,7 @@
 }
 
 #relatorioCondominioRegistrar .Black .MuiTableCell-root {
-  background-color: black !important;
+  background-color: var(--report-color) !important;
   color: white !important;
   font-weight: 600 !important;
   padding-top: 1px !important;
@@ -34,6 +34,7 @@
   margin: 0;
   padding: 0;
   cursor: pointer;
+  color: var(--report-color);
 }
 #relatorioCondominioRegistrar .MuiTableCell-root.col1 {
   padding-left: 10px !important;
