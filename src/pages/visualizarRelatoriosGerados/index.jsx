@@ -123,7 +123,7 @@ export default function VisualizarRelatoriosGerados(props) {
     <div id="VisualizarRelatoriosGerados">
       {loading && (
         <Loading
-          title={"Por favor aguarde enquanto os relatórios são processados"}
+          title={"Por favor aguarde enquanto os Relatórios são processados"}
           open={[loading, setLoading]}
         />
       )}

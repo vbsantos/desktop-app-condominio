@@ -95,7 +95,7 @@ export default function DraggableDialog(props) {
           id="draggable-dialog-title"
           color="inherit"
         >
-          {pagante.id === "" ? "Cadastrar Novo Pagante" : "Editar Pagante"}
+          {pagante.id === "" ? "Cadastrar Condômino" : "Editar Condômino"}
         </DialogTitle>
         <DialogContent>
           <FormPagante

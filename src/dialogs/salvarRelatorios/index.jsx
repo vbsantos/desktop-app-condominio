@@ -162,7 +162,7 @@ export default function DraggableDialog(props) {
 
   return loading ? (
     <Loading
-      title={"Por favor aguarde enquanto os relatórios são salvos"}
+      title={"Por favor aguarde enquanto os Relatórios são salvos"}
       open={[loading, setLoading]}
     />
   ) : (
@@ -178,9 +178,19 @@ export default function DraggableDialog(props) {
           id="draggable-dialog-title"
           color="inherit"
         >
-          Tem certeza que deseja salvar relatórios?
+          Tem certeza que deseja salvar Relatórios?
         </DialogTitle>
-        <DialogContent>Essa ação não poderá ser desfeita.</DialogContent>
+        <DialogContent>
+          Essa ação irá:
+          <br />
+          <br />- Salvar os relatórios no sistema;
+          <br />- Incrementar parcelas das despesas;
+          <br />- Atualizar registros de água;
+          <br />- Zerar custos das despesas;
+          <br />
+          <br />
+          Caso prossiga, não poderá ser desfeita.
+        </DialogContent>
         <DialogActions>
           <Button
             autoFocus

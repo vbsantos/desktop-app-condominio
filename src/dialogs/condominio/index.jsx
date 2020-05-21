@@ -93,9 +93,7 @@ export default function DraggableDialog(props) {
           id="draggable-dialog-title"
           color="inherit"
         >
-          {condominio.id === ""
-            ? "Cadastrar Novo Condomínio"
-            : "Editar Condomínio"}
+          {condominio.id === "" ? "Cadastrar Condomínio" : "Editar Condomínio"}
         </DialogTitle>
         <DialogContent>
           <FormCondominio

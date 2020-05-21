@@ -45,7 +45,7 @@ export default function FormPagante(props) {
     <form ref={formRef} onChange={formOnChange}>
       <section>
         <DialogContentText color="inherit">
-          Informações do Morador Atual
+          Informações do Condômino Atual
         </DialogContentText>
         <FormControl>
           <InputLabel htmlFor="nome">Nome</InputLabel>

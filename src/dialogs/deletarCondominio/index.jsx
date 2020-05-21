@@ -8,7 +8,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  Paper
+  Paper,
 } from "@material-ui/core";
 
 // MATERIAL UI ICONS
@@ -41,7 +41,7 @@ export default function DraggableDialog(props) {
   async function handleRightButton() {
     const response = await window.ipcRenderer.invoke("condominios", {
       method: "delete",
-      content: { id: condominio.id }
+      content: { id: condominio.id },
     });
     response === 1
       ? console.warn(`Condomínio excluido: [id=${condominio.id}]`)
@@ -66,7 +66,7 @@ export default function DraggableDialog(props) {
         </DialogTitle>
         <DialogContent>
           {condominio["Pagantes"].length > 0
-            ? `A exclusão desse condomínio acarretará na exclusão de ${condominio["Pagantes"].length} moradores e não poderá ser desfeita.`
+            ? `A exclusão desse Condomínio acarretará na exclusão de ${condominio["Pagantes"].length} Condôminos e não poderá ser desfeita.`
             : "Essa ação não poderá ser desfeita."}
         </DialogContent>
         <DialogActions>

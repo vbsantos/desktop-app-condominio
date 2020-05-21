@@ -6,12 +6,11 @@
 }
 #relatorioGeral .MuiTable-root {
   background-color: white !important;
-  border: 2px solid black;
+  border: 2px solid var(--report-color);
 }
 
 #relatorioGeral .MuiTable-root * {
   font-size: 18px !important;
-  /* font-weight: bolder !important; */
 }
 
 #relatorioGeral .MuiTable-root {
@@ -19,7 +18,7 @@
 }
 
 #relatorioGeral .Black .MuiTableCell-root {
-  background-color: black !important;
+  background-color: var(--report-color) !important;
   color: white !important;
   font-weight: 600 !important;
   padding-top: 1px !important;
@@ -33,14 +32,18 @@
 #relatorioGeral .Linha .MuiTableCell-root {
   margin: 0;
   padding: 0;
+  color: var(--report-color);
 }
+
 #relatorioGeral .MuiTableCell-root.col1 {
   padding-left: 10px !important;
   width: 650px !important;
 }
+
 #relatorioGeral .MuiTableCell-root.col2 {
   width: 100px !important;
 }
+
 #relatorioGeral .MuiTableCell-root.col3 {
   width: 150px !important;
 }

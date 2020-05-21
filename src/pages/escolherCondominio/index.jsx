@@ -310,13 +310,13 @@ export default function EscolherCondominio(props) {
       {dialogAlertDespesa && (
         <DialogAlerta
           open={[dialogAlertDespesa, setDialogAlertDespesa]}
-          content="Para cadastrar novos Moradores é necessário deletar as despesas (com rateio manual) já cadastradas"
+          content="Para cadastrar Condôminos é necessário deletar as Despesas (com rateio manual) já registradas"
         />
       )}
       {dialogAlertNoReports && (
         <DialogAlerta
           open={[dialogAlertNoReports, setDialogAlertNoReports]}
-          title="Não há relatórios para visualizar"
+          title="Não há Relatórios para visualizar"
         />
       )}
       {/* CONDOMINIO DIALOGS */}
@@ -455,7 +455,7 @@ export default function EscolherCondominio(props) {
                       <PlusOne />
                     </ListItemAvatar>
                     <p>
-                      <strong>Adicionar Novo Morador</strong>
+                      <strong>Adicionar Condômino</strong>
                     </p>
                   </ListItem>
                 </List>
@@ -472,7 +472,7 @@ export default function EscolherCondominio(props) {
           <ExpansionPanelSummary onClick={hadleCondominioRegister}>
             <div className="leftCondominioItens">
               <PlusOne />
-              <h3>Adicionar Novo Condomínio</h3>
+              <h3>Adicionar Condomínio</h3>
             </div>
           </ExpansionPanelSummary>
         </ExpansionPanel>

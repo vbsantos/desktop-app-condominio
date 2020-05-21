@@ -11,8 +11,6 @@ export default function IndividualReportHeader(props) {
   const { nomePagante } = props;
   const { fracaoPagante } = props;
 
-  console.warn(props);
-
   return (
     <div id="IndividualReportHeader">
       <div className="bold" id="header-line1">
@@ -23,7 +21,7 @@ export default function IndividualReportHeader(props) {
         <span className="bold">{"Fração: " + fracaoPagante}</span>
       </div>
       <div id="header-line3">
-        <span className="bold">Morador:</span>
+        <span className="bold">Condômino:</span>
         {" " + nomePagante}
       </div>
     </div>

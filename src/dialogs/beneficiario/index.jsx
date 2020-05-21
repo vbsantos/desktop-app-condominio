@@ -89,8 +89,8 @@ export default function DraggableDialog(props) {
           color="inherit"
         >
           {beneficiario.id === ""
-            ? "Cadastrar Novo Beneficiário"
-            : "Editar Beneficiário"}
+            ? "Cadastrar Administrador"
+            : "Editar Administrador"}
         </DialogTitle>
         <DialogContent>
           <FormBeneficiario
