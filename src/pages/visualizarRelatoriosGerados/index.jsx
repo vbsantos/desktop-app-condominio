@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-// CSS
-import "./style.css";
-
 // DIALOGS
 import DialogSaveReports from "../../dialogs/salvarRelatorios";
 import DialogCloseSystem from "../../dialogs/fecharSistema";

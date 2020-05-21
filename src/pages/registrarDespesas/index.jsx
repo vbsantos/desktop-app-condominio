@@ -1,9 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
-// CSS
-import "./style.css";
-
 // DIALOGS
 import DialogExcluirDespesa from "../../dialogs/deletarDespesa";
 import DialogEscolherDespesa from "../../dialogs/escolherDespesa";

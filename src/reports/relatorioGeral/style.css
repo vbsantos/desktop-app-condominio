@@ -4,6 +4,7 @@
   margin: 0 auto 0 auto;
   padding: 0;
 }
+
 #relatorioGeral .MuiTable-root {
   background-color: white !important;
   border: 2px solid var(--report-color);
