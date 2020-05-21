@@ -94,9 +94,10 @@ export default function FormDespesa(props) {
       id: despesa.id,
       nome: formList[0].value,
       categoria: formList[1].value,
+      agua: null,
+      aguaIndividual: true,
       rateioAutomatico: false,
       permanente: true,
-      aguaIndividual: true,
       fundoReserva: false,
       valor: valoresList
         .filter((field) => field.id.includes("valorAguaIndividual"))
@@ -162,16 +163,54 @@ export default function FormDespesa(props) {
             ></Input>
           </FormControl>
         </section>
+
+        {/* FIXME - REGISTRO AGUA GERAL */}
         <section>
           <DialogContentText key={"valoresTitle"} color="inherit">
-            Registros Individuais dos Moradores
+            Registro de água atual do Condomínio
+          </DialogContentText>
+          <div id="containerAgua">
+            <div id="esquerdaAgua">
+              <FormControl key={"aguaComumForm"}>
+                <InputLabel>Registro de água Geral</InputLabel>
+                <Input
+                  id={"aguaComum"}
+                  // defaultValue={
+                  //   despesaAutomatica.id === ""
+                  //     ? ""
+                  //     : "R$ " + despesaAutomatica.valor
+                  // }
+                ></Input>
+              </FormControl>
+            </div>
+            <div id="direitaAgua">
+              <FormControl key={"valorAguaComumForm"}>
+                <InputLabel>Custo para o Condomínio</InputLabel>
+                <Input
+                  id={"valorAguaComum"}
+                  // defaultValue={
+                  //   valorAutomatica === ""
+                  //     ? " " // TODO - CALCULO EM TEMPO REAL - ((RC - RCA) - SOMA(RIs))*VUA
+                  //     : "R$ " + valorAutomatica.valor
+                  // }
+                  disabled={true}
+                ></Input>
+              </FormControl>
+            </div>
+          </div>
+        </section>
+
+        {/* REGISTRO AGUA INDIVIDUAL */}
+        <section>
+          <DialogContentText key={"valoresTitle"} color="inherit">
+            Registros Individuais atuais dos Condôminos
           </DialogContentText>
           <div id="containerAgua">
             <div id="esquerdaAgua">
               {condominio["Pagantes"].map((pagante) => (
                 <FormControl key={"aguaIndividualForm" + pagante.id}>
                   <InputLabel htmlFor={"aguaIndividual" + pagante.id}>
-                    Registro de água para {pagante.complemento}
+                    Registro de água do {pagante.complemento}
                   </InputLabel>
                   <Input
                     defaultValue={
@@ -212,12 +251,6 @@ export default function FormDespesa(props) {
             </div>
           </div>
         </section>
-        {/* <section>
-          <DialogContentText key={"valoresTitle"} color="inherit">
-            Registros do Condomínio
-          </DialogContentText>
-          FIXME
-        </section> */}
       </form>
     </div>
   );

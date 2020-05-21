@@ -98,6 +98,16 @@ export default function DraggableDialog(props) {
             completed={[formCompleted, setFormCompleted]}
           />
         </DialogContent>
+
+        {/* FEEDBACK */}
+        {!formCompleted && (
+          <DialogContent>
+            {beneficiario.id === ""
+              ? "É necessário preencher todos os campos para cadastrar"
+              : "É necessário modificar algum campo para salvar"}
+          </DialogContent>
+        )}
+
         <DialogActions className="dialogButtons">
           <Button onClick={handleClose} variant="outlined" color="secondary">
             Cancelar

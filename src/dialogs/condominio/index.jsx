@@ -46,6 +46,7 @@ export default function DraggableDialog(props) {
     props.condominio || {
       id: "",
       nome: "",
+      leituraAgua: "",
       beneficiarioId: beneficiario.id,
     }
   );
@@ -102,6 +103,16 @@ export default function DraggableDialog(props) {
             completed={[formCompleted, setFormCompleted]}
           />
         </DialogContent>
+
+        {/* FEEDBACK */}
+        {!formCompleted && (
+          <DialogContent>
+            {condominio.id === ""
+              ? "É necessário preencher todos os campos para cadastrar"
+              : "É necessário modificar algum campo para salvar"}
+          </DialogContent>
+        )}
+
         <DialogActions>
           <Button onClick={handleClose} variant="outlined" color="secondary">
             Cancelar

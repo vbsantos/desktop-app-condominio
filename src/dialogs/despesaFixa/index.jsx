@@ -43,11 +43,12 @@ export default function DraggableDialog(props) {
       nome: "",
       categoria: "",
       valor: "",
+      agua: "",
+      aguaIndividual: false,
       parcelaAtual: null,
       numParcelas: null,
       rateioAutomatico: true,
       permanente: true,
-      aguaIndividual: false,
       fundoReserva: false,
       condominioId: condominio.id,
       Valores: [],
@@ -173,6 +174,16 @@ export default function DraggableDialog(props) {
             completed={[formCompleted, setFormCompleted]}
           />
         </DialogContent>
+
+        {/* FEEDBACK */}
+        {!formCompleted && (
+          <DialogContent>
+            {despesa.id === ""
+              ? "É necessário preencher todos os campos para registrar a despesa"
+              : "É necessário modificar algum campo para salvar"}
+          </DialogContent>
+        )}
+
         <DialogActions>
           <Button onClick={handleClose} variant="outlined" color="secondary">
             Cancelar

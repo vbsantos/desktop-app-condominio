@@ -26,9 +26,10 @@ export default function FormDespesaFundoReserva(props) {
       id: despesa.id,
       nome: "",
       categoria: "",
+      agua: null,
+      aguaIndividual: false,
       rateioAutomatico: true,
       permanente: false,
-      aguaIndividual: false,
       fundoReserva: true,
       valor: porcentagemString
         .replace(",", ".")

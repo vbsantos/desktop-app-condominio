@@ -125,9 +125,10 @@ export default function FormDespesa(props) {
       id: despesa.id,
       nome: formList[0].value,
       categoria: formList[1].value,
+      agua: null,
+      aguaIndividual: false,
       rateioAutomatico: formList[2].checked,
       permanente: true,
-      aguaIndividual: false,
       fundoReserva: false,
       valor: rateioAuto
         ? formList[3].value.replace(",", ".")

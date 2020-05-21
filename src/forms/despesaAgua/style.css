@@ -1,11 +1,14 @@
 div#containerAgua {
-  display: flex;
+  display: flex !important;
+  justify-content: space-around;
 }
 
 div#esquerdaAgua {
   display: block !important;
+  width: 50%;
 }
 
 div#direitaAgua {
   display: block !important;
+  width: 50%;
 }

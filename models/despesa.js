@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
       permanente: DataTypes.BOOLEAN,
       aguaIndividual: DataTypes.BOOLEAN,
       fundoReserva: DataTypes.BOOLEAN,
+      agua: DataTypes.STRING,
       condominioId: DataTypes.INTEGER,
     },
     {}
