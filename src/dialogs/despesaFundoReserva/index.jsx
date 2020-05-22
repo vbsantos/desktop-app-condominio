@@ -78,9 +78,9 @@ export default function DraggableDialog(props) {
     if (despesa.id === "") {
       let response;
       if (despesa.fundoReserva) {
-        const fundoReservaId = condominio["Despesas"].filter(
+        const fundoReservaId = condominio["Despesas"].find(
           (despesa) => despesa.fundoReserva
-        )[0];
+        );
         if (fundoReservaId) {
           //if it already exists update
           despesa.id = fundoReservaId.id;

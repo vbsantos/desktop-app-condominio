@@ -48,7 +48,7 @@ export default function FormDespesa(props) {
       setValores(
         (function () {
           const valorM3Agua = valoresList
-            .filter((field) => field.id === "valorAguaCondominio")[0]
+            .find((field) => field.id === "valorAguaCondominio")
             .value.replace(",", ".");
           const valoresAgua = valoresList.filter((field) =>
             field.id.includes("aguaIndividual")
@@ -61,9 +61,9 @@ export default function FormDespesa(props) {
               valoraguafield.value.replace(",", ".")
             );
             const pagante_id = Number(valoraguafield.id.slice(14));
-            const pagante_leituraAguaAntiga = condominio["Pagantes"].filter(
+            const pagante_leituraAguaAntiga = condominio["Pagantes"].find(
               (pagante) => pagante.id === pagante_id
-            )[0].leituraAgua;
+            ).leituraAgua;
             const leituraAguaNova =
               leituraAguaFormated - Number(pagante_leituraAguaAntiga);
             const valor = Number(leituraAguaNova) * Number(valorM3Agua);
@@ -72,11 +72,11 @@ export default function FormDespesa(props) {
             return {
               id:
                 valores.length > 0 && valores[0].id !== ""
-                  ? valores.filter(
+                  ? valores.find(
                       (valor) =>
                         valor.paganteId === pagante_id &&
                         valor.despesaId === despesa.id
-                    )[0].id
+                    ).id
                   : "",
               precoAgua: valorM3Agua,
               agua: leituraAguaFormated.toString(),
@@ -112,7 +112,7 @@ export default function FormDespesa(props) {
     });
 
     setFormCompleted(
-      formList.filter((field) => !field.disabled && field.value === "")[0] ===
+      formList.find((field) => !field.disabled && field.value === "") ===
         undefined
     );
   }
@@ -238,9 +238,9 @@ export default function FormDespesa(props) {
                       valores.length > 0 && valores[0].id !== ""
                         ? "R$ " +
                           Number(
-                            valores.filter(
+                            valores.find(
                               (valor) => valor["paganteId"] === pagante.id
-                            )[0].valor
+                            ).valor
                           ).toFixed(2)
                         : " "
                     }

@@ -42,7 +42,7 @@ export default function FormDespesaFundoReserva(props) {
     });
 
     setFormCompleted(
-      formList.filter((field) => !field.disabled && field.value === "")[0] ===
+      formList.find((field) => !field.disabled && field.value === "") ===
         undefined
     );
   }

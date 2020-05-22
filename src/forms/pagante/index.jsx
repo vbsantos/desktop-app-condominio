@@ -23,21 +23,23 @@ export default function FormPagante(props) {
 
   function formOnChange() {
     const formList = [...formRef.current.elements];
+    const fracao = formList[2].value.replace(",", ".");
+    const leituraAgua = formList[3].value.replace(",", ".");
     setPagante({
       id: pagante.id,
       nome: formList[0].value,
       complemento: formList[1].value,
-      fracao: formList[2].value.replace(",", "."),
-      leituraAgua: formList[3].value.replace(",", "."),
+      fracao,
+      leituraAgua,
       condominioId: condominio.id,
     });
     // não permite fração que não seja entre 0 e 1
     // não permite registro de água menor que 0
     setFormCompleted(
-      formList.filter((f) => f.value === "")[0] === undefined &&
-        formList[2].value.replace(",", ".") > 0 &&
-        formList[2].value.replace(",", ".") <= 1 &&
-        formList[3].value.replace(",", ".") >= 0
+      formList.find((f) => f.value === "") === undefined &&
+        fracao > 0 &&
+        fracao <= 1 &&
+        leituraAgua >= 0
     );
   }
 

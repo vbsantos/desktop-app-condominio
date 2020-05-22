@@ -66,7 +66,7 @@ export default function RegistrarDespesas(props) {
   const [dialogDeleteDespesa, setDialogDeleteDespesa] = useState(false);
 
   // Boolean for Alert Dialog
-  const [dialogAlert, setDialogAlert] = useState(false);
+  const [dialogAlertDespesas, setDialogAlertDespesas] = useState(false);
 
   console.groupCollapsed("RegistrarDespesas: System data");
   console.log("Footbar:", footbar);
@@ -127,7 +127,7 @@ export default function RegistrarDespesas(props) {
             await putReportsOnLastReports(categorias, data.allNestedCondominio);
             navigate("/VisualizarRelatoriosGerados");
           } else {
-            setDialogAlert(true);
+            setDialogAlertDespesas(true);
           }
         })();
 
@@ -159,9 +159,9 @@ export default function RegistrarDespesas(props) {
             content: { id: data.beneficiario.id },
           }
         );
-        const allNestedCondominio = allNestedBeneficiario["Condominios"].filter(
+        const allNestedCondominio = allNestedBeneficiario["Condominios"].find(
           (condominio) => condominio.id === data.allNestedCondominio.id
-        )[0];
+        );
         setData({
           ...data,
           allNestedBeneficiario,
@@ -260,9 +260,9 @@ export default function RegistrarDespesas(props) {
             const valor = despesa.rateioAutomatico
               ? Number(despesa.valor * pagante.fracao)
               : Number(
-                  despesa["Valores"].filter(
+                  despesa["Valores"].find(
                     (valor) => valor.paganteId === pagante.id
-                  )[0].valor
+                  ).valor
                 );
             totalIndividual += valor;
             return {
@@ -350,9 +350,9 @@ export default function RegistrarDespesas(props) {
   return (
     <>
       {/* ALERTA */}
-      {dialogAlert && (
+      {dialogAlertDespesas && (
         <DialogAlerta
-          open={[dialogAlert, setDialogAlert]}
+          open={[dialogAlertDespesas, setDialogAlertDespesas]}
           title="Não há despesas cadastradas"
         />
       )}
@@ -406,11 +406,9 @@ export default function RegistrarDespesas(props) {
           open={[dialogEditDespesaFixa, setDialogEditDespesaFixa]}
           delete={[dialogDeleteDespesa, setDialogDeleteDespesa]}
           condominio={data.allNestedCondominio}
-          despesa={
-            data.allNestedCondominio["Despesas"].filter(
-              (despesa) => despesa.id === selectedDespesa.id
-            )[0]
-          }
+          despesa={data.allNestedCondominio["Despesas"].find(
+            (despesa) => despesa.id === selectedDespesa.id
+          )}
         />
       )}
       {dialogEditDespesaParcelada && (
@@ -418,11 +416,9 @@ export default function RegistrarDespesas(props) {
           open={[dialogEditDespesaParcelada, setDialogEditDespesaParcelada]}
           delete={[dialogDeleteDespesa, setDialogDeleteDespesa]}
           condominio={data.allNestedCondominio}
-          despesa={
-            data.allNestedCondominio["Despesas"].filter(
-              (despesa) => despesa.id === selectedDespesa.id
-            )[0]
-          }
+          despesa={data.allNestedCondominio["Despesas"].find(
+            (despesa) => despesa.id === selectedDespesa.id
+          )}
         />
       )}
       {dialogEditDespesaAgua && (
@@ -430,11 +426,9 @@ export default function RegistrarDespesas(props) {
           open={[dialogEditDespesaAgua, setDialogEditDespesaAgua]}
           delete={[dialogDeleteDespesa, setDialogDeleteDespesa]}
           condominio={data.allNestedCondominio}
-          despesa={
-            data.allNestedCondominio["Despesas"].filter(
-              (despesa) => despesa.id === selectedDespesa.id
-            )[0]
-          }
+          despesa={data.allNestedCondominio["Despesas"].find(
+            (despesa) => despesa.id === selectedDespesa.id
+          )}
         />
       )}
       {dialogEditDespesaFundoReserva && (
@@ -445,11 +439,9 @@ export default function RegistrarDespesas(props) {
           ]}
           delete={[dialogDeleteDespesa, setDialogDeleteDespesa]}
           condominio={data.allNestedCondominio}
-          despesa={
-            data.allNestedCondominio["Despesas"].filter(
-              (despesa) => despesa.id === selectedDespesa.id
-            )[0]
-          }
+          despesa={data.allNestedCondominio["Despesas"].find(
+            (despesa) => despesa.id === selectedDespesa.id
+          )}
         />
       )}
 
@@ -457,11 +449,9 @@ export default function RegistrarDespesas(props) {
       {dialogDeleteDespesa && (
         <DialogExcluirDespesa
           open={[dialogDeleteDespesa, setDialogDeleteDespesa]}
-          despesa={
-            data.allNestedCondominio["Despesas"].filter(
-              (despesa) => despesa.id === selectedDespesa.id
-            )[0]
-          }
+          despesa={data.allNestedCondominio["Despesas"].find(
+            (despesa) => despesa.id === selectedDespesa.id
+          )}
         />
       )}
 

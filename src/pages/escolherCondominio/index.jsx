@@ -196,9 +196,9 @@ export default function EscolherCondominio(props) {
           : setData({
               ...data,
               allNestedBeneficiario: response,
-              allNestedCondominio: response["Condominios"].filter(
+              allNestedCondominio: response["Condominios"].find(
                 (condominio) => condominio.id == selectedCondominio.id
-              )[0],
+              ),
             });
         console.timeEnd("Get all data from database");
       }
@@ -219,7 +219,7 @@ export default function EscolherCondominio(props) {
       setExpanded(panel);
       const allNestedCondominio = data.allNestedBeneficiario[
         "Condominios"
-      ].filter((condominio) => condominio.id === panel)[0];
+      ].find((condominio) => condominio.id === panel);
       setData({ ...data, allNestedCondominio });
     } else {
       setSelectedCondominio({ id: -1 });
@@ -354,21 +354,17 @@ export default function EscolherCondominio(props) {
           open={[dialogEditPaganteForm, setDialogEditPaganteForm]}
           delete={[dialogDeletePagante, setDialogDeletePagante]}
           condominio={selectedCondominio}
-          pagante={
-            data.allNestedCondominio["Pagantes"].filter(
-              (pagante) => pagante.id === selectedPagante.id
-            )[0]
-          }
+          pagante={data.allNestedCondominio["Pagantes"].find(
+            (pagante) => pagante.id === selectedPagante.id
+          )}
         />
       )}
       {dialogDeletePagante && (
         <DialogExcluirPagante
           open={[dialogDeletePagante, setDialogDeletePagante]}
-          pagante={
-            data.allNestedCondominio["Pagantes"].filter(
-              (pagante) => pagante.id === selectedPagante.id
-            )[0]
-          }
+          pagante={data.allNestedCondominio["Pagantes"].find(
+            (pagante) => pagante.id === selectedPagante.id
+          )}
         />
       )}
       <h1 className="PageTitle">Selecione o Condominio</h1>

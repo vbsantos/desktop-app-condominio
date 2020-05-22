@@ -54,11 +54,11 @@ export default function FormDespesa(props) {
           return {
             id:
               valores.length > 0 && valores[0].id !== ""
-                ? valores.filter(
+                ? valores.find(
                     (valor) =>
                       valor.paganteId === pagante_id &&
                       valor.despesaId === despesa.id
-                  )[0].id
+                  ).id
                 : "",
             precoAgua: null,
             agua: null,
@@ -94,7 +94,7 @@ export default function FormDespesa(props) {
     });
 
     setFormCompleted(
-      formList.filter((field) => !field.disabled && field.value === "")[0] ===
+      formList.find((field) => !field.disabled && field.value === "") ===
         undefined
     );
   }
@@ -188,9 +188,9 @@ export default function FormDespesa(props) {
                   defaultValue={
                     valores.length > 0 && valores[0].id !== ""
                       ? Number(
-                          valores.filter(
+                          valores.find(
                             (valor) => valor["paganteId"] === pagante.id
-                          )[0].valor
+                          ).valor
                         ).toFixed(2)
                       : ""
                   }

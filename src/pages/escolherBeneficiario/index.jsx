@@ -91,9 +91,9 @@ export default function EscolherBeneficiario(props) {
         });
         setList([...beneficiarios]);
         if (
-          beneficiarios.filter(
+          beneficiarios.find(
             (beneficiario) => beneficiario.id === selected.id
-          )[0] === undefined
+          ) === undefined
         ) {
           setSelected({ id: -1 });
         }
@@ -121,7 +121,7 @@ export default function EscolherBeneficiario(props) {
         console.log("EscolherBeneficiario - Botão da direita");
         setData({
           ...data,
-          beneficiario: list.filter((a) => a.id === selected.id)[0],
+          beneficiario: list.find((a) => a.id === selected.id),
         });
         setFootbar({
           ...footbar,
@@ -177,14 +177,14 @@ export default function EscolherBeneficiario(props) {
       )}
       {dialogEditForm && (
         <DialogBeneficiario
-          beneficiario={list.filter((a) => a.id === selected.id)[0]}
+          beneficiario={list.find((a) => a.id === selected.id)}
           open={[dialogEditForm, setDialogEditForm]}
           delete={[dialogDelete, setDialogDelete]}
         />
       )}
       {dialogDelete && (
         <DialogExcluirBeneficiario
-          beneficiario={list.filter((a) => a.id === selected.id)[0]}
+          beneficiario={list.find((a) => a.id === selected.id)}
           open={[dialogDelete, setDialogDelete]}
         />
       )}

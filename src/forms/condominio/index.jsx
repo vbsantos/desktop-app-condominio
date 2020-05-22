@@ -1,12 +1,7 @@
 import React, { useRef } from "react";
 
 // MATERIAL UI COMPONENTS
-import {
-  DialogContentText,
-  FormControl,
-  InputLabel,
-  Input,
-} from "@material-ui/core";
+import { FormControl, InputLabel, Input } from "@material-ui/core";
 
 export default function FormCondominio(props) {
   // true when all the fields of the form are filled
@@ -29,7 +24,7 @@ export default function FormCondominio(props) {
       leituraAgua: formList[1].value.replace(",", "."),
       beneficiarioId: beneficiario.id,
     });
-    setFormCompleted(formList.filter((f) => f.value === "")[0] === undefined);
+    setFormCompleted(formList.find((f) => f.value === "") === undefined);
   }
 
   return (

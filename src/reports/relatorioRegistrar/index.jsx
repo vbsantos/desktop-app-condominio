@@ -130,8 +130,7 @@ export default function RelatorioCondominioRegistrar(props) {
                 id="fundoReservaRow"
                 onClick={() =>
                   selectAndOpenDialog(
-                    despesas.filter((despesa) => despesa.fundoReserva)[0].id ||
-                      ""
+                    despesas.find((despesa) => despesa.fundoReserva).id || ""
                   )
                 }
               >
