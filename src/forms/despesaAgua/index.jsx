@@ -19,11 +19,11 @@ export default function FormDespesa(props) {
   const [despesa, setDespesa] = props.despesa;
   console.log("despesa:", despesa);
 
-  // REVIEW despesa secudaria de agua
+  // despesa secudaria de agua
   const [despesa2, setDespesa2] = props.despesa2;
   console.log("despesa2:", despesa2);
 
-  // REVIEW store despesa2 value
+  // store despesa2 value
   const [valor2, setValor2] = useState(despesa2.valor);
 
   // stores all individual values in case of !rateioAuto
@@ -35,16 +35,25 @@ export default function FormDespesa(props) {
   // form reference
   const formRef = useRef(null);
 
+  const wrongValues = (fields) => {
+    const condition = (value) => {
+      return Number(value) >= 0;
+    };
+    return fields.reduce((acc, field) => {
+      return acc && condition(field.value.replace(",", ".").substring(3));
+    }, true);
+  };
+
   // function that runs each time there is a change in the form
   function formOnChange() {
     const formList = [...formRef.current.elements];
-    //console.log("FORM LIST:", formList); // TODO remover
+    //console.log("FORM LIST:", formList);
     const valoresList = formList.slice(2);
-    //console.log("VALORES LIST:", valoresList); // TODO remover
+    //console.log("VALORES LIST:", valoresList);
     const precoAguaField = valoresList[0];
-    //console.log("valorM3AguaField:", precoAguaField); // TODO remover
+    //console.log("valorM3AguaField:", precoAguaField);
     const precoAgua = Number(precoAguaField.value.replace(",", "."));
-    console.log("valorM3Agua", precoAgua);
+    // console.log("valorM3Agua", precoAgua);
 
     // fields registros de água individuais
     const registrosIndividuaisFields = valoresList.filter((field) =>
@@ -68,22 +77,22 @@ export default function FormDespesa(props) {
         return registroAnterior;
       }
     );
-    console.log(
-      "registrosIndividuaisAnteriores",
-      registrosIndividuaisAnteriores
-    );
+    // console.log(
+    //   "registrosIndividuaisAnteriores",
+    //   registrosIndividuaisAnteriores
+    // );
 
     // registro de água geral que entra no condominio
     const registroGeralAtual = valoresList[1].value.replace(",", ".");
-    console.log("registroGeralAtual:", registroGeralAtual);
+    // console.log("registroGeralAtual:", registroGeralAtual);
 
     // registro de água geral anterior
     const registroGeralAnterior = condominio.leituraAgua;
-    console.log("registroGeralAnterior:", registroGeralAnterior);
+    // console.log("registroGeralAnterior:", registroGeralAnterior);
 
     // registro de água geral só desse mês
     const registroGeralConsumo = registroGeralAtual - registroGeralAnterior;
-    console.log("registroGeralConsumo:", registroGeralConsumo);
+    // console.log("registroGeralConsumo:", registroGeralConsumo);
 
     const registroIndividualAtual = registrosIndividuaisFields.reduce(
       (acc, field) => {
@@ -91,7 +100,7 @@ export default function FormDespesa(props) {
       },
       0
     );
-    console.log("registroIndividualAtual:", registroIndividualAtual);
+    // console.log("registroIndividualAtual:", registroIndividualAtual);
 
     const registroIndividualAnterior = registrosIndividuaisAnteriores.reduce(
       (acc, item) => {
@@ -99,21 +108,21 @@ export default function FormDespesa(props) {
       },
       0
     );
-    console.log("registroIndividualAnterior:", registroIndividualAnterior);
+    // console.log("registroIndividualAnterior:", registroIndividualAnterior);
 
     const registroIndividualConsumo =
       registroIndividualAtual - registroIndividualAnterior;
-    console.log("registroIndividualConsumo:", registroIndividualConsumo);
+    // console.log("registroIndividualConsumo:", registroIndividualConsumo);
 
     const consumoComum = registroGeralConsumo - registroIndividualConsumo;
-    console.log("consumoComum:", consumoComum);
+    // console.log("consumoComum:", consumoComum);
 
     setValor2(function () {
       const precoComum = consumoComum * precoAgua;
       valoresList[2].value = "R$ " + precoComum.toFixed(2);
       return precoComum;
-    }); //REVIEW
-    console.log("valor2:", valor2);
+    });
+    // console.log("valor2:", valor2);
 
     setValores(
       (function () {
@@ -126,7 +135,7 @@ export default function FormDespesa(props) {
           const leituraAguaNova =
             Number(leituraAguaAtual) - Number(leituraAguaAntiga);
           const valor = Number(leituraAguaNova * precoAgua).toFixed(2);
-          valoresIndividuaisFields[index].value = "R$ " + valor; // FIXME É ISSO E NÃO QQR OUTRA COISA
+          valoresIndividuaisFields[index].value = "R$ " + valor;
           return {
             id:
               valores.length > 0 && valores[0].id !== ""
@@ -145,41 +154,43 @@ export default function FormDespesa(props) {
         });
       })()
     );
-    console.log("valores:", valores);
+    // console.log("valores:", valores);
 
     setDespesa({
       id: despesa.id,
       nome: "Consumo de Água - Individual",
       categoria: formList[1].value,
-      agua: registroIndividualAtual, //REVIEW
+      agua: registroIndividualAtual,
       aguaIndividual: true,
       rateioAutomatico: false,
       permanente: true,
       fundoReserva: false,
-      valor: (+registroIndividualConsumo * +precoAgua).toFixed(2), //REVIEW
+      valor: (+registroIndividualConsumo * +precoAgua).toFixed(2),
       parcelaAtual: null,
       numParcelas: null,
       Valores: valores,
       condominioId: condominio.id,
     });
-    console.log("despesa:", despesa);
+    // console.log("despesa:", despesa);
 
     setDespesa2({
       id: despesa2.id,
       nome: "Consumo de Água - Área Comum",
       categoria: formList[1].value,
-      agua: registroGeralAtual, //REVIEW
+      agua: registroGeralAtual,
       aguaIndividual: true,
       rateioAutomatico: true,
       permanente: true,
       fundoReserva: false,
-      valor: (+consumoComum * +precoAgua).toFixed(2), //REVIEW
+      valor: (+consumoComum * +precoAgua).toFixed(2),
       parcelaAtual: null,
       numParcelas: null,
       Valores: [],
       condominioId: condominio.id,
     });
-    console.log("despesa2:", despesa2);
+    // console.log("despesa2:", despesa2);
+
+    // console.warn(valor2 > 0 && wrongValues(valoresIndividuaisFields)); // TODO avisar valores negativos
 
     setFormCompleted(
       formList.find((field) => !field.disabled && field.value === "") ===
@@ -233,15 +244,15 @@ export default function FormDespesa(props) {
         {/* REGISTRO AGUA GERAL */}
         <section>
           <DialogContentText key={"valoresTitle"} color="inherit">
-            Registro de água atual do Condomínio
+            Leitura de água atual do Condomínio
           </DialogContentText>
           <div id="containerAgua">
             <div id="esquerdaAgua">
               <FormControl key={"aguaComumForm"}>
-                <InputLabel>Registro de água Geral</InputLabel>
+                <InputLabel>Leitura de água Geral</InputLabel>
                 <Input
                   id={"aguaComum"}
-                  defaultValue={despesa2.id ? despesa2.agua : ""} //FIXME
+                  defaultValue={despesa2.id ? despesa2.agua : ""}
                 ></Input>
               </FormControl>
             </div>
@@ -252,7 +263,7 @@ export default function FormDespesa(props) {
                   id={"valorAguaComum"}
                   defaultValue={
                     despesa2.id ? "R$ " + Number(valor2).toFixed(2) : " "
-                  } //FIXME
+                  }
                   disabled={true}
                 ></Input>
               </FormControl>
@@ -263,14 +274,14 @@ export default function FormDespesa(props) {
         {/* REGISTRO AGUA INDIVIDUAL */}
         <section>
           <DialogContentText key={"valoresTitle"} color="inherit">
-            Registros Individuais atuais dos Condôminos
+            Leituras de Água Individuais atuais dos Condôminos
           </DialogContentText>
           <div id="containerAgua">
             <div id="esquerdaAgua">
               {condominio["Pagantes"].map((pagante) => (
                 <FormControl key={"aguaIndividualForm" + pagante.id}>
                   <InputLabel htmlFor={"aguaIndividual" + pagante.id}>
-                    Registro de água do {pagante.complemento}
+                    Leitura de água do {pagante.complemento}
                   </InputLabel>
                   <Input
                     id={"aguaIndividual" + pagante.id}

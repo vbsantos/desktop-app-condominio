@@ -3,6 +3,7 @@ import React, { useRef, useState } from "react";
 // MATERIAL UI COMPONENTS
 import {
   DialogContentText,
+  DialogContent,
   FormControl,
   InputLabel,
   Input,
@@ -82,7 +83,7 @@ export default function FormPagante(props) {
       </section>
       <section>
         <DialogContentText color="inherit">
-          Último Registro de Água Contabilizado
+          Última Leitura de água Contabilizado
         </DialogContentText>
         <FormControl>
           <InputLabel htmlFor="leituraAgua">Leitura da Água</InputLabel>
@@ -93,6 +94,15 @@ export default function FormPagante(props) {
           ></Input>
         </FormControl>
       </section>
+
+      {/* FEEDBACK */}
+      {!formCompleted && (
+        <DialogContent>
+          {pagante.id === ""
+            ? "É necessário preencher todos os campos para cadastrar"
+            : "É necessário modificar algum campo para salvar"}
+        </DialogContent>
+      )}
     </form>
   );
 }

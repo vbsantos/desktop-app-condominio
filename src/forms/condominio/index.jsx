@@ -3,6 +3,7 @@ import React, { useRef } from "react";
 // MATERIAL UI COMPONENTS
 import {
   FormControl,
+  DialogContent,
   DialogContentText,
   InputLabel,
   Input,
@@ -46,13 +47,22 @@ export default function FormCondominio(props) {
 
       <section>
         <DialogContentText color="inherit">
-          Último Registro de Água Contabilizado
+          Última Leitura de água Contabilizado
         </DialogContentText>
         <FormControl>
           <InputLabel htmlFor="leituraAgua">Leitura da água</InputLabel>
           <Input defaultValue={condominio.leituraAgua} id="leituraAgua"></Input>
         </FormControl>
       </section>
+
+      {/* FEEDBACK */}
+      {!formCompleted && (
+        <DialogContent>
+          {condominio.id === ""
+            ? "É necessário preencher todos os campos para cadastrar"
+            : "É necessário modificar algum campo para salvar"}
+        </DialogContent>
+      )}
     </form>
   );
 }

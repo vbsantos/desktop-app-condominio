@@ -1,7 +1,13 @@
 import React, { useRef } from "react";
 
 // MATERIAL UI COMPONENTS
-import { FormControl, InputLabel, Input } from "@material-ui/core";
+import {
+  DialogContent,
+  DialogContentText,
+  FormControl,
+  InputLabel,
+  Input,
+} from "@material-ui/core";
 
 export default function FormBeneficiario(props) {
   // true when all the fields of the form are filled
@@ -24,10 +30,24 @@ export default function FormBeneficiario(props) {
 
   return (
     <form ref={formRef} onChange={formOnChange}>
-      <FormControl>
-        <InputLabel htmlFor="nome">Nome</InputLabel>
-        <Input autoFocus defaultValue={beneficiario.nome} id="nome"></Input>
-      </FormControl>
+      <section>
+        <DialogContentText color="inherit">
+          Informações do Administrador
+        </DialogContentText>
+        <FormControl>
+          <InputLabel htmlFor="nome">Nome</InputLabel>
+          <Input autoFocus defaultValue={beneficiario.nome} id="nome"></Input>
+        </FormControl>
+      </section>
+
+      {/* FEEDBACK */}
+      {!formCompleted && (
+        <DialogContent>
+          {beneficiario.id === ""
+            ? "É necessário preencher todos os campos para cadastrar"
+            : "É necessário modificar algum campo para salvar"}
+        </DialogContent>
+      )}
     </form>
   );
 }

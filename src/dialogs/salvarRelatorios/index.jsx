@@ -108,6 +108,13 @@ export default function DraggableDialog(props) {
     });
   };
 
+  const updateRegistroCondominio = async (condominioId, novoRegistro) => {
+    await window.ipcRenderer.invoke("condominios", {
+      method: "update",
+      content: { id: condominioId, leituraAgua: novoRegistro },
+    });
+  };
+
   const updateValorDespesaToZero = async (despesaId, valores) => {
     await window.ipcRenderer.invoke("despesas", {
       method: "update",
@@ -129,8 +136,12 @@ export default function DraggableDialog(props) {
     for (const despesa of despesas) {
       if (despesa.fundoReserva) continue; // NÃO FAZ ALTERAÇÕES NO FUNDO RESERVA
       if (despesa.aguaIndividual) {
-        for (const individual of despesa["Valores"]) {
-          await updateRegistroPagante(individual.paganteId, individual.agua); // SALVAR NOVO REGISTRO DE ÁGUA
+        if (!despesa.rateioAutomatico) {
+          for (const individual of despesa["Valores"]) {
+            await updateRegistroPagante(individual.paganteId, individual.agua); // SALVAR NOVO REGISTRO DE ÁGUA
+          }
+        } else {
+          await updateRegistroCondominio(despesa.condominioId, despesa.agua);
         }
       }
       await updateValorDespesaToZero(despesa.id, despesa["Valores"]); // ZERAR VALORES
