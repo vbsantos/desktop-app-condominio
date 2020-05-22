@@ -110,7 +110,7 @@ export default function FormDespesa(props) {
 
     setValor2(function () {
       const precoComum = consumoComum * precoAgua;
-      valoresList[2].value = "R$ " + precoComum;
+      valoresList[2].value = "R$ " + precoComum.toFixed(2);
       return precoComum;
     }); //REVIEW
     console.log("valor2:", valor2);
