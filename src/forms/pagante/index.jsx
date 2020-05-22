@@ -47,7 +47,7 @@ export default function FormPagante(props) {
     <form ref={formRef} onChange={formOnChange}>
       <section>
         <DialogContentText color="inherit">
-          Informações do Condômino Atual
+          Informações do Condômino
         </DialogContentText>
         <FormControl>
           <InputLabel htmlFor="nome">Nome</InputLabel>
@@ -79,6 +79,11 @@ export default function FormPagante(props) {
             id="fracao"
           ></Input>
         </FormControl>
+      </section>
+      <section>
+        <DialogContentText color="inherit">
+          Último Registro de Água Contabilizado
+        </DialogContentText>
         <FormControl>
           <InputLabel htmlFor="leituraAgua">Leitura da Água</InputLabel>
           <Input

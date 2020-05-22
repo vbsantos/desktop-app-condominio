@@ -42,12 +42,12 @@ export default function DraggableDialog(props) {
     let despesa_b;
     if (despesa_a.aguaIndividual) {
       if (despesa_a.rateioAutomatico) {
-        console.warn("Essa é a despesa secundária, procurando primária"); // TODO remover
+        // console.warn("Essa é a despesa secundária, procurando primária");
         despesa_b = despesas.find(
           (despesa) => despesa.aguaIndividual && isPrimary(despesa)
         );
       } else {
-        console.warn("Essa é a despesa primária, procurando secundária"); // TODO remover
+        // console.warn("Essa é a despesa primária, procurando secundária");
         despesa_b = despesas.find(
           (despesa) => despesa.aguaIndividual && !isPrimary(despesa)
         );

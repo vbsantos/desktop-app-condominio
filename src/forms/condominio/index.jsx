@@ -1,7 +1,12 @@
 import React, { useRef } from "react";
 
 // MATERIAL UI COMPONENTS
-import { FormControl, InputLabel, Input } from "@material-ui/core";
+import {
+  FormControl,
+  DialogContentText,
+  InputLabel,
+  Input,
+} from "@material-ui/core";
 
 export default function FormCondominio(props) {
   // true when all the fields of the form are filled
@@ -29,16 +34,25 @@ export default function FormCondominio(props) {
 
   return (
     <form ref={formRef} onChange={formOnChange}>
-      <FormControl>
-        <InputLabel htmlFor="nome">Nome</InputLabel>
-        <Input autoFocus defaultValue={condominio.nome} id="nome"></Input>
-      </FormControl>
-      <FormControl>
-        <InputLabel htmlFor="leituraAgua">
-          Último registro de água contabilizado
-        </InputLabel>
-        <Input defaultValue={condominio.leituraAgua} id="leituraAgua"></Input>
-      </FormControl>
+      <section>
+        <DialogContentText color="inherit">
+          Informações do Condomínio
+        </DialogContentText>
+        <FormControl>
+          <InputLabel htmlFor="nome">Nome</InputLabel>
+          <Input autoFocus defaultValue={condominio.nome} id="nome"></Input>
+        </FormControl>
+      </section>
+
+      <section>
+        <DialogContentText color="inherit">
+          Último Registro de Água Contabilizado
+        </DialogContentText>
+        <FormControl>
+          <InputLabel htmlFor="leituraAgua">Leitura da água</InputLabel>
+          <Input defaultValue={condominio.leituraAgua} id="leituraAgua"></Input>
+        </FormControl>
+      </section>
     </form>
   );
 }
