@@ -178,7 +178,7 @@ export default function DraggableDialog(props) {
           id="draggable-dialog-title"
           color="inherit"
         >
-          Tem certeza que deseja salvar Relatórios?
+          Deseja salvar Relatórios?
         </DialogTitle>
         <DialogContent>
           Essa ação irá:

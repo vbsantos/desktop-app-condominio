@@ -62,7 +62,7 @@ export default function DraggableDialog(props) {
           id="draggable-dialog-title"
           color="inherit"
         >
-          Tem certeza que deseja excluir <strong>{pagante.nome}</strong>?
+          Deseja excluir <strong>{pagante.nome}</strong>?
         </DialogTitle>
         <DialogContent>
           {`A exclusão desse Condômino acarretará na exclusão de todos os Relatórios dele e não poderá ser desfeita.`}

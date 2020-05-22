@@ -43,20 +43,72 @@ export default function DraggableDialog(props) {
       nome: "",
       categoria: "",
       valor: "",
-      parcelaAtual: "",
-      numParcelas: "",
+      parcelaAtual: null,
+      numParcelas: null,
       agua: "",
-      aguaIndividual: false,
+      aguaIndividual: true,
       rateioAutomatico: false,
-      permanente: false,
+      permanente: true,
       fundoReserva: false,
       condominioId: condominio.id,
       Valores: [],
     }
   );
 
+  const isPrimary = (despesa) => {
+    return !despesa.rateioAutomatico;
+  };
+
+  // REVIEW - This function finds the Despesa "B" that complements de Despesa "A"
+  const findDespesaB = (despesas, despesa_a) => {
+    let despesa_b;
+    if (despesa_a.aguaIndividual) {
+      if (despesa_a.rateioAutomatico) {
+        console.warn("Essa é a despesa secundária, procurando primária"); // TODO remover
+        despesa_b = despesas.find(
+          (despesa) => despesa.aguaIndividual && isPrimary(despesa)
+        );
+      } else {
+        console.warn("Essa é a despesa primária, procurando secundária"); // TODO remover
+        despesa_b = despesas.find(
+          (despesa) => despesa.aguaIndividual && !isPrimary(despesa)
+        );
+      }
+    }
+    return despesa_b;
+  };
+
+  // REVIEW - Finds or Create a Despesa
+  const [despesa2, setDespesa2] = useState(
+    despesa.id === ""
+      ? {
+          id: "",
+          nome: "",
+          categoria: "",
+          valor: "",
+          parcelaAtual: null,
+          numParcelas: null,
+          agua: "",
+          aguaIndividual: true,
+          rateioAutomatico: true,
+          permanente: true,
+          fundoReserva: false,
+          condominioId: condominio.id,
+          Valores: [],
+        }
+      : findDespesaB(condominio["Despesas"], despesa)
+  );
+
+  //const [valores, setValores] = useState(
+  //  props.despesa ? props.despesa["Valores"] : []
+  //);
+
   const [valores, setValores] = useState(
-    props.despesa ? props.despesa["Valores"] : []
+    despesa.id === ""
+      ? [] // criação
+      : isPrimary(despesa)
+      ? props.despesa["Valores"] //edição - primary
+      : despesa2["Valores"] //edição - secondary
   );
 
   // true when all the fields of the form are filled
@@ -76,35 +128,17 @@ export default function DraggableDialog(props) {
   // function that runs when you click the right button
   async function handleRightButton() {
     if (despesa.id === "") {
-      let response;
-      if (despesa.fundoReserva) {
-        const fundoReservaId = condominio["Despesas"].find(
-          (despesa) => despesa.fundoReserva
-        );
-        if (fundoReservaId) {
-          //if it already exists update
-          despesa.id = fundoReservaId.id;
-          response = await window.ipcRenderer.invoke("despesas", {
-            method: "update",
-            content: despesa,
-          });
-          console.warn("Despesa Editada:", response);
-        } else {
-          // if it doesn't exists create
-          response = await window.ipcRenderer.invoke("despesas", {
-            method: "create",
-            content: despesa,
-          });
-          console.warn("Despesa Cadastrada:", response);
-        }
-      } else {
-        // if it isn't fundoReserva create
-        response = await window.ipcRenderer.invoke("despesas", {
-          method: "create",
-          content: despesa,
-        });
-        console.warn("Despesa Cadastrada:", response);
-      }
+      const response = await window.ipcRenderer.invoke("despesas", {
+        method: "create",
+        content: despesa,
+      });
+      console.warn("Despesa Cadastrada:", response);
+      // REVIEW
+      const response2 = await window.ipcRenderer.invoke("despesas", {
+        method: "create",
+        content: despesa2,
+      });
+      console.warn("Despesa Cadastrada:", response2);
       const neoValores = valores.map((valor) => {
         return {
           despesaId: response.id,
@@ -128,6 +162,13 @@ export default function DraggableDialog(props) {
         method: "update",
         content: despesa,
       });
+      // REVIEW
+      const response2 = await window.ipcRenderer.invoke("despesas", {
+        method: "update",
+        content: despesa2,
+      });
+      console.warn("Despesa Editada:", response);
+      console.warn("Despesa Editada:", response2);
       if (valores.length > 0) {
         if (valores[0].id !== "") {
           // console.warn("JUST AN UPDATE:", valores);
@@ -145,7 +186,6 @@ export default function DraggableDialog(props) {
           console.warn("Valores Cadastrados:", response2);
         }
       }
-      console.warn("Despesa Editada:", response);
     }
 
     setDialog(false);
@@ -171,7 +211,16 @@ export default function DraggableDialog(props) {
         <DialogContent>
           <FormDespesaAgua
             condominio={condominio}
-            despesa={[despesa, setDespesa]}
+            despesa={
+              despesa.rateioAutomatico
+                ? [despesa2, setDespesa2]
+                : [despesa, setDespesa]
+            } //REVIEW
+            despesa2={
+              despesa2.rateioAutomatico
+                ? [despesa2, setDespesa2]
+                : [despesa, setDespesa]
+            } //REVIEW
             valores={[valores, setValores]}
             completed={[formCompleted, setFormCompleted]}
           />

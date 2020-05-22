@@ -452,6 +452,7 @@ export default function RegistrarDespesas(props) {
           despesa={data.allNestedCondominio["Despesas"].find(
             (despesa) => despesa.id === selectedDespesa.id
           )}
+          despesas={data.allNestedCondominio["Despesas"]}
         />
       )}
 

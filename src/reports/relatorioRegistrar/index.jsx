@@ -55,7 +55,7 @@ export default function RelatorioCondominioRegistrar(props) {
     setSelected({ id }); // pega o id da despesa
     const despesa = despesas.find((despesa) => despesa.id === id);
 
-    console.log(despesa);
+    console.log(despesa); // TODO remover
 
     if (despesa.fundoReserva) {
       setDialogEditDespesaFundoReserva(true);

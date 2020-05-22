@@ -8,7 +8,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  Paper
+  Paper,
 } from "@material-ui/core";
 
 // MATERIAL UI ICONS
@@ -30,7 +30,31 @@ function PaperComponent(props) {
 
 export default function DraggableDialog(props) {
   const [dialog, setDialog] = props.open;
+  const { despesas } = props;
   const { despesa } = props;
+
+  const isPrimary = (despesa) => {
+    return !despesa.rateioAutomatico;
+  };
+
+  // This function finds the Despesa "B" that complements de Despesa "A"
+  const findDespesaB = (despesas, despesa_a) => {
+    let despesa_b;
+    if (despesa_a.aguaIndividual) {
+      if (despesa_a.rateioAutomatico) {
+        console.warn("Essa é a despesa secundária, procurando primária"); // TODO remover
+        despesa_b = despesas.find(
+          (despesa) => despesa.aguaIndividual && isPrimary(despesa)
+        );
+      } else {
+        console.warn("Essa é a despesa primária, procurando secundária"); // TODO remover
+        despesa_b = despesas.find(
+          (despesa) => despesa.aguaIndividual && !isPrimary(despesa)
+        );
+      }
+    }
+    return despesa_b;
+  };
 
   // function that runs when the dialog is suposed to close
   function handleClose() {
@@ -39,13 +63,28 @@ export default function DraggableDialog(props) {
 
   // function that runs when you click the right button
   async function handleRightButton() {
+    const despesa2 = despesa.aguaIndividual
+      ? findDespesaB(despesas, despesa)
+      : null;
+
     const response = await window.ipcRenderer.invoke("despesas", {
       method: "delete",
-      content: { id: despesa.id }
+      content: { id: despesa.id },
     });
     response === 1
       ? console.warn(`Despesa excluida: [id=${despesa.id}]`)
       : console.warn(`Falha ao excluir Despesa: [id=${despesa.id}]`);
+
+    if (despesa2) {
+      const response2 = await window.ipcRenderer.invoke("despesas", {
+        method: "delete",
+        content: { id: despesa2.id },
+      });
+      response2 === 1
+        ? console.warn(`Despesa excluida: [id=${despesa2.id}]`)
+        : console.warn(`Falha ao excluir Despesa: [id=${despesa2.id}]`);
+    }
+
     setDialog(false);
   }
 
@@ -62,8 +101,15 @@ export default function DraggableDialog(props) {
           id="draggable-dialog-title"
           color="inherit"
         >
-          Tem certeza que deseja remover a despesa{" "}
-          <strong>{despesa.nome}</strong>?
+          Deseja excluir a despesa{" "}
+          <strong>
+            {despesa.aguaIndividual
+              ? "Consumo de Água"
+              : despesa.fundoReserva
+              ? "Fundo Reserva"
+              : despesa.nome}
+          </strong>
+          ?
         </DialogTitle>
         <DialogContent>Essa ação não poderá ser desfeita.</DialogContent>
         <DialogActions>
