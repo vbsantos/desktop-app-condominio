@@ -176,15 +176,6 @@ export default function DraggableDialog(props) {
           />
         </DialogContent>
 
-        {/* FEEDBACK */}
-        {!formCompleted && (
-          <DialogContent>
-            {despesa.id === ""
-              ? "É necessário preencher todos os campos para registrar a despesa"
-              : "É necessário modificar algum campo para salvar"}
-          </DialogContent>
-        )}
-
         <DialogActions>
           <Button onClick={handleClose} variant="outlined" color="secondary">
             Cancelar
