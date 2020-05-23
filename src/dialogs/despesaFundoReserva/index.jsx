@@ -36,23 +36,30 @@ export default function DraggableDialog(props) {
   // despesa must belong to a condominio
   const { condominio } = props;
 
+  // Made to avoid duplicate
+  const findDespesaFundoReserva = (despesas) => {
+    const despesa = despesas.find((despesa) => despesa.fundoReserva);
+    return despesa;
+  };
+
   // Opens or Create a Despesa
   const [despesa, setDespesa] = useState(
-    props.despesa || {
-      id: "",
-      nome: "",
-      categoria: "",
-      valor: "",
-      parcelaAtual: "",
-      numParcelas: "",
-      agua: "",
-      aguaIndividual: false,
-      rateioAutomatico: false,
-      permanente: false,
-      fundoReserva: false,
-      condominioId: condominio.id,
-      Valores: [],
-    }
+    props.despesa ||
+      findDespesaFundoReserva(condominio["Despesas"]) || {
+        id: "",
+        nome: "",
+        categoria: "",
+        valor: "",
+        parcelaAtual: "",
+        numParcelas: "",
+        agua: "",
+        aguaIndividual: false,
+        rateioAutomatico: false,
+        permanente: false,
+        fundoReserva: false,
+        condominioId: condominio.id,
+        Valores: [],
+      }
   );
 
   const [valores, setValores] = useState(
