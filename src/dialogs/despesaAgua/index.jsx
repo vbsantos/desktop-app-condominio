@@ -29,6 +29,40 @@ function PaperComponent(props) {
   );
 }
 
+const isPrimary = (despesa) => {
+  return !despesa.rateioAutomatico;
+};
+
+// This function finds the Despesa "B" that complements de Despesa "A"
+const findDespesaB = (despesas, despesa_a) => {
+  let despesa_b;
+  if (despesa_a.aguaIndividual) {
+    if (despesa_a.rateioAutomatico) {
+      //console.warn("Essa é a despesa secundária, procurando primária");
+      despesa_b = despesas.find(
+        (despesa) => despesa.aguaIndividual && isPrimary(despesa)
+      );
+    } else {
+      //console.warn("Essa é a despesa primária, procurando secundária");
+      despesa_b = despesas.find(
+        (despesa) => despesa.aguaIndividual && !isPrimary(despesa)
+      );
+    }
+  }
+  return despesa_b;
+};
+
+// REVIEW Made to avoid duplicate
+const findDespesaAgua = (despesas) => {
+  const despesa = despesas.find(
+    (despesa) => despesa.aguaIndividual && isPrimary(despesa)
+  );
+  console.warn("despesa", despesa);
+  // const found = typeof despesa === "undefined" ? false : despesa;
+  // console.warn("found", found);
+  return despesa;
+};
+
 export default function DraggableDialog(props) {
   const [dialog, setDialog] = props.open;
   const [dialogDelete, setDialogDelete] = props.delete;
@@ -36,49 +70,30 @@ export default function DraggableDialog(props) {
   // despesa must belong to a condominio
   const { condominio } = props;
 
+  // true when all the fields of the form are filled
+  const [formCompleted, setFormCompleted] = useState(false);
+
   // Opens or Create a Despesa
   const [despesa, setDespesa] = useState(
-    props.despesa || {
-      id: "",
-      nome: "",
-      categoria: "",
-      valor: "",
-      parcelaAtual: null,
-      numParcelas: null,
-      agua: "",
-      aguaIndividual: true,
-      rateioAutomatico: false,
-      permanente: true,
-      fundoReserva: false,
-      condominioId: condominio.id,
-      Valores: [],
-    }
+    props.despesa ||
+      findDespesaAgua(condominio["Despesas"]) || {
+        id: "",
+        nome: "",
+        categoria: "",
+        valor: "",
+        parcelaAtual: null,
+        numParcelas: null,
+        agua: "",
+        aguaIndividual: true,
+        rateioAutomatico: false,
+        permanente: true,
+        fundoReserva: false,
+        condominioId: condominio.id,
+        Valores: [],
+      }
   );
 
-  const isPrimary = (despesa) => {
-    return !despesa.rateioAutomatico;
-  };
-
-  // REVIEW - This function finds the Despesa "B" that complements de Despesa "A"
-  const findDespesaB = (despesas, despesa_a) => {
-    let despesa_b;
-    if (despesa_a.aguaIndividual) {
-      if (despesa_a.rateioAutomatico) {
-        console.warn("Essa é a despesa secundária, procurando primária"); // TODO remover
-        despesa_b = despesas.find(
-          (despesa) => despesa.aguaIndividual && isPrimary(despesa)
-        );
-      } else {
-        console.warn("Essa é a despesa primária, procurando secundária"); // TODO remover
-        despesa_b = despesas.find(
-          (despesa) => despesa.aguaIndividual && !isPrimary(despesa)
-        );
-      }
-    }
-    return despesa_b;
-  };
-
-  // REVIEW - Finds or Create a Despesa
+  // Finds or Create a Despesa
   const [despesa2, setDespesa2] = useState(
     despesa.id === ""
       ? {
@@ -99,20 +114,13 @@ export default function DraggableDialog(props) {
       : findDespesaB(condominio["Despesas"], despesa)
   );
 
-  //const [valores, setValores] = useState(
-  //  props.despesa ? props.despesa["Valores"] : []
-  //);
-
   const [valores, setValores] = useState(
     despesa.id === ""
       ? [] // criação
       : isPrimary(despesa)
-      ? props.despesa["Valores"] //edição - primary
+      ? despesa["Valores"] //edição - primary
       : despesa2["Valores"] //edição - secondary
   );
-
-  // true when all the fields of the form are filled
-  const [formCompleted, setFormCompleted] = useState(false);
 
   // function that runs when the dialog is suposed to close
   function handleClose() {
@@ -133,7 +141,6 @@ export default function DraggableDialog(props) {
         content: despesa,
       });
       console.warn("Despesa Cadastrada:", response);
-      // REVIEW
       const response2 = await window.ipcRenderer.invoke("despesas", {
         method: "create",
         content: despesa2,
@@ -162,7 +169,6 @@ export default function DraggableDialog(props) {
         method: "update",
         content: despesa,
       });
-      // REVIEW
       const response2 = await window.ipcRenderer.invoke("despesas", {
         method: "update",
         content: despesa2,
@@ -215,12 +221,12 @@ export default function DraggableDialog(props) {
               despesa.rateioAutomatico
                 ? [despesa2, setDespesa2]
                 : [despesa, setDespesa]
-            } //REVIEW
+            }
             despesa2={
               despesa2.rateioAutomatico
                 ? [despesa2, setDespesa2]
                 : [despesa, setDespesa]
-            } //REVIEW
+            }
             valores={[valores, setValores]}
             completed={[formCompleted, setFormCompleted]}
           />
