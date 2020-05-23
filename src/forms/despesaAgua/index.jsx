@@ -47,25 +47,19 @@ export default function FormDespesa(props) {
   // function that runs each time there is a change in the form
   function formOnChange() {
     const formList = [...formRef.current.elements];
-    //console.log("FORM LIST:", formList);
     const valoresList = formList.slice(2);
-    //console.log("VALORES LIST:", valoresList);
     const precoAguaField = valoresList[0];
-    //console.log("valorM3AguaField:", precoAguaField);
     const precoAgua = Number(precoAguaField.value.replace(",", "."));
-    // console.log("valorM3Agua", precoAgua);
 
     // fields registros de água individuais
     const registrosIndividuaisFields = valoresList.filter((field) =>
       field.id.includes("aguaIndividual")
     );
-    //console.log("registrosIndividuaisFields", registrosIndividuaisFields);
 
     // fields valores de água individuais
     const valoresIndividuaisFields = valoresList.filter((field) =>
       field.id.includes("valorAguaIndividual")
     );
-    //console.log("valoresIndividuaisFields", valoresIndividuaisFields);
 
     // array com registros individuais anteriores
     const registrosIndividuaisAnteriores = registrosIndividuaisFields.map(
@@ -77,22 +71,15 @@ export default function FormDespesa(props) {
         return registroAnterior;
       }
     );
-    // console.log(
-    //   "registrosIndividuaisAnteriores",
-    //   registrosIndividuaisAnteriores
-    // );
 
     // registro de água geral que entra no condominio
     const registroGeralAtual = valoresList[1].value.replace(",", ".");
-    // console.log("registroGeralAtual:", registroGeralAtual);
 
     // registro de água geral anterior
     const registroGeralAnterior = condominio.leituraAgua;
-    // console.log("registroGeralAnterior:", registroGeralAnterior);
 
     // registro de água geral só desse mês
     const registroGeralConsumo = registroGeralAtual - registroGeralAnterior;
-    // console.log("registroGeralConsumo:", registroGeralConsumo);
 
     const registroIndividualAtual = registrosIndividuaisFields.reduce(
       (acc, field) => {
@@ -100,7 +87,6 @@ export default function FormDespesa(props) {
       },
       0
     );
-    // console.log("registroIndividualAtual:", registroIndividualAtual);
 
     const registroIndividualAnterior = registrosIndividuaisAnteriores.reduce(
       (acc, item) => {
@@ -108,21 +94,17 @@ export default function FormDespesa(props) {
       },
       0
     );
-    // console.log("registroIndividualAnterior:", registroIndividualAnterior);
 
     const registroIndividualConsumo =
       registroIndividualAtual - registroIndividualAnterior;
-    // console.log("registroIndividualConsumo:", registroIndividualConsumo);
 
     const consumoComum = registroGeralConsumo - registroIndividualConsumo;
-    // console.log("consumoComum:", consumoComum);
 
     setValor2(function () {
       const precoComum = consumoComum * precoAgua;
       valoresList[2].value = "R$ " + precoComum.toFixed(2);
       return precoComum;
     });
-    // console.log("valor2:", valor2);
 
     setValores(
       (function () {
@@ -154,7 +136,6 @@ export default function FormDespesa(props) {
         });
       })()
     );
-    // console.log("valores:", valores);
 
     setDespesa({
       id: despesa.id,
@@ -171,7 +152,6 @@ export default function FormDespesa(props) {
       Valores: valores,
       condominioId: condominio.id,
     });
-    // console.log("despesa:", despesa);
 
     setDespesa2({
       id: despesa2.id,
@@ -188,9 +168,8 @@ export default function FormDespesa(props) {
       Valores: [],
       condominioId: condominio.id,
     });
-    // console.log("despesa2:", despesa2);
 
-    // console.warn(valor2 > 0 && wrongValues(valoresIndividuaisFields)); // TODO avisar valores negativos
+    // console.warn(valor2 > 0 && wrongValues(valoresIndividuaisFields)); // FIXME avisar valores negativos
 
     setFormCompleted(
       formList.find((field) => !field.disabled && field.value === "") ===
