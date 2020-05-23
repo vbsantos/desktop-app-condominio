@@ -38,12 +38,10 @@ const findDespesaB = (despesas, despesa_a) => {
   let despesa_b;
   if (despesa_a.aguaIndividual) {
     if (despesa_a.rateioAutomatico) {
-      //console.warn("Essa é a despesa secundária, procurando primária");
       despesa_b = despesas.find(
         (despesa) => despesa.aguaIndividual && isPrimary(despesa)
       );
     } else {
-      //console.warn("Essa é a despesa primária, procurando secundária");
       despesa_b = despesas.find(
         (despesa) => despesa.aguaIndividual && !isPrimary(despesa)
       );
@@ -58,8 +56,6 @@ const findDespesaAgua = (despesas) => {
     (despesa) => despesa.aguaIndividual && isPrimary(despesa)
   );
   console.warn("despesa", despesa);
-  // const found = typeof despesa === "undefined" ? false : despesa;
-  // console.warn("found", found);
   return despesa;
 };
 
