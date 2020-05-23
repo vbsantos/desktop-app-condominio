@@ -258,7 +258,7 @@ export default function RegistrarDespesas(props) {
           .filter((despesa) => despesa.categoria === categoria)
           .map((despesa) => {
             const valor = despesa.rateioAutomatico
-              ? Number(despesa.valor * pagante.fracao)
+              ? Math.ceil(despesa.valor * pagante.fracao * 100) / 100 // REVIEW valor final condômino
               : Number(
                   despesa["Valores"].find(
                     (valor) => valor.paganteId === pagante.id
