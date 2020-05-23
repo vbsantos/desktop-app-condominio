@@ -50,12 +50,11 @@ const findDespesaB = (despesas, despesa_a) => {
   return despesa_b;
 };
 
-// REVIEW Made to avoid duplicate
+// Made to avoid duplicate
 const findDespesaAgua = (despesas) => {
   const despesa = despesas.find(
     (despesa) => despesa.aguaIndividual && isPrimary(despesa)
   );
-  console.warn("despesa", despesa);
   return despesa;
 };
 

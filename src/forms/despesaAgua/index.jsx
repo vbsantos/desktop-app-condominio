@@ -29,11 +29,11 @@ export default function FormDespesa(props) {
 
   // store all current values of the form fields
   const [despesa, setDespesa] = props.despesa;
-  console.log("despesa:", despesa);
+  // console.log("despesa:", despesa);
 
   // despesa secudaria de agua
   const [despesa2, setDespesa2] = props.despesa2;
-  console.log("despesa2:", despesa2);
+  // console.log("despesa2:", despesa2);
 
   // store despesa2 value
   const [valor2, setValor2] = useState(despesa2.valor);
@@ -175,12 +175,6 @@ export default function FormDespesa(props) {
       Valores: [],
       condominioId: condominio.id,
     });
-
-    // REVIEW avisar valores errados
-    // console.assert(
-    //   allValuesGood(valoresIndividuaisFields, valorTotalComum, precoAgua),
-    //   "Há valores incorretos no formulário!"
-    // );
 
     setFormCompleted(
       formList.find((field) => !field.disabled && field.value === "") ===
