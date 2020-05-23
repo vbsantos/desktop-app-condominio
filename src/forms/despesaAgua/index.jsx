@@ -11,6 +11,18 @@ import {
 // CSS
 import "./style.css";
 
+/**
+ * registro condominio >= soma dos registros individuais
+ * valor condominio > 0
+ * valores individuais > 0
+ */
+const allValuesGood = (fields, consumoComum, precoAgua) => {
+  const valoresIndividuaisPositivos = fields.reduce((acc, field) => {
+    return acc && field.value.replace(",", ".").substring(3) >= 0;
+  }, true);
+  return valoresIndividuaisPositivos && consumoComum >= 0 && precoAgua > 0;
+};
+
 export default function FormDespesa(props) {
   // true when all the fields of the form are filled
   const [formCompleted, setFormCompleted] = props.completed;
@@ -34,15 +46,6 @@ export default function FormDespesa(props) {
 
   // form reference
   const formRef = useRef(null);
-
-  const wrongValues = (fields) => {
-    const condition = (value) => {
-      return Number(value) >= 0;
-    };
-    return fields.reduce((acc, field) => {
-      return acc && condition(field.value.replace(",", ".").substring(3));
-    }, true);
-  };
 
   // function that runs each time there is a change in the form
   function formOnChange() {
@@ -100,6 +103,9 @@ export default function FormDespesa(props) {
 
     const consumoComum = registroGeralConsumo - registroIndividualConsumo;
 
+    const valorTotalIndividual = +registroIndividualConsumo * +precoAgua;
+    const valorTotalComum = +consumoComum * +precoAgua;
+
     setValor2(function () {
       const precoComum = consumoComum * precoAgua;
       valoresList[2].value = "R$ " + precoComum.toFixed(2);
@@ -108,6 +114,7 @@ export default function FormDespesa(props) {
 
     setValores(
       (function () {
+        // TODO - turn into a outside function
         return registrosIndividuaisFields.map((valoraguafield, index) => {
           const leituraAguaAtual = valoraguafield.value.replace(",", ".");
           const paganteId = Number(valoraguafield.id.slice(14));
@@ -146,7 +153,7 @@ export default function FormDespesa(props) {
       rateioAutomatico: false,
       permanente: true,
       fundoReserva: false,
-      valor: (+registroIndividualConsumo * +precoAgua).toFixed(2),
+      valor: valorTotalIndividual.toFixed(2),
       parcelaAtual: null,
       numParcelas: null,
       Valores: valores,
@@ -162,18 +169,23 @@ export default function FormDespesa(props) {
       rateioAutomatico: true,
       permanente: true,
       fundoReserva: false,
-      valor: (+consumoComum * +precoAgua).toFixed(2),
+      valor: valorTotalComum.toFixed(2),
       parcelaAtual: null,
       numParcelas: null,
       Valores: [],
       condominioId: condominio.id,
     });
 
-    // console.warn(valor2 > 0 && wrongValues(valoresIndividuaisFields)); // FIXME avisar valores negativos
+    // REVIEW avisar valores errados
+    // console.assert(
+    //   allValuesGood(valoresIndividuaisFields, valorTotalComum, precoAgua),
+    //   "Há valores incorretos no formulário!"
+    // );
 
     setFormCompleted(
       formList.find((field) => !field.disabled && field.value === "") ===
-        undefined
+        undefined &&
+        allValuesGood(valoresIndividuaisFields, valorTotalComum, precoAgua)
     );
   }
 
