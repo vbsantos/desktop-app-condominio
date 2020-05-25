@@ -71,6 +71,9 @@ export default function FormDespesa(props) {
       setValorTotal(somaValorTotal.toFixed(2));
     }
 
+    const parcelaAtual = formList[3].value.split(".")[0];
+    const numParcelas = formList[4].value.split(".")[0];
+    const valor = formList[5].value.replace(",", ".");
     setDespesa({
       id: despesa.id,
       nome: formList[0].value,
@@ -81,21 +84,25 @@ export default function FormDespesa(props) {
       permanente: false,
       fundoReserva: false,
       valor: rateioAuto
-        ? formList[5].value.replace(",", ".")
+        ? valor
         : valoresList
             .reduce((acc, field) => {
               return Number(acc) + Number(field.value.replace(",", "."));
             }, 0)
             .toFixed(2),
-      parcelaAtual: formList[3].value,
-      numParcelas: formList[4].value,
+      parcelaAtual,
+      numParcelas,
       Valores: valores,
       condominioId: condominio.id,
     });
 
     setFormCompleted(
-      formList.find((field) => !field.disabled && field.value === "") ===
-        undefined
+      Number(valor) >= 0 &&
+        Number(parcelaAtual) > 0 &&
+        Number(numParcelas) > 0 &&
+        Number(parcelaAtual) <= Number(numParcelas) &&
+        formList.find((field) => !field.disabled && field.value === "") ===
+          undefined
     );
   }
 

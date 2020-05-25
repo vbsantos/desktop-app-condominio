@@ -20,7 +20,10 @@ export default function FormDespesaFundoReserva(props) {
   function formOnChange() {
     const formList = [...formRef.current.elements];
 
-    const porcentagemString = formList[0].value;
+    const porcentagemString = formList[0].value
+      .replace(",", ".")
+      .replace("%", "")
+      .replace(" ", "");
 
     setDespesa({
       id: despesa.id,
@@ -31,10 +34,7 @@ export default function FormDespesaFundoReserva(props) {
       rateioAutomatico: true,
       permanente: false,
       fundoReserva: true,
-      valor: porcentagemString
-        .replace(",", ".")
-        .replace("%", "")
-        .replace(" ", ""),
+      valor: porcentagemString,
       parcelaAtual: "",
       numParcelas: "",
       Valores: [],
@@ -42,8 +42,7 @@ export default function FormDespesaFundoReserva(props) {
     });
 
     setFormCompleted(
-      formList.find((field) => !field.disabled && field.value === "") ===
-        undefined
+      porcentagemString !== "" && !!(Number(porcentagemString) >= 0)
     );
   }
 

@@ -145,7 +145,12 @@ export default function FormDespesa(props) {
 
     setFormCompleted(
       formList.find((field) => !field.disabled && field.value === "") ===
-        undefined
+        undefined &&
+        valoresList.find(
+          (field) =>
+            !Number(field.value.replace(",", ".")) ||
+            Number(field.value.replace(",", ".")) < 0
+        ) === undefined
     );
   }
 
