@@ -24,14 +24,17 @@ export default function FormCondominio(props) {
 
   function formOnChange() {
     const formList = [...formRef.current.elements];
+    const leituraAgua = formList[2].value.replace(",", ".");
     setCondominio({
       id: condominio.id,
       nome: formList[0].value,
       endereco: formList[1].value,
-      leituraAgua: formList[2].value.replace(",", "."),
+      leituraAgua,
       beneficiarioId: beneficiario.id,
     });
-    setFormCompleted(formList.find((f) => f.value === "") === undefined);
+    setFormCompleted(
+      formList[0].value !== "" && leituraAgua !== "" && Number(leituraAgua) >= 0
+    );
   }
 
   return (

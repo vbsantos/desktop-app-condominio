@@ -194,7 +194,6 @@ export default function FormDespesa(props) {
           <FormControl>
             <InputLabel htmlFor="nome">Nome</InputLabel>
             <Input
-              autoFocus
               defaultValue={"Consumo de Água"}
               disabled={true}
               id="nome"
@@ -202,7 +201,11 @@ export default function FormDespesa(props) {
           </FormControl>
           <FormControl>
             <InputLabel htmlFor="categoria">Categoria *</InputLabel>
-            <Input defaultValue={despesa.categoria} id="categoria"></Input>
+            <Input
+              autoFocus
+              defaultValue={despesa.categoria}
+              id="categoria"
+            ></Input>
           </FormControl>
         </section>
 

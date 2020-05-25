@@ -42,7 +42,7 @@ export default function FormDespesaFundoReserva(props) {
     });
 
     setFormCompleted(
-      porcentagemString !== "" && !!(Number(porcentagemString) >= 0)
+      porcentagemString !== "" && Number(porcentagemString) >= 0
     );
   }
 

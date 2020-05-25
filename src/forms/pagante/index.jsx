@@ -50,9 +50,9 @@ export default function FormPagante(props) {
         formList[3].value !== "" &&
         fracao !== "" &&
         leituraAgua !== "" &&
-        fracao > 0 &&
-        fracao <= 1 &&
-        leituraAgua >= 0
+        Number(fracao) > 0 &&
+        Number(fracao) <= 1 &&
+        Number(leituraAgua) >= 0
     );
   }
 
