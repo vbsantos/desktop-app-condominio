@@ -24,8 +24,12 @@ export default function FormBeneficiario(props) {
     setBeneficiario({
       id: beneficiario.id,
       nome: formList[0].value,
+      email: formList[1].value,
+      telefone: formList[2].value,
+      endereco: formList[3].value,
     });
-    setFormCompleted(formList.find((f) => f.value === "") === undefined);
+    // setFormCompleted(formList.find((f) => f.value === "") === undefined);
+    setFormCompleted(formList[0].value !== "");
   }
 
   return (
@@ -35,8 +39,20 @@ export default function FormBeneficiario(props) {
           Informações do Administrador
         </DialogContentText>
         <FormControl>
-          <InputLabel htmlFor="nome">Nome</InputLabel>
+          <InputLabel htmlFor="nome">Nome *</InputLabel>
           <Input autoFocus defaultValue={beneficiario.nome} id="nome"></Input>
+        </FormControl>
+        <FormControl>
+          <InputLabel htmlFor="email">E-mail</InputLabel>
+          <Input defaultValue={beneficiario.email} id="email"></Input>
+        </FormControl>
+        <FormControl>
+          <InputLabel htmlFor="telefone">Telefone</InputLabel>
+          <Input defaultValue={beneficiario.telefone} id="telefone"></Input>
+        </FormControl>
+        <FormControl>
+          <InputLabel htmlFor="endereco">Endereço</InputLabel>
+          <Input defaultValue={beneficiario.endereco} id="endereco"></Input>
         </FormControl>
       </section>
 
@@ -44,7 +60,7 @@ export default function FormBeneficiario(props) {
       {!formCompleted && (
         <DialogContent>
           {beneficiario.id === ""
-            ? "É necessário preencher todos os campos para cadastrar"
+            ? "É necessário preencher os campos obrigatórios (*) para cadastrar"
             : "É necessário modificar algum campo para salvar"}
         </DialogContent>
       )}
