@@ -3,15 +3,15 @@
 module.exports = {
   up(queryInterface, Sequelize) {
     return Promise.all([
-      queryInterface.addColumn("Pagantes", "email", {
+      queryInterface.addColumn("pagantes", "email", {
         type: Sequelize.STRING,
         allowNull: true,
       }),
-      queryInterface.addColumn("Pagantes", "box", {
+      queryInterface.addColumn("pagantes", "box", {
         type: Sequelize.STRING,
         allowNull: true,
       }),
-      queryInterface.addColumn("Pagantes", "telefone", {
+      queryInterface.addColumn("pagantes", "telefone", {
         type: Sequelize.STRING,
         allowNull: true,
       }),
@@ -21,9 +21,9 @@ module.exports = {
   down(queryInterface, Sequelize) {
     // logic for reverting the changes
     return Promise.all([
-      queryInterface.removeColumn("Pagantes", "email"),
-      queryInterface.removeColumn("Pagantes", "box"),
-      queryInterface.removeColumn("Pagantes", "telefone"),
+      queryInterface.removeColumn("pagantes", "email"),
+      queryInterface.removeColumn("pagantes", "box"),
+      queryInterface.removeColumn("pagantes", "telefone"),
     ]);
   },
 };

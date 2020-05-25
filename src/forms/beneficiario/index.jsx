@@ -26,7 +26,6 @@ export default function FormBeneficiario(props) {
       nome: formList[0].value,
       email: formList[1].value,
       telefone: formList[2].value,
-      endereco: formList[3].value,
     });
     // setFormCompleted(formList.find((f) => f.value === "") === undefined);
     setFormCompleted(formList[0].value !== "");
@@ -49,10 +48,6 @@ export default function FormBeneficiario(props) {
         <FormControl>
           <InputLabel htmlFor="telefone">Telefone</InputLabel>
           <Input defaultValue={beneficiario.telefone} id="telefone"></Input>
-        </FormControl>
-        <FormControl>
-          <InputLabel htmlFor="endereco">Endereço</InputLabel>
-          <Input defaultValue={beneficiario.endereco} id="endereco"></Input>
         </FormControl>
       </section>
 

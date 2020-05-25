@@ -27,7 +27,8 @@ export default function FormCondominio(props) {
     setCondominio({
       id: condominio.id,
       nome: formList[0].value,
-      leituraAgua: formList[1].value.replace(",", "."),
+      endereco: formList[1].value,
+      leituraAgua: formList[2].value.replace(",", "."),
       beneficiarioId: beneficiario.id,
     });
     setFormCompleted(formList.find((f) => f.value === "") === undefined);
@@ -42,6 +43,10 @@ export default function FormCondominio(props) {
         <FormControl>
           <InputLabel htmlFor="nome">Nome *</InputLabel>
           <Input autoFocus defaultValue={condominio.nome} id="nome"></Input>
+        </FormControl>
+        <FormControl>
+          <InputLabel htmlFor="endereco">Endereço</InputLabel>
+          <Input defaultValue={beneficiario.endereco} id="endereco"></Input>
         </FormControl>
       </section>
 
