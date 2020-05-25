@@ -89,7 +89,7 @@ export default function RegistrarDespesas(props) {
           position: "center",
           visible: true,
           enabled: true,
-          value: "Registrar Nova Despesa",
+          value: "Registrar Despesa",
         },
         {
           id: 2,
