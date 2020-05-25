@@ -7,6 +7,9 @@ module.exports = (sequelize, DataTypes) => {
       complemento: DataTypes.STRING,
       fracao: DataTypes.STRING,
       leituraAgua: DataTypes.STRING,
+      email: DataTypes.STRING,
+      box: DataTypes.STRING,
+      telefone: DataTypes.STRING,
       condominioId: DataTypes.INTEGER,
     },
     {}

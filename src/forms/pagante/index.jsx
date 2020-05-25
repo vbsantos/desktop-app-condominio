@@ -24,20 +24,32 @@ export default function FormPagante(props) {
 
   function formOnChange() {
     const formList = [...formRef.current.elements];
-    const fracao = formList[2].value.replace(",", ".");
-    const leituraAgua = formList[3].value.replace(",", ".");
+    const fracao = formList[4].value.replace(",", ".");
+    const leituraAgua = formList[6].value.replace(",", ".");
     setPagante({
       id: pagante.id,
       nome: formList[0].value,
-      complemento: formList[1].value,
+      email: formList[1].value,
+      telefone: formList[2].value,
+      complemento: formList[3].value,
       fracao,
+      box: formList[5].value,
       leituraAgua,
       condominioId: condominio.id,
     });
     // não permite fração que não seja entre 0 e 1
     // não permite registro de água menor que 0
+    // setFormCompleted(
+    //   formList.find((f) => f.value === "") === undefined &&
+    //     fracao > 0 &&
+    //     fracao <= 1 &&
+    //     leituraAgua >= 0
+    // );
     setFormCompleted(
-      formList.find((f) => f.value === "") === undefined &&
+      formList[0].value !== "" &&
+        formList[3].value !== "" &&
+        fracao !== "" &&
+        leituraAgua !== "" &&
         fracao > 0 &&
         fracao <= 1 &&
         leituraAgua >= 0
@@ -51,12 +63,28 @@ export default function FormPagante(props) {
           Informações do Condômino
         </DialogContentText>
         <FormControl>
-          <InputLabel htmlFor="nome">Nome</InputLabel>
+          <InputLabel htmlFor="nome">Nome *</InputLabel>
           <Input
             title="Nome do atual dono do Apartamento"
             autoFocus
             defaultValue={pagante.nome}
             id="nome"
+          ></Input>
+        </FormControl>
+        <FormControl>
+          <InputLabel htmlFor="email">E-mail</InputLabel>
+          <Input
+            title="E-mail do atual dono do Apartamento"
+            defaultValue={pagante.email}
+            id="email"
+          ></Input>
+        </FormControl>
+        <FormControl>
+          <InputLabel htmlFor="telefone">Telefone</InputLabel>
+          <Input
+            title="Telefone do atual dono do Apartamento"
+            defaultValue={pagante.telefone}
+            id="telefone"
           ></Input>
         </FormControl>
       </section>
@@ -65,7 +93,7 @@ export default function FormPagante(props) {
           Informações do Apartamento
         </DialogContentText>
         <FormControl>
-          <InputLabel htmlFor="complemento">Número do apartamento</InputLabel>
+          <InputLabel htmlFor="complemento">Número do apartamento *</InputLabel>
           <Input
             title="Número identificador do Apartamento"
             defaultValue={pagante.complemento}
@@ -73,11 +101,19 @@ export default function FormPagante(props) {
           ></Input>
         </FormControl>
         <FormControl>
-          <InputLabel htmlFor="fracao">Fração</InputLabel>
+          <InputLabel htmlFor="fracao">Fração *</InputLabel>
           <Input
             title="Entre 0 e 1"
             defaultValue={pagante.fracao}
             id="fracao"
+          ></Input>
+        </FormControl>
+        <FormControl>
+          <InputLabel htmlFor="box">Box</InputLabel>
+          <Input
+            title="Box que pertencem ao apartamento"
+            defaultValue={pagante.box}
+            id="box"
           ></Input>
         </FormControl>
       </section>
@@ -86,7 +122,7 @@ export default function FormPagante(props) {
           Última Leitura de água Contabilizado
         </DialogContentText>
         <FormControl>
-          <InputLabel htmlFor="leituraAgua">Leitura da Água</InputLabel>
+          <InputLabel htmlFor="leituraAgua">Leitura da Água *</InputLabel>
           <Input
             title="Valor no medidor de água (m³)"
             defaultValue={pagante.leituraAgua}
@@ -95,11 +131,11 @@ export default function FormPagante(props) {
         </FormControl>
       </section>
 
-      {/* FEEDBACK */}
+      {/* FIXME FEEDBACK */}
       {!formCompleted && (
         <DialogContent>
           {pagante.id === ""
-            ? "É necessário preencher todos os campos para cadastrar"
+            ? "É necessário preencher os campos obrigatórios (*) para cadastrar"
             : "É necessário modificar algum campo para salvar"}
         </DialogContent>
       )}
