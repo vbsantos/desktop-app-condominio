@@ -51,7 +51,7 @@ export default function FormDespesaFundoReserva(props) {
     <div>
       <form ref={formRef} onChange={formOnChange}>
         <FormControl>
-          <InputLabel htmlFor="porcentagem">Porcentagem (%)</InputLabel>
+          <InputLabel htmlFor="porcentagem">Porcentagem (%) *</InputLabel>
           <Input
             autoFocus
             defaultValue={despesa.valor}

@@ -158,7 +158,7 @@ export default function FormDespesa(props) {
             Informações da Despesa
           </DialogContentText>
           <FormControl>
-            <InputLabel htmlFor="nome">Nome</InputLabel>
+            <InputLabel htmlFor="nome">Nome *</InputLabel>
             <Input
               autoFocus
               disabled={despesaFundoReserva}
@@ -167,7 +167,7 @@ export default function FormDespesa(props) {
             ></Input>
           </FormControl>
           <FormControl>
-            <InputLabel htmlFor="categoria">Categoria</InputLabel>
+            <InputLabel htmlFor="categoria">Categoria *</InputLabel>
             <Input
               disabled={despesaFundoReserva}
               defaultValue={despesa.categoria}
@@ -224,7 +224,7 @@ export default function FormDespesa(props) {
             {condominio["Pagantes"].map((pagante) => (
               <FormControl key={"valorIndividualForm" + pagante.id}>
                 <InputLabel htmlFor={"valorIndividual" + pagante.id}>
-                  Custo para {pagante.complemento}
+                  Custo para {pagante.complemento} *
                 </InputLabel>
                 <Input
                   id={"valorIndividual" + pagante.id}
@@ -247,7 +247,7 @@ export default function FormDespesa(props) {
               Custo da Despesa
             </DialogContentText>
             <FormControl>
-              <InputLabel htmlFor="valor">Valor (R$)</InputLabel>
+              <InputLabel htmlFor="valor">Valor (R$) *</InputLabel>
               <Input
                 defaultValue={despesa.valor}
                 id="valor"

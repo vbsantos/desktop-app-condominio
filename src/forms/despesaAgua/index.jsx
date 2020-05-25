@@ -201,7 +201,7 @@ export default function FormDespesa(props) {
             ></Input>
           </FormControl>
           <FormControl>
-            <InputLabel htmlFor="categoria">Categoria</InputLabel>
+            <InputLabel htmlFor="categoria">Categoria *</InputLabel>
             <Input defaultValue={despesa.categoria} id="categoria"></Input>
           </FormControl>
         </section>
@@ -213,7 +213,7 @@ export default function FormDespesa(props) {
           </DialogContentText>
           <FormControl key={"valorAguaForm"}>
             <InputLabel htmlFor={"valorAguaLabel"}>
-              Valor do m³ da água
+              Valor do m³ da água *
             </InputLabel>
             <Input
               defaultValue={
@@ -234,7 +234,7 @@ export default function FormDespesa(props) {
           <div id="containerAgua">
             <div id="esquerdaAgua">
               <FormControl key={"aguaComumForm"}>
-                <InputLabel>Leitura de água Geral</InputLabel>
+                <InputLabel>Leitura de água Geral *</InputLabel>
                 <Input
                   id={"aguaComum"}
                   defaultValue={despesa2.id ? despesa2.agua : ""}
@@ -266,7 +266,7 @@ export default function FormDespesa(props) {
               {condominio["Pagantes"].map((pagante) => (
                 <FormControl key={"aguaIndividualForm" + pagante.id}>
                   <InputLabel htmlFor={"aguaIndividual" + pagante.id}>
-                    Leitura de água do {pagante.complemento}
+                    Leitura de água do {pagante.complemento} *
                   </InputLabel>
                   <Input
                     id={"aguaIndividual" + pagante.id}

@@ -40,7 +40,7 @@ export default function FormCondominio(props) {
           Informações do Condomínio
         </DialogContentText>
         <FormControl>
-          <InputLabel htmlFor="nome">Nome</InputLabel>
+          <InputLabel htmlFor="nome">Nome *</InputLabel>
           <Input autoFocus defaultValue={condominio.nome} id="nome"></Input>
         </FormControl>
       </section>
@@ -50,7 +50,7 @@ export default function FormCondominio(props) {
           Última Leitura de água Contabilizado
         </DialogContentText>
         <FormControl>
-          <InputLabel htmlFor="leituraAgua">Leitura da água</InputLabel>
+          <InputLabel htmlFor="leituraAgua">Leitura da água *</InputLabel>
           <Input defaultValue={condominio.leituraAgua} id="leituraAgua"></Input>
         </FormControl>
       </section>
@@ -59,7 +59,7 @@ export default function FormCondominio(props) {
       {!formCompleted && (
         <DialogContent>
           {condominio.id === ""
-            ? "É necessário preencher todos os campos para cadastrar"
+            ? "É necessário preencher os campos obrigatórios (*) para cadastrar"
             : "É necessário modificar algum campo para salvar"}
         </DialogContent>
       )}

@@ -108,11 +108,11 @@ export default function FormDespesa(props) {
             Informações da Despesa
           </DialogContentText>
           <FormControl>
-            <InputLabel htmlFor="nome">Nome</InputLabel>
+            <InputLabel htmlFor="nome">Nome *</InputLabel>
             <Input autoFocus defaultValue={despesa.nome} id="nome"></Input>
           </FormControl>
           <FormControl>
-            <InputLabel htmlFor="categoria">Categoria</InputLabel>
+            <InputLabel htmlFor="categoria">Categoria *</InputLabel>
             <Input defaultValue={despesa.categoria} id="categoria"></Input>
           </FormControl>
         </section>
@@ -160,14 +160,14 @@ export default function FormDespesa(props) {
             Informações das Parcelas
           </DialogContentText>
           <FormControl>
-            <InputLabel htmlFor="parcelaAtual">Parcela Atual</InputLabel>
+            <InputLabel htmlFor="parcelaAtual">Parcela Atual *</InputLabel>
             <Input
               defaultValue={despesa.parcelaAtual}
               id="parcelaAtual"
             ></Input>
           </FormControl>
           <FormControl>
-            <InputLabel htmlFor="numParcelas">Total de Parcelas</InputLabel>
+            <InputLabel htmlFor="numParcelas">Total de Parcelas *</InputLabel>
             <Input defaultValue={despesa.numParcelas} id="numParcelas"></Input>
           </FormControl>
         </section>
@@ -181,7 +181,7 @@ export default function FormDespesa(props) {
             {condominio["Pagantes"].map((pagante) => (
               <FormControl key={"valorIndividualForm" + pagante.id}>
                 <InputLabel htmlFor={"valorIndividual" + pagante.id}>
-                  Custo para {pagante.complemento}
+                  Custo para {pagante.complemento} *
                 </InputLabel>
                 <Input
                   id={"valorIndividual" + pagante.id}
@@ -204,7 +204,7 @@ export default function FormDespesa(props) {
               Custo da Parcela Atual
             </DialogContentText>
             <FormControl>
-              <InputLabel htmlFor="valor">Valor (R$)</InputLabel>
+              <InputLabel htmlFor="valor">Valor (R$) *</InputLabel>
               <Input
                 defaultValue={despesa.valor}
                 id="valor"
