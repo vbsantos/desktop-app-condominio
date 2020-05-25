@@ -12,3 +12,7 @@ div#direitaAgua {
   display: block !important;
   width: 50%;
 }
+
+input:disabled {
+  cursor: not-allowed !important;
+}
