@@ -1,9 +1,18 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 
 // MATERIAL UI COMPONENTS
-import { FormControl, InputLabel, Input } from "@material-ui/core";
+import {
+  DialogContentText,
+  FormControl,
+  InputLabel,
+  TextField,
+  Input,
+} from "@material-ui/core";
 
-export default function FormDespesaFundoReserva(props) {
+// CSS
+import "./style.css";
+
+export default function FormDespesa(props) {
   // true when all the fields of the form are filled
   const [formCompleted, setFormCompleted] = props.completed;
 
@@ -19,44 +28,42 @@ export default function FormDespesaFundoReserva(props) {
   // function that runs each time there is a change in the form
   function formOnChange() {
     const formList = [...formRef.current.elements];
+    // console.log("INFORMACAO FORM LIST:", formList);
 
-    const porcentagemString = formList[0].value
-      .replace(",", ".")
-      .replace("%", "")
-      .replace(" ", "");
+    const texto = formList[0].value;
 
     setDespesa({
       id: despesa.id,
-      nome: "",
+      nome: texto,
       categoria: "",
       agua: null,
       aguaIndividual: false,
-      rateioAutomatico: true,
-      permanente: false,
-      fundoReserva: true,
-      valor: porcentagemString,
-      parcelaAtual: "",
-      numParcelas: "",
-      informacao: false,
+      rateioAutomatico: false,
+      permanente: true,
+      fundoReserva: false,
+      valor: "",
+      parcelaAtual: null,
+      numParcelas: null,
+      informacao: true,
       Valores: [],
       condominioId: condominio.id,
     });
 
-    setFormCompleted(
-      porcentagemString !== "" && Number(porcentagemString) >= 0
-    );
+    setFormCompleted(texto !== "" && texto.length <= 255);
   }
 
   return (
     <div>
       <form ref={formRef} onChange={formOnChange}>
         <FormControl>
-          <InputLabel htmlFor="porcentagem">Porcentagem (%) *</InputLabel>
-          <Input
+          <TextField
             autoFocus
-            defaultValue={despesa.valor}
-            id="porcentagem"
-          ></Input>
+            id="nome"
+            label="Informação *"
+            multiline
+            rows={5}
+            defaultValue={despesa.nome}
+          />
         </FormControl>
       </form>
     </div>

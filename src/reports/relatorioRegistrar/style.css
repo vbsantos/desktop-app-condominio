@@ -45,20 +45,20 @@
 
 #relatorioCondominioRegistrar .MuiTableCell-root.col2 {
   width: 100px !important;
+  text-align: center;
 }
 
 #relatorioCondominioRegistrar .MuiTableCell-root.col3 {
   width: 150px !important;
-}
-
-#relatorioCondominioRegistrar .MuiTableCell-root.col2 {
-  text-align: center;
-}
-
-#relatorioCondominioRegistrar .MuiTableCell-root.col3 {
   text-align: center;
 }
 
 #relatorioCondominioRegistrar #fundoReservaRow {
+  cursor: pointer;
+}
+
+#relatorioCondominioRegistrar .MuiTableCell-root.uniqueCol {
+  text-align: left;
+  padding: 1px 1px 1px 10px;
   cursor: pointer;
 }

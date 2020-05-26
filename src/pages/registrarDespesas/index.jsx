@@ -8,6 +8,7 @@ import DialogDespesaFixa from "../../dialogs/despesaFixa";
 import DialogDespesaParcelada from "../../dialogs/despesaParcelada";
 import DialogDespesaAgua from "../../dialogs/despesaAgua";
 import DialogDespesaFundoReserva from "../../dialogs/despesaFundoReserva";
+import DialogInformacao from "../../dialogs/informacao";
 import DialogAlerta from "../../dialogs/alerta";
 
 // REPORTS
@@ -29,6 +30,9 @@ export default function RegistrarDespesas(props) {
   // Store the fundoReserva percentage and value
   const [percentage, setPercentage] = useState([0, 0]);
 
+  // Store informations
+  const [informacoes, setInformacoes] = useState([]);
+
   // ID of the selected Despesa
   const [selectedDespesa, setSelectedDespesa] = useState({ id: -1 });
 
@@ -46,6 +50,8 @@ export default function RegistrarDespesas(props) {
   const [dialogDespesaFundoReserva, setDialogDespesaFundoReserva] = useState(
     false
   );
+  // Boolean for Informação Dialog
+  const [dialogInformacao, setDialogInformacao] = useState(false);
 
   // EDITAR DESPESA
   // Boolean for Despesa Fixa Dialog
@@ -61,6 +67,7 @@ export default function RegistrarDespesas(props) {
     dialogEditDespesaFundoReserva,
     setDialogEditDespesaFundoReserva,
   ] = useState(false);
+  const [dialogEditInformacao, setDialogEditInformacao] = useState(false);
 
   // Boolean for Delete Dialog
   const [dialogDeleteDespesa, setDialogDeleteDespesa] = useState(false);
@@ -143,10 +150,12 @@ export default function RegistrarDespesas(props) {
       dialogDespesaParcelada ||
       dialogDespesaAgua ||
       dialogDespesaFundoReserva ||
+      dialogInformacao ||
       dialogEditDespesaFixa ||
       dialogEditDespesaParcelada ||
       dialogEditDespesaAgua ||
       dialogEditDespesaFundoReserva ||
+      dialogEditInformacao ||
       dialogDeleteDespesa
     );
     if (allDialogsClosed) {
@@ -176,10 +185,12 @@ export default function RegistrarDespesas(props) {
     dialogDespesaParcelada,
     dialogDespesaAgua,
     dialogDespesaFundoReserva,
+    dialogInformacao,
     dialogEditDespesaFixa,
     dialogEditDespesaParcelada,
     dialogEditDespesaAgua,
     dialogEditDespesaFundoReserva,
+    dialogEditInformacao,
     dialogDeleteDespesa,
   ]);
 
@@ -188,18 +199,21 @@ export default function RegistrarDespesas(props) {
     let total = 0;
     let allCategorias = [];
     let porcentagem = 0;
+    const infos = [];
 
     for (const despesa of data.allNestedCondominio["Despesas"]) {
-      if (!despesa.fundoReserva) {
+      if (despesa.fundoReserva) {
+        porcentagem = Number(despesa.valor);
+      } else if (despesa.informacao) {
+        infos.push({ id: despesa.id, text: despesa.nome });
+      } else {
         total += Number(despesa.valor);
         allCategorias.push(despesa.categoria);
-      } else {
-        porcentagem = Number(despesa.valor);
       }
     }
+    setInformacoes(infos);
     setTotal(total);
     setPercentage([porcentagem, (porcentagem / 100) * total]);
-    // remove duplicates
     setCategorias([...new Set(allCategorias)]);
 
     console.groupCollapsed("Dados das Despesas");
@@ -207,6 +221,7 @@ export default function RegistrarDespesas(props) {
     console.log("categorias", categorias);
     console.log("total", total);
     console.log("percentage", percentage);
+    console.log("informacoes", informacoes);
     console.groupEnd("Dados das Despesas");
   }, [data.allNestedCondominio["Despesas"]]);
 
@@ -230,6 +245,13 @@ export default function RegistrarDespesas(props) {
         table: false,
         name: "fundoReserva",
         data: percentage[1].toFixed(2),
+      });
+    }
+    if (informacoes.length > 0) {
+      generalReport.push({
+        table: false,
+        name: "informacoes",
+        data: informacoes,
       });
     }
     generalReport.push({
@@ -258,7 +280,7 @@ export default function RegistrarDespesas(props) {
           .filter((despesa) => despesa.categoria === categoria)
           .map((despesa) => {
             const valor = despesa.rateioAutomatico
-              ? Math.ceil(despesa.valor * pagante.fracao * 100) / 100 // REVIEW valor final condômino
+              ? Math.ceil(despesa.valor * pagante.fracao * 100) / 100 // valor final condômino
               : Number(
                   despesa["Valores"].find(
                     (valor) => valor.paganteId === pagante.id
@@ -367,6 +389,7 @@ export default function RegistrarDespesas(props) {
             dialogDespesaFundoReserva,
             setDialogDespesaFundoReserva,
           ]}
+          informacao={[dialogInformacao, setDialogInformacao]}
         />
       )}
 
@@ -395,6 +418,15 @@ export default function RegistrarDespesas(props) {
       {dialogDespesaFundoReserva && (
         <DialogDespesaFundoReserva
           open={[dialogDespesaFundoReserva, setDialogDespesaFundoReserva]}
+          delete={[dialogDeleteDespesa, setDialogDeleteDespesa]}
+          condominio={data.allNestedCondominio}
+        />
+      )}
+
+      {/* CADASTRAR INFORMAÇÃO */}
+      {dialogInformacao && (
+        <DialogInformacao
+          open={[dialogInformacao, setDialogInformacao]}
           delete={[dialogDeleteDespesa, setDialogDeleteDespesa]}
           condominio={data.allNestedCondominio}
         />
@@ -445,6 +477,18 @@ export default function RegistrarDespesas(props) {
         />
       )}
 
+      {/* EDITAR INFORMAÇÃO */}
+      {dialogEditInformacao && (
+        <DialogInformacao
+          open={[dialogEditInformacao, setDialogEditInformacao]}
+          delete={[dialogDeleteDespesa, setDialogDeleteDespesa]}
+          condominio={data.allNestedCondominio}
+          despesa={data.allNestedCondominio["Despesas"].find(
+            (despesa) => despesa.id === selectedDespesa.id
+          )}
+        />
+      )}
+
       {/* DELETA A DESPESA */}
       {dialogDeleteDespesa && (
         <DialogExcluirDespesa
@@ -477,9 +521,11 @@ export default function RegistrarDespesas(props) {
           dialogEditDespesaFundoReserva,
           setDialogEditDespesaFundoReserva,
         ]}
+        dialogEditInformacao={[dialogEditInformacao, setDialogEditInformacao]}
         categorias={[categorias, setCategorias]}
         valorTotal={[total, setTotal]}
         valorFundoReserva={[percentage, setPercentage]}
+        informacoes={[informacoes, setInformacoes]}
       />
     </>
   );

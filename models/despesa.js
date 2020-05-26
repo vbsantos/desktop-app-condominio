@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       aguaIndividual: DataTypes.BOOLEAN,
       fundoReserva: DataTypes.BOOLEAN,
       agua: DataTypes.STRING,
+      informacao: DataTypes.BOOLEAN,
       condominioId: DataTypes.INTEGER,
     },
     {}

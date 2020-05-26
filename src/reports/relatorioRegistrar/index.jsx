@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React from "react";
 
 // MATERIAL UI COMPONENTS
 import {
@@ -40,6 +40,10 @@ export default function RelatorioCondominioRegistrar(props) {
     dialogEditDespesaFundoReserva,
     setDialogEditDespesaFundoReserva,
   ] = props.dialogEditDespesaFundoReserva;
+  const [
+    dialogEditInformacao,
+    setDialogEditInformacao,
+  ] = props.dialogEditInformacao;
 
   // Store the Contas by Categoria
   const [categorias, setCategorias] = props.categorias;
@@ -50,6 +54,9 @@ export default function RelatorioCondominioRegistrar(props) {
   // Store the fundoReserva percentage
   const [percentage, setPercentage] = props.valorFundoReserva;
 
+  // Store the informacoes
+  const [informacoes, setInformacoes] = props.informacoes;
+
   // Function that runs when you click in a Conta row
   const selectAndOpenDialog = (id) => {
     setSelected({ id }); // pega o id da despesa
@@ -59,6 +66,8 @@ export default function RelatorioCondominioRegistrar(props) {
 
     if (despesa.fundoReserva) {
       setDialogEditDespesaFundoReserva(true);
+    } else if (despesa.informacao) {
+      setDialogEditInformacao(true);
     } else if (despesa.aguaIndividual) {
       setDialogEditDespesaAgua(true);
     } else if (despesa.permanente) {
@@ -68,9 +77,35 @@ export default function RelatorioCondominioRegistrar(props) {
     }
   };
 
+  // TODO colocar despesas (categoria) em ordem alfabética, e fundo reserva junto (como qqr despesa)
+
   return (
     <div id="relatorioCondominioRegistrar">
       <TableContainer ref={reportRef}>
+        {percentage[0] !== 0 && (
+          <Table key={"fundoReserva"}>
+            <TableHead>
+              <TableRow
+                className="Black"
+                id="fundoReservaRow"
+                onClick={() =>
+                  selectAndOpenDialog(
+                    despesas.find((despesa) => despesa.fundoReserva).id || ""
+                  )
+                }
+              >
+                <TableCell className="col1">
+                  Fundo Reserva - {percentage[0]} %
+                </TableCell>
+                <TableCell className="col2"></TableCell>
+                <TableCell className="col3">
+                  {"R$ " + percentage[1].toFixed(2)}
+                </TableCell>
+              </TableRow>
+            </TableHead>
+          </Table>
+        )}
+
         {categorias.map((categoria) => {
           const categoriaContas = despesas.filter(
             (despesa) => despesa.categoria === categoria
@@ -122,29 +157,7 @@ export default function RelatorioCondominioRegistrar(props) {
             </Table>
           );
         })}
-        {percentage[0] !== 0 && (
-          <Table key={"fundoReserva"}>
-            <TableHead>
-              <TableRow
-                className="Black"
-                id="fundoReservaRow"
-                onClick={() =>
-                  selectAndOpenDialog(
-                    despesas.find((despesa) => despesa.fundoReserva).id || ""
-                  )
-                }
-              >
-                <TableCell className="col1">
-                  Fundo Reserva - {percentage[0]} %
-                </TableCell>
-                <TableCell className="col2"></TableCell>
-                <TableCell className="col3">
-                  {"R$ " + percentage[1].toFixed(2)}
-                </TableCell>
-              </TableRow>
-            </TableHead>
-          </Table>
-        )}
+
         <Table key={"total"}>
           <TableHead>
             <TableRow className="Black">
@@ -156,6 +169,26 @@ export default function RelatorioCondominioRegistrar(props) {
             </TableRow>
           </TableHead>
         </Table>
+
+        {informacoes.length > 0 && (
+          <Table key={"informacoes"}>
+            <TableHead>
+              <TableRow className="Black" id="informacoesRow">
+                <TableCell className="col1">Informações</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {informacoes.map((informacao) => (
+                <TableRow
+                  key={"informacao" + informacao.id}
+                  onClick={() => selectAndOpenDialog(informacao.id)}
+                >
+                  <TableCell className="uniqueCol">{informacao.text}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        )}
       </TableContainer>
     </div>
   );

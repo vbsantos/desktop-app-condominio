@@ -51,6 +51,7 @@ export default function DraggableDialog(props) {
       permanente: false,
       fundoReserva: false,
       condominioId: condominio.id,
+      informacao: false,
       Valores: [],
     }
   );
@@ -165,7 +166,7 @@ export default function DraggableDialog(props) {
           color="inherit"
         >
           {despesa.id === ""
-            ? "Cadastrar Despesa Parcelada"
+            ? "Registrar Despesa Parcelada"
             : "Editar Despesa Parcelada"}
         </DialogTitle>
         <DialogContent>

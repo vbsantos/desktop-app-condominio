@@ -84,6 +84,7 @@ export default function DraggableDialog(props) {
         permanente: true,
         fundoReserva: false,
         condominioId: condominio.id,
+        informacao: false,
         Valores: [],
       }
   );
@@ -104,6 +105,7 @@ export default function DraggableDialog(props) {
           permanente: true,
           fundoReserva: false,
           condominioId: condominio.id,
+          informacao: false,
           Valores: [],
         }
       : findDespesaB(condominio["Despesas"], despesa)
@@ -206,7 +208,7 @@ export default function DraggableDialog(props) {
           color="inherit"
         >
           {despesa.id === ""
-            ? "Cadastrar Despesa de Consumo de Água"
+            ? "Registrar Despesa de Consumo de Água"
             : "Editar Despesa de Consumo de Água"}
         </DialogTitle>
         <DialogContent>

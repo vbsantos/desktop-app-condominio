@@ -58,6 +58,7 @@ export default function DraggableDialog(props) {
         permanente: false,
         fundoReserva: false,
         condominioId: condominio.id,
+        informacao: false,
         Valores: [],
       }
   );
@@ -172,7 +173,7 @@ export default function DraggableDialog(props) {
           color="inherit"
         >
           {despesa.id === ""
-            ? "Cadastrar Fundo Reserva"
+            ? "Registrar Fundo Reserva"
             : "Editar Fundo Reserva"}
         </DialogTitle>
         <DialogContent>

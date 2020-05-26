@@ -37,6 +37,7 @@ export default function DraggableDialog(props) {
     dialogDespesaFundoReserva,
     setDialogDespesaFundoReserva,
   ] = props.despesaFundoReserva;
+  const [dialogInformacao, setDialogInformacao] = props.informacao;
 
   // function that runs when the dialog is suposed to close
   function handleClose() {
@@ -45,29 +46,31 @@ export default function DraggableDialog(props) {
 
   // function that runs when you click a button
   async function handleButton1() {
-    // console.log4("Clicked Despesa Fixa");
     setDialogDespesaFixa(true);
     setDialog(false);
   }
 
   // function that runs when you click a button
   async function handleButton2() {
-    // console.log4("Clicked Despesa Parcelada");
     setDialogDespesaParcelada(true);
     setDialog(false);
   }
 
   // function that runs when you click a button
   async function handleButton3() {
-    // console.log4("Clicked Despesa Agua");
     setDialogDespesaAgua(true);
     setDialog(false);
   }
 
   // function that runs when you click a button
   async function handleButton4() {
-    // console.log4("Clicked Despesa Fundo Reserva");
     setDialogDespesaFundoReserva(true);
+    setDialog(false);
+  }
+
+  // function that runs when you click a button
+  async function handleButton5() {
+    setDialogInformacao(true);
     setDialog(false);
   }
 
@@ -97,6 +100,7 @@ export default function DraggableDialog(props) {
             <Button onClick={handleButton2}>Despesa Parcelada</Button>
             <Button onClick={handleButton3}>Água</Button>
             <Button onClick={handleButton4}>Fundo Reserva</Button>
+            <Button onClick={handleButton5}>Informação</Button>
           </ButtonGroup>
         </DialogContent>
         <DialogActions>

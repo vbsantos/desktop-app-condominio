@@ -156,6 +156,7 @@ export default function FormDespesa(props) {
       valor: valorTotalIndividual.toFixed(2),
       parcelaAtual: null,
       numParcelas: null,
+      informacao: false,
       Valores: valores,
       condominioId: condominio.id,
     });
@@ -172,6 +173,7 @@ export default function FormDespesa(props) {
       valor: valorTotalComum.toFixed(2),
       parcelaAtual: null,
       numParcelas: null,
+      informacao: false,
       Valores: [],
       condominioId: condominio.id,
     });

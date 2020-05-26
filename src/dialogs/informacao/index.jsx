@@ -12,7 +12,7 @@ import {
 } from "@material-ui/core";
 
 // FORM COMPONENTS
-import FormDespesaFixa from "../../forms/despesaFixa";
+import FormInformacao from "../../forms/informacao";
 
 // MATERIAL UI ICONS
 import { DeleteOutlined } from "@material-ui/icons";
@@ -47,17 +47,13 @@ export default function DraggableDialog(props) {
       aguaIndividual: false,
       parcelaAtual: null,
       numParcelas: null,
-      rateioAutomatico: true,
+      rateioAutomatico: false,
       permanente: true,
       fundoReserva: false,
       condominioId: condominio.id,
-      informacao: false,
+      informacao: true,
       Valores: [],
     }
-  );
-
-  const [valores, setValores] = useState(
-    props.despesa ? props.despesa["Valores"] : []
   );
 
   // true when all the fields of the form are filled
@@ -77,75 +73,16 @@ export default function DraggableDialog(props) {
   // function that runs when you click the right button
   async function handleRightButton() {
     if (despesa.id === "") {
-      let response;
-      if (despesa.fundoReserva) {
-        const fundoReservaId = condominio["Despesas"].find(
-          (despesa) => despesa.fundoReserva
-        );
-        if (fundoReservaId) {
-          //if it already exists update
-          despesa.id = fundoReservaId.id;
-          response = await window.ipcRenderer.invoke("despesas", {
-            method: "update",
-            content: despesa,
-          });
-          console.warn("Despesa Editada:", response);
-        } else {
-          // if it doesn't exists create
-          response = await window.ipcRenderer.invoke("despesas", {
-            method: "create",
-            content: despesa,
-          });
-          console.warn("Despesa Cadastrada:", response);
-        }
-      } else {
-        // if it isn't fundoReserva create
-        response = await window.ipcRenderer.invoke("despesas", {
-          method: "create",
-          content: despesa,
-        });
-        console.warn("Despesa Cadastrada:", response);
-      }
-      const neoValores = valores.map((valor) => {
-        return {
-          despesaId: response.id,
-          paganteId: valor.paganteId,
-          precoAgua: valor.precoAgua,
-          agua: valor.agua,
-          valor: valor.valor,
-        };
+      const response = await window.ipcRenderer.invoke("despesas", {
+        method: "create",
+        content: despesa,
       });
-      // console.warn("CREATE NEO VALORES:", neoValores);
-      if (valores.length > 0) {
-        const response2 = await window.ipcRenderer.invoke("valores", {
-          method: "bulkCreate",
-          content: neoValores,
-        });
-        console.warn("Valores Cadastrados:", response2);
-      }
+      console.warn("Despesa Cadastrada:", response);
     } else {
-      // console.warn("EDIT NEO VALORES:", valores);
       const response = await window.ipcRenderer.invoke("despesas", {
         method: "update",
         content: despesa,
       });
-      if (valores.length > 0) {
-        if (valores[0].id !== "") {
-          // console.warn("JUST AN UPDATE:", valores);
-          const response2 = await window.ipcRenderer.invoke("valores", {
-            method: "bulkUpdate",
-            content: valores,
-          });
-          console.warn("Valores Editados:", response2);
-        } else {
-          // console.warn("IT IS A CREATION:", valores);
-          const response2 = await window.ipcRenderer.invoke("valores", {
-            method: "bulkCreate",
-            content: valores,
-          });
-          console.warn("Valores Cadastrados:", response2);
-        }
-      }
       console.warn("Despesa Editada:", response);
     }
 
@@ -165,13 +102,12 @@ export default function DraggableDialog(props) {
           id="draggable-dialog-title"
           color="inherit"
         >
-          {despesa.id === "" ? "Registrar Despesa Fixa" : "Editar Despesa Fixa"}
+          {despesa.id === "" ? "Registrar Informação" : "Editar Informação"}
         </DialogTitle>
         <DialogContent>
-          <FormDespesaFixa
+          <FormInformacao
             condominio={condominio}
             despesa={[despesa, setDespesa]}
-            valores={[valores, setValores]}
             completed={[formCompleted, setFormCompleted]}
           />
         </DialogContent>

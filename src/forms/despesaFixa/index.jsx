@@ -139,6 +139,7 @@ export default function FormDespesa(props) {
             .toFixed(2),
       parcelaAtual: null,
       numParcelas: null,
+      informacao: false,
       Valores: valores,
       condominioId: condominio.id,
     });

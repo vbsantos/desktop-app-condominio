@@ -131,7 +131,7 @@ export default function FormPagante(props) {
         </FormControl>
       </section>
 
-      {/* FIXME FEEDBACK */}
+      {/* FEEDBACK */}
       {!formCompleted && (
         <DialogContent>
           {pagante.id === ""

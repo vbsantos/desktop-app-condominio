@@ -21,16 +21,40 @@ export default function RelatorioGeral(props) {
   const { reportRef } = props;
   const { reportClass } = props;
 
-  const info =
+  const headerInfo =
     report[report.length - 1].name === "info" ? report.pop().data : null;
+
+  const fundoReserva = report.find(
+    (data) => !data.table && data.name === "fundoReserva"
+  );
+  const total = report.find((data) => !data.table && data.name === "total");
+  const informacoes = report.find(
+    (data) => !data.table && data.name === "informacoes"
+  );
 
   return (
     <div id="relatorioGeral">
       <TableContainer className={reportClass} ref={reportRef}>
         <GeneralReportHeader
-          nomeCondominio={info.nameCondominio}
-          nomeAdministrador={info.nameAdministrador}
+          nomeCondominio={headerInfo.nameCondominio}
+          nomeAdministrador={headerInfo.nameAdministrador}
         />
+
+        {/* TODO MOSTRAR fundo reserva COMO UMA DESPESA COMUM */}
+        {fundoReserva && (
+          <Table key={"fundoReserva"}>
+            <TableHead>
+              <TableRow className="Black" id="fundoReservaRow">
+                <TableCell className="col1">Fundo Reserva</TableCell>
+                <TableCell className="col2"></TableCell>
+                <TableCell className="col3">
+                  {"R$ " + Number(fundoReserva.data).toFixed(2)}
+                </TableCell>
+              </TableRow>
+            </TableHead>
+          </Table>
+        )}
+
         {report.map((categoria) => {
           // cada categoria
           let subtotal = 0;
@@ -79,40 +103,34 @@ export default function RelatorioGeral(props) {
           );
         })}
 
-        {/* fundo reserva e soma total dos valores */}
-        {report.map((info) => {
-          if (!info.table) {
-            if (info.name === "fundoReserva") {
-              return (
-                <Table key={"fundoReserva"}>
-                  <TableHead>
-                    <TableRow className="Black" id="fundoReservaRow">
-                      <TableCell className="col1">Fundo Reserva</TableCell>
-                      <TableCell className="col2"></TableCell>
-                      <TableCell className="col3">
-                        {"R$ " + Number(info.data).toFixed(2)}
-                      </TableCell>
-                    </TableRow>
-                  </TableHead>
-                </Table>
-              );
-            } else if (info.name === "total") {
-              return (
-                <Table key={"total"}>
-                  <TableHead>
-                    <TableRow className="Black">
-                      <TableCell className="col1">TOTAL:</TableCell>
-                      <TableCell className="col2"></TableCell>
-                      <TableCell className="col3">
-                        {"R$ " + Number(info.data).toFixed(2)}
-                      </TableCell>
-                    </TableRow>
-                  </TableHead>
-                </Table>
-              );
-            }
-          }
-        })}
+        <Table key={"total"}>
+          <TableHead>
+            <TableRow className="Black">
+              <TableCell className="col1">TOTAL:</TableCell>
+              <TableCell className="col2"></TableCell>
+              <TableCell className="col3">
+                {"R$ " + Number(total.data).toFixed(2)}
+              </TableCell>
+            </TableRow>
+          </TableHead>
+        </Table>
+
+        {informacoes && (
+          <Table key={"informacoes"}>
+            <TableHead>
+              <TableRow className="Black" id="informacoesRow">
+                <TableCell className="col1">Informações</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {informacoes.data.map((informacao) => (
+                <TableRow key={"informacoes" + informacao.id}>
+                  <TableCell className="uniqueCol">{informacao.text}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        )}
       </TableContainer>
     </div>
   );
