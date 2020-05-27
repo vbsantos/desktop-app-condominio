@@ -78,6 +78,7 @@ export default function EscolherCondominio(props) {
   const [dialogAlertDespesas, setDialogAlertDespesas] = useState(false);
   const [dialogAlertNoReports, setDialogAlertNoReports] = useState(false);
   const [dialogAlertPagante, setDialogAlertPagante] = useState(false);
+  const [dialogAlertFracao, setDialogAlertFracao] = useState(false);
 
   console.groupCollapsed("EscolherCondominio: System data");
   console.log("Footbar:", footbar);
@@ -125,12 +126,19 @@ export default function EscolherCondominio(props) {
         break;
       case 2:
         console.log("EscolherCondominio - Botão da direita");
-        const hasPagantes = data.allNestedCondominio["Pagantes"].length > 0; // REVIEW
+        const hasPagantes = data.allNestedCondominio["Pagantes"].length > 0;
+        const sumFracao = data.allNestedCondominio["Pagantes"]
+          .reduce((a, b) => a + Number(b.fracao), 0)
+          .toFixed(5);
+        const validFracao = sumFracao === "1.00000";
         setFootbar({ ...footbar, action: -1 });
-        hasPagantes
-          ? navigate("/RegistrarDespesas")
-          : setDialogAlertPagante(true);
-        break;
+        if (validFracao && hasPagantes) {
+          navigate("/RegistrarDespesas");
+        } else if (!hasPagantes) {
+          setDialogAlertPagante(true);
+        } else {
+          setDialogAlertFracao(true);
+        }
     }
   }, [footbar.action]);
 
@@ -317,16 +325,22 @@ export default function EscolherCondominio(props) {
           content="Para cadastrar Condôminos é necessário deletar as Despesas (com rateio manual) já registradas"
         />
       )}
+      {dialogAlertNoReports && (
+        <DialogAlerta
+          open={[dialogAlertNoReports, setDialogAlertNoReports]}
+          title="Não há Relatórios para visualizar"
+        />
+      )}
       {dialogAlertPagante && (
         <DialogAlerta
           open={[dialogAlertPagante, setDialogAlertPagante]}
           content="Não é possível continuar sem Condôminos cadastrados no Condomínio selecionado"
         />
       )}
-      {dialogAlertNoReports && (
+      {dialogAlertFracao && (
         <DialogAlerta
-          open={[dialogAlertNoReports, setDialogAlertNoReports]}
-          title="Não há Relatórios para visualizar"
+          open={[dialogAlertFracao, setDialogAlertFracao]}
+          content="A soma das frações dos Condôminos não é '1.00000', isso quer dizer que é possível que a divisão de valores das Despesas dê erro"
         />
       )}
       {/* CONDOMINIO DIALOGS */}
