@@ -1,8 +1,5 @@
 import React from "react";
 
-// MATERIAL UI ICON
-import { AssessmentOutlined } from "@material-ui/icons";
-
 // CSS
 import "./style.css";
 
