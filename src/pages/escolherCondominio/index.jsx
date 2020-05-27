@@ -75,8 +75,9 @@ export default function EscolherCondominio(props) {
   const [dialogDeletePagante, setDialogDeletePagante] = useState(false);
 
   // Boolean for Alert Dialog
-  const [dialogAlertDespesa, setDialogAlertDespesa] = useState(false);
+  const [dialogAlertDespesas, setDialogAlertDespesas] = useState(false);
   const [dialogAlertNoReports, setDialogAlertNoReports] = useState(false);
+  const [dialogAlertPagante, setDialogAlertPagante] = useState(false);
 
   console.groupCollapsed("EscolherCondominio: System data");
   console.log("Footbar:", footbar);
@@ -124,8 +125,11 @@ export default function EscolherCondominio(props) {
         break;
       case 2:
         console.log("EscolherCondominio - Botão da direita");
+        const hasPagantes = data.allNestedCondominio["Pagantes"].length > 0; // REVIEW
         setFootbar({ ...footbar, action: -1 });
-        navigate("/RegistrarDespesas"); // vai pra tela de rateamento de contas
+        hasPagantes
+          ? navigate("/RegistrarDespesas")
+          : setDialogAlertPagante(true);
         break;
     }
   }, [footbar.action]);
@@ -300,17 +304,23 @@ export default function EscolherCondominio(props) {
     if (registerPagante) {
       setDialogRegisterPaganteForm(true);
     } else {
-      setDialogAlertDespesa(true);
+      setDialogAlertDespesas(true);
     }
   }
 
   return (
     <div id="EscolherCondominio">
       {/* ALERTA */}
-      {dialogAlertDespesa && (
+      {dialogAlertDespesas && (
         <DialogAlerta
-          open={[dialogAlertDespesa, setDialogAlertDespesa]}
+          open={[dialogAlertDespesas, setDialogAlertDespesas]}
           content="Para cadastrar Condôminos é necessário deletar as Despesas (com rateio manual) já registradas"
+        />
+      )}
+      {dialogAlertPagante && (
+        <DialogAlerta
+          open={[dialogAlertPagante, setDialogAlertPagante]}
+          content="Não é possível continuar sem Condôminos cadastrados no Condomínio selecionado"
         />
       )}
       {dialogAlertNoReports && (
