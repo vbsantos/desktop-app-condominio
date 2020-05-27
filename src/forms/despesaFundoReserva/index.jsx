@@ -1,7 +1,12 @@
 import React, { useRef } from "react";
 
 // MATERIAL UI COMPONENTS
-import { FormControl, InputLabel, Input } from "@material-ui/core";
+import {
+  DialogContentText,
+  FormControl,
+  InputLabel,
+  Input,
+} from "@material-ui/core";
 
 export default function FormDespesaFundoReserva(props) {
   // true when all the fields of the form are filled
@@ -20,23 +25,23 @@ export default function FormDespesaFundoReserva(props) {
   function formOnChange() {
     const formList = [...formRef.current.elements];
 
-    const porcentagemString = formList[0].value
+    const porcentagemString = formList[2].value
       .replace(",", ".")
       .replace("%", "")
       .replace(" ", "");
 
     setDespesa({
       id: despesa.id,
-      nome: "",
-      categoria: "",
+      nome: "Fundo Reserva",
+      categoria: formList[1].value,
       agua: null,
       aguaIndividual: false,
       rateioAutomatico: true,
-      permanente: false,
+      permanente: true,
       fundoReserva: true,
       valor: porcentagemString,
-      parcelaAtual: "",
-      numParcelas: "",
+      parcelaAtual: null,
+      numParcelas: null,
       informacao: false,
       Valores: [],
       condominioId: condominio.id,
@@ -50,14 +55,42 @@ export default function FormDespesaFundoReserva(props) {
   return (
     <div>
       <form ref={formRef} onChange={formOnChange}>
-        <FormControl>
-          <InputLabel htmlFor="porcentagem">Porcentagem (%) *</InputLabel>
-          <Input
-            autoFocus
-            defaultValue={despesa.valor}
-            id="porcentagem"
-          ></Input>
-        </FormControl>
+        {/* INFORMAÇÕES DA DESPESA */}
+        <section>
+          <DialogContentText key={"despesaTitle"} color="inherit">
+            Informações da Despesa
+          </DialogContentText>
+          <FormControl>
+            <InputLabel htmlFor="nome">Nome</InputLabel>
+            <Input
+              defaultValue={"Fundo Reserva"}
+              disabled={true}
+              id="nome"
+            ></Input>
+          </FormControl>
+          <FormControl>
+            <InputLabel htmlFor="categoria">Categoria *</InputLabel>
+            <Input
+              autoFocus
+              defaultValue={despesa.categoria}
+              id="categoria"
+            ></Input>
+          </FormControl>
+        </section>
+
+        <section>
+          <DialogContentText key={"despesaTitle"} color="inherit">
+            Valor
+          </DialogContentText>
+          <FormControl>
+            <InputLabel htmlFor="porcentagem">Porcentagem (%) *</InputLabel>
+            <Input
+              autoFocus
+              defaultValue={despesa.valor}
+              id="porcentagem"
+            ></Input>
+          </FormControl>
+        </section>
       </form>
     </div>
   );
