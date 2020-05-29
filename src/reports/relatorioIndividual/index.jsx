@@ -17,8 +17,7 @@ import IndividualReportHeader from "../../components/headerIndividualReport";
 import "./style.css";
 
 const pad = (num, size) => {
-  var s = "000000000" + num;
-  return s.substr(s.length - size);
+  return String(num).padStart(size, "0");
 };
 
 export default function RelatorioIndividual(props) {
@@ -64,10 +63,11 @@ export default function RelatorioIndividual(props) {
           nomePagante={info.nomePagante}
           fracaoPagante={info.fracaoPagante}
         />
+
         <div id="duasTabelas">
           <Table id="table1">
             <TableHead>
-              <TableRow>
+              <TableRow className="Black">
                 <TableCell id="nome">Despesa</TableCell>
                 <TableCell id="valor">{"Valor "}</TableCell>
               </TableRow>
@@ -87,7 +87,7 @@ export default function RelatorioIndividual(props) {
           </Table>
           <Table id="table2">
             <TableHead>
-              <TableRow>
+              <TableRow className="Black">
                 <TableCell id="nome">Despesa</TableCell>
                 <TableCell id="valor">{"Valor "}</TableCell>
               </TableRow>

@@ -13,6 +13,7 @@
 #relatorioIndividual .MuiTableRow-head * {
   background-color: var(--report-color);
   color: white !important;
+  font-weight: 600 !important;
 }
 
 #relatorioIndividual .MuiTableRow-root * {
