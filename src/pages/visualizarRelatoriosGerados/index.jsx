@@ -13,6 +13,9 @@ import RelatorioIndividual from "../../reports/relatorioIndividual";
 // COMPONENT TO PNG
 import html2canvas from "html2canvas";
 
+// CSS
+import "./style.css";
+
 export default function VisualizarRelatoriosGerados(props) {
   const [footbar, setFootbar] = props.buttons;
   const [data, setData] = props.data;
@@ -144,6 +147,7 @@ export default function VisualizarRelatoriosGerados(props) {
           report={JSON.parse(data.lastReports.rg)}
         />
       </div>
+      <hr />
       <div>
         {data.lastReports.ris.map((ri) => (
           <div key={"ri" + ri.paganteId}>

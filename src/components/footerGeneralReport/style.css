@@ -1,0 +1,28 @@
+#GeneralReportFooter {
+  background-color: white;
+  border: 2px solid var(--report-color);
+  color: var(--report-color);
+
+  margin-top: 5px;
+  margin-bottom: 10px;
+
+  height: 74px;
+  width: 100 vw;
+
+  padding: 5px;
+}
+
+#GeneralReportFooter #header-line1 {
+  line-height: 20px;
+  font-size: 15px;
+}
+
+#GeneralReportFooter #header-line2 {
+  line-height: 20px;
+  font-size: 15px;
+}
+
+#GeneralReportFooter #header-line3 {
+  line-height: 20px;
+  font-size: 15px;
+}

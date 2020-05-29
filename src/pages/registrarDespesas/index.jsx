@@ -263,8 +263,11 @@ export default function RegistrarDespesas(props) {
       table: false,
       name: "info",
       data: {
-        nameCondominio: data.allNestedCondominio.nome,
-        nameAdministrador: data.allNestedBeneficiario.nome,
+        nomeCondominio: data.allNestedCondominio.nome,
+        enderecoCondominio: data.allNestedCondominio.endereco,
+        nomeAdministrador: data.allNestedBeneficiario.nome,
+        emailAdministrador: data.allNestedBeneficiario.email,
+        telefoneAdministrar: data.allNestedBeneficiario.telefone,
       },
     });
     const generalReportJSON = JSON.stringify(generalReport);

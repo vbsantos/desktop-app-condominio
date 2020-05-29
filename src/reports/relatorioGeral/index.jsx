@@ -12,6 +12,7 @@ import {
 
 // COMPONENTS
 import GeneralReportHeader from "../../components/headerGeneralReport";
+import GeneralReportFooter from "../../components/footerGeneralReport";
 
 // CSS
 import "./style.css";
@@ -36,8 +37,8 @@ export default function RelatorioGeral(props) {
     <div id="relatorioGeral">
       <TableContainer className={reportClass} ref={reportRef}>
         <GeneralReportHeader
-          nomeCondominio={headerInfo.nameCondominio}
-          nomeAdministrador={headerInfo.nameAdministrador}
+          nomeCondominio={headerInfo.nomeCondominio}
+          enderecoCondominio={headerInfo.enderecoCondominio}
         />
 
         {/* TODO MOSTRAR fundo reserva COMO UMA DESPESA COMUM */}
@@ -47,7 +48,8 @@ export default function RelatorioGeral(props) {
               <TableRow className="Black" id="fundoReservaRow">
                 <TableCell className="col1">Fundo Reserva</TableCell>
                 <TableCell className="col2"></TableCell>
-                <TableCell className="col3">
+                <TableCell className="col3"></TableCell>
+                <TableCell className="col4">
                   {"R$ " + Number(fundoReserva.data).toFixed(2)}
                 </TableCell>
               </TableRow>
@@ -135,6 +137,11 @@ export default function RelatorioGeral(props) {
             </TableBody>
           </Table>
         )}
+        <GeneralReportFooter
+          nomeAdministrador={headerInfo.nomeAdministrador}
+          emailAdministrador={headerInfo.emailAdministrador}
+          telefoneAdministrar={headerInfo.telefoneAdministrar}
+        />
       </TableContainer>
     </div>
   );
