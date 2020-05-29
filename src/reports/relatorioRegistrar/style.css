@@ -40,7 +40,7 @@
 
 #relatorioCondominioRegistrar .MuiTableCell-root.col1 {
   padding-left: 10px !important;
-  width: 650px !important;
+  width: 550px !important;
 }
 
 #relatorioCondominioRegistrar .MuiTableCell-root.col2 {
@@ -49,6 +49,11 @@
 }
 
 #relatorioCondominioRegistrar .MuiTableCell-root.col3 {
+  width: 100px !important;
+  text-align: center;
+}
+
+#relatorioCondominioRegistrar .MuiTableCell-root.col4 {
   width: 150px !important;
   text-align: center;
 }

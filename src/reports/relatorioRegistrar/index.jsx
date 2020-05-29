@@ -98,7 +98,8 @@ export default function RelatorioCondominioRegistrar(props) {
                   Fundo Reserva - {percentage[0]} %
                 </TableCell>
                 <TableCell className="col2"></TableCell>
-                <TableCell className="col3">
+                <TableCell className="col3"></TableCell>
+                <TableCell className="col4">
                   {"R$ " + percentage[1].toFixed(2)}
                 </TableCell>
               </TableRow>
@@ -118,8 +119,9 @@ export default function RelatorioCondominioRegistrar(props) {
               <TableHead>
                 <TableRow key={categoria + "header"} className="Black">
                   <TableCell className="col1">{categoria}</TableCell>
-                  <TableCell className="col2">Parcela</TableCell>
-                  <TableCell className="col3">Valor</TableCell>
+                  <TableCell className="col2">Cód.</TableCell>
+                  <TableCell className="col3">Parcela</TableCell>
+                  <TableCell className="col4">Valor</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -132,7 +134,8 @@ export default function RelatorioCondominioRegistrar(props) {
                     <TableCell className="col1">
                       {categoriaConta.nome}
                     </TableCell>
-                    <TableCell className="col2">
+                    <TableCell className="col2">{categoriaConta.id}</TableCell>
+                    <TableCell className="col3">
                       {categoriaConta.permanente
                         ? "Fixa"
                         : `${
@@ -141,7 +144,7 @@ export default function RelatorioCondominioRegistrar(props) {
                             categoriaConta.numParcelas
                           }`}
                     </TableCell>
-                    <TableCell className="col3">
+                    <TableCell className="col4">
                       {"R$ " + Number(categoriaConta.valor).toFixed(2)}
                     </TableCell>
                   </TableRow>
@@ -149,7 +152,8 @@ export default function RelatorioCondominioRegistrar(props) {
                 <TableRow key={categoria + "subtotal"} className="Black">
                   <TableCell className="col1">SUB-TOTAL:</TableCell>
                   <TableCell className="col2"></TableCell>
-                  <TableCell className="col3">
+                  <TableCell className="col3"></TableCell>
+                  <TableCell className="col4">
                     {"R$ " + Number(subtotal).toFixed(2)}
                   </TableCell>
                 </TableRow>
@@ -163,7 +167,8 @@ export default function RelatorioCondominioRegistrar(props) {
             <TableRow className="Black">
               <TableCell className="col1">TOTAL:</TableCell>
               <TableCell className="col2"></TableCell>
-              <TableCell className="col3">
+              <TableCell className="col3"></TableCell>
+              <TableCell className="col4">
                 {"R$ " + (total + percentage[1]).toFixed(2)}
               </TableCell>
             </TableRow>

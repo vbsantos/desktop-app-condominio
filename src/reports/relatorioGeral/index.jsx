@@ -64,8 +64,9 @@ export default function RelatorioGeral(props) {
                 <TableHead>
                   <TableRow key={categoria.name + "header"} className="Black">
                     <TableCell className="col1">{categoria.name}</TableCell>
-                    <TableCell className="col2">Parcela</TableCell>
-                    <TableCell className="col3">Valor</TableCell>
+                    <TableCell className="col2">Cód.</TableCell>
+                    <TableCell className="col3">Parcela</TableCell>
+                    <TableCell className="col4">Valor</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -75,7 +76,8 @@ export default function RelatorioGeral(props) {
                     return (
                       <TableRow key={categoria + despesa.id} className="Linha">
                         <TableCell className="col1">{despesa.nome}</TableCell>
-                        <TableCell className="col2">
+                        <TableCell className="col2">{despesa.id}</TableCell>
+                        <TableCell className="col3">
                           {despesa.permanente
                             ? "Fixa"
                             : `${
@@ -84,7 +86,7 @@ export default function RelatorioGeral(props) {
                                 despesa.numParcelas
                               }`}
                         </TableCell>
-                        <TableCell className="col3">
+                        <TableCell className="col4">
                           {"R$ " + Number(despesa.valor).toFixed(2)}
                         </TableCell>
                       </TableRow>
@@ -93,7 +95,8 @@ export default function RelatorioGeral(props) {
                   <TableRow key={categoria + "subtotal"} className="Black">
                     <TableCell className="col1">SUB-TOTAL:</TableCell>
                     <TableCell className="col2"></TableCell>
-                    <TableCell className="col3">
+                    <TableCell className="col3"></TableCell>
+                    <TableCell className="col4">
                       {"R$ " + Number(subtotal).toFixed(2)}
                     </TableCell>
                   </TableRow>
@@ -108,7 +111,8 @@ export default function RelatorioGeral(props) {
             <TableRow className="Black">
               <TableCell className="col1">TOTAL:</TableCell>
               <TableCell className="col2"></TableCell>
-              <TableCell className="col3">
+              <TableCell className="col3"></TableCell>
+              <TableCell className="col4">
                 {"R$ " + Number(total.data).toFixed(2)}
               </TableCell>
             </TableRow>

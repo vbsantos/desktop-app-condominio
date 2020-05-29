@@ -16,6 +16,11 @@ import IndividualReportHeader from "../../components/headerIndividualReport";
 // CSS
 import "./style.css";
 
+const pad = (num, size) => {
+  var s = "000000000" + num;
+  return s.substr(s.length - size);
+};
+
 export default function RelatorioIndividual(props) {
   const { reportRef } = props;
   const { reportClass } = props;
@@ -29,11 +34,18 @@ export default function RelatorioIndividual(props) {
   const reportData = report
     .map((categoria) =>
       categoria.table
-        ? categoria.data.map((despesa) => [despesa.nome, despesa.valor])
+        ? categoria.data.map((despesa) => [
+            despesa.id,
+            despesa.nome,
+            despesa.valor,
+            true,
+          ])
         : [
             [
+              categoria.id,
               categoria.name === "total" ? "Total" : "Fundo Reserva",
               categoria.data,
+              false,
             ],
           ]
     )
@@ -63,8 +75,12 @@ export default function RelatorioIndividual(props) {
             <TableBody>
               {table1.map((despesa, index) => (
                 <TableRow key={"table1row" + index}>
-                  <TableCell id="nome">{despesa[0]}</TableCell>
-                  <TableCell id="valor">{"R$ " + despesa[1]}</TableCell>
+                  <TableCell id="nome">
+                    {despesa[3]
+                      ? `${pad(despesa[0], 4)} - ${despesa[1]}`
+                      : `${despesa[1]}`}
+                  </TableCell>
+                  <TableCell id="valor">{"R$ " + despesa[2]}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -79,8 +95,12 @@ export default function RelatorioIndividual(props) {
             <TableBody>
               {table2.map((despesa, index) => (
                 <TableRow key={"table2row" + index}>
-                  <TableCell id="nome">{despesa[0]}</TableCell>
-                  <TableCell id="valor">{"R$ " + despesa[1]}</TableCell>
+                  <TableCell id="nome">
+                    {despesa[3]
+                      ? `${pad(despesa[0], 4)} - ${despesa[1]}`
+                      : `${despesa[1]}`}
+                  </TableCell>
+                  <TableCell id="valor">{"R$ " + despesa[2]}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

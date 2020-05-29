@@ -38,7 +38,7 @@
 
 #relatorioGeral .MuiTableCell-root.col1 {
   padding-left: 10px !important;
-  width: 650px !important;
+  width: 550px !important;
 }
 
 #relatorioGeral .MuiTableCell-root.col2 {
@@ -47,6 +47,11 @@
 }
 
 #relatorioGeral .MuiTableCell-root.col3 {
+  width: 100px !important;
+  text-align: center;
+}
+
+#relatorioGeral .MuiTableCell-root.col4 {
   width: 150px !important;
   text-align: center;
 }
