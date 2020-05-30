@@ -4,6 +4,4 @@ yarn-error.log
 package-lock.json
 .git
 dist
-database.sqlite
 build
-backup.sqlite
