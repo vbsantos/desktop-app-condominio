@@ -49,7 +49,7 @@ export default function FormCondominio(props) {
         </FormControl>
         <FormControl>
           <InputLabel htmlFor="endereco">Endereço</InputLabel>
-          <Input defaultValue={beneficiario.endereco} id="endereco"></Input>
+          <Input defaultValue={condominio.endereco} id="endereco"></Input>
         </FormControl>
       </section>
 
