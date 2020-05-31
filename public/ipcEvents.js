@@ -388,35 +388,3 @@ ipcMain.handle("files", async (event, arg) => {
     return { error };
   }
 });
-
-const { autoUpdater } = require("electron-updater");
-
-ipcMain.handle("updates", async (event, arg) => {
-  const { method, content } = arg;
-  let status;
-  try {
-    switch (method) {
-      case "check":
-        console.log("entrada:", arg);
-        status = await autoUpdater.checkForUpdates();
-        console.log("saida:", status);
-        break;
-      case "download":
-        console.log("entrada:", arg);
-        status = await autoUpdater.checkForUpdatesAndNotify();
-        console.log("saida:", status);
-        break;
-      case "events": // REVIEW to get events on the frontend
-        console.log("entrada:", arg);
-        status = autoUpdater;
-        console.log("saida:", status);
-        break;
-      default:
-        console.log({ error: "This method do not exist." });
-    }
-    return status;
-  } catch (error) {
-    console.log("Erro no ipcEvents:", error);
-    return { error };
-  }
-});
