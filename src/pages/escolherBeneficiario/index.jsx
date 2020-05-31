@@ -115,7 +115,6 @@ export default function EscolherBeneficiario(props) {
       case 1:
         console.log("EscolherBeneficiario - Botão do centro");
         setFootbar({ ...footbar, action: -1 });
-        setDialogRegisterForm(true);
         break;
       case 2:
         console.log("EscolherBeneficiario - Botão da direita");
@@ -188,7 +187,9 @@ export default function EscolherBeneficiario(props) {
           open={[dialogDelete, setDialogDelete]}
         />
       )}
-      <h1 className="PageTitle">Gerenciador de Condomínios v0.10.2</h1>
+      <h1 className="PageTitle">{`Gerenciador de Condomínios${
+        data.systemVersion !== "" ? ` v${data.systemVersion}` : ""
+      }`}</h1>
       <div className="UserInputs">
         <FormControl>
           <InputLabel htmlFor="administrator">Administrador</InputLabel>
