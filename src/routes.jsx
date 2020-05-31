@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Routes, Route } from "react-router-dom";
 
 // PAGES
@@ -11,8 +11,8 @@ import VisualizarRelatoriosGerados from "./pages/visualizarRelatoriosGerados";
 // COMPONENTS
 import Footbar from "./components/footbar";
 
-// DIALOGS
-import DialogUpdate from "./dialogs/update";
+// SNACKBARS
+import SnackbarSystemUpdate from "./snackbars/update";
 
 // CSS
 import "./style.css";
@@ -25,7 +25,7 @@ export default function MainRoutes(props) {
     reports: { generalReport: false, data: [] },
     lastReports: {},
     base64Reports: {},
-    systemVersion: "",
+    systemVersion: require("../package.json").version,
   });
 
   const [footbarButtons, setFootbarButtons] = useState({
@@ -55,36 +55,9 @@ export default function MainRoutes(props) {
     action: -1,
   });
 
-  const [dialogUpdate, setDialogUpdate] = useState(false);
-  const [updateVersion, setUpdateVersion] = useState("");
-
-  useEffect(() => {
-    (async () => {
-      try {
-        const res = await window.ipcRenderer.invoke("updates", {
-          method: "check",
-          content: null,
-        });
-        if (typeof res.updateInfo !== "undefined") {
-          setData({ ...data, systemVersion: res.versionInfo.version });
-          setUpdateVersion(res.updateInfo.version);
-          setDialogUpdate(res.versionInfo.version < res.updateInfo.version);
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    })();
-  }, []);
-
   return (
     <>
-      {dialogUpdate && (
-        <DialogUpdate
-          open={[dialogUpdate, setDialogUpdate]}
-          title={"Uma nova versão do sistema foi encontrada"}
-          content={`Deseja atualizar o sistema para a versão ${updateVersion}?`}
-        />
-      )}
+      <SnackbarSystemUpdate />
       <div id="MainContainer">
         <Routes>
           <Route
