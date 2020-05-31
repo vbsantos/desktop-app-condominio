@@ -1,6 +1,6 @@
 const { app, BrowserWindow } = require("electron");
 const Log = require("electron-log");
-const { autoUpdater } = require("electron-updater");
+// const { autoUpdater } = require("electron-updater");
 const isDev = require("electron-is-dev");
 const Path = require("path");
 
@@ -16,46 +16,46 @@ const ipcEvents = require("./ipcEvents.js");
 // Logger & Auto-Updater
 //-------------------------------------------------------------------
 
-autoUpdater.logger = Log;
-autoUpdater.logger.transports.file.level = "info";
+// autoUpdater.logger = Log;
+// autoUpdater.logger.transports.file.level = "info";
 
-const sendStatusToWindow = (text) => {
-  Log.info(text);
-  win.webContents.send("message", text);
-};
+// const sendStatusToWindow = (text) => {
+//   Log.info(text);
+//   win.webContents.send("message", text);
+// };
 
-autoUpdater.on("checking-for-update", () => {
-  sendStatusToWindow("Checking for update...");
-});
+// autoUpdater.on("checking-for-update", () => {
+//   sendStatusToWindow("Checking for update...");
+// });
 
-autoUpdater.on("update-available", (info) => {
-  sendStatusToWindow("Update available.");
-});
+// autoUpdater.on("update-available", (info) => {
+//   sendStatusToWindow("Update available.");
+// });
 
-autoUpdater.on("update-not-available", (info) => {
-  sendStatusToWindow("Update not available.");
-});
+// autoUpdater.on("update-not-available", (info) => {
+//   sendStatusToWindow("Update not available.");
+// });
 
-autoUpdater.on("error", (err) => {
-  sendStatusToWindow("Error in auto-updater. " + err);
-});
+// autoUpdater.on("error", (err) => {
+//   sendStatusToWindow("Error in auto-updater. " + err);
+// });
 
-autoUpdater.on("download-progress", (progressObj) => {
-  let log_message = "Download speed: " + progressObj.bytesPerSecond;
-  log_message = log_message + " - Downloaded " + progressObj.percent + "%";
-  log_message =
-    log_message +
-    " (" +
-    progressObj.transferred +
-    "/" +
-    progressObj.total +
-    ")";
-  sendStatusToWindow(log_message);
-});
+// autoUpdater.on("download-progress", (progressObj) => {
+//   let log_message = "Download speed: " + progressObj.bytesPerSecond;
+//   log_message = log_message + " - Downloaded " + progressObj.percent + "%";
+//   log_message =
+//     log_message +
+//     " (" +
+//     progressObj.transferred +
+//     "/" +
+//     progressObj.total +
+//     ")";
+//   sendStatusToWindow(log_message);
+// });
 
-autoUpdater.on("update-downloaded", (info) => {
-  sendStatusToWindow("Update downloaded");
-});
+// autoUpdater.on("update-downloaded", (info) => {
+//   sendStatusToWindow("Update downloaded");
+// });
 
 //-------------------------------------------------------------------
 // Window
@@ -95,7 +95,7 @@ const createDefaultWindow = () => {
       : `file://${Path.join(__dirname, "..", "build", "index.html")}`
   );
 
-  sendStatusToWindow("Sistema na versão " + app.getVersion());
+  // sendStatusToWindow("Sistema na versao " + app.getVersion());
 
   return win;
 };
@@ -106,7 +106,7 @@ app.on("ready", () => {
   // Menu.setApplicationMenu(menu);
   try {
     createDefaultWindow();
-    autoUpdater.checkForUpdatesAndNotify();
+    // autoUpdater.checkForUpdatesAndNotify();
   } catch (error) {
     Log.info("Startup Sequence Error:", error);
   }
