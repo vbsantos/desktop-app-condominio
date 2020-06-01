@@ -16,5 +16,6 @@
   background: rgba(68, 85, 102, 0.8) !important;
   border-radius: 50px;
   margin: 0px;
-  width: 100px;
+  height: 80px !important;
+  width: 100px !important;
 }
