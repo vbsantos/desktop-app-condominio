@@ -25,15 +25,17 @@ export default function UpdateSnackbar(props) {
   const updateStatus = (msg, error, speed, percent) => {
     switch (msg) {
       case "checking-for-update":
+        setUpdateEnd(false);
         return {
           symbol: <CircularProgress color={"primary"} />,
           text: <p>Procurando por nova versão</p>,
         };
 
       case "update-available":
+        setUpdateEnd(false);
         return {
           symbol: <CircularProgress color={"primary"} />,
-          text: <p>Nova versão Encontrada</p>,
+          text: <p>Nova versão encontrada</p>,
         };
 
       case "update-not-available":
@@ -64,6 +66,7 @@ export default function UpdateSnackbar(props) {
         };
 
       case "download-progress":
+        setUpdateEnd(false);
         return {
           symbol: <CircularProgressWithLabel value={percent} />,
           text: <p>Baixando: {`${(speed / 1000).toFixed(1)} kb/s`}</p>,
@@ -82,7 +85,7 @@ export default function UpdateSnackbar(props) {
     (async () => {
       window.ipcRenderer.on("update", (event, arg) => {
         const { msg, error, speed, percent } = arg;
-        console.log("[UPDATE EVENT]:", arg);
+        // console.log("[UPDATE EVENT]:", arg);
         setSnackbarInterface(updateStatus(msg, error, speed, percent));
       });
 
@@ -92,6 +95,7 @@ export default function UpdateSnackbar(props) {
       });
 
       if (res === null) {
+        console.error("Não é possível atualizar a versão de desenvolvimento");
         setSnackbarInterface({
           symbol: (
             <CircularProgress
@@ -100,18 +104,13 @@ export default function UpdateSnackbar(props) {
               value={100}
             />
           ),
-          text: (
-            <>
-              <p>Erro ao procurar por uma nova versão</p>
-            </>
-          ),
+          text: <p>Erro ao procurar por uma nova versão</p>,
         });
         setUpdateEnd(true);
       }
     })();
   }, []);
 
-  // REVIEW só fecha a snackbar depois que receber um event determinado
   const handleClose = () => {
     updateEnd && setSnackbarOpen(false);
   };
@@ -119,7 +118,7 @@ export default function UpdateSnackbar(props) {
   return (
     <div id="snackbarSystemUpdate">
       <Snackbar
-        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+        anchorOrigin={{ vertical: "top", horizontal: "left" }}
         open={snackbarOpen}
         onClose={handleClose}
         message={
