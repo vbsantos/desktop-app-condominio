@@ -69,7 +69,7 @@ export default function DraggableDialog(props) {
           id="draggable-dialog-title"
           color="inherit"
         >
-          Relatório referente à
+          Gerar relatórios referentes à
         </DialogTitle>
         <DialogContent>
           <FormEscolherData
@@ -86,7 +86,7 @@ export default function DraggableDialog(props) {
             disabled={!formCompleted}
           >
             <CreateOutlined />
-            Gerar Relatório
+            Gerar Relatórios
           </Button>
         </DialogActions>
       </Dialog>

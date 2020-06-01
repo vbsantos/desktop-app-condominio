@@ -9,6 +9,9 @@ import {
   Input,
 } from "@material-ui/core";
 
+// CSS
+import "./style.css";
+
 export default function FormDespesa(props) {
   // true when all the fields of the form are filled
   const [formCompleted, setFormCompleted] = props.completed;
@@ -54,38 +57,42 @@ export default function FormDespesa(props) {
   }
 
   return (
-    <div>
+    <div id={"formEscolherData"}>
       <form ref={formRef} onChange={formOnChange}>
         <section>
           <DialogContentText key={"dataTitle"} color="inherit">
             Data
           </DialogContentText>
-          <FormControl>
-            <InputLabel htmlFor="mes">Mês *</InputLabel>
-            <NativeSelect id="mes" className="Selector">
-              <option key={"mes0"} value={""}>
-                {" "}
-              </option>
-              {months.map((month) => (
-                <option key={month} value={month}>
-                  {month}
+          <div>
+            <FormControl>
+              <InputLabel htmlFor="mes">Mês *</InputLabel>
+              <NativeSelect id="mes" className="Selector">
+                <option key={"mes0"} value={""}>
+                  {" "}
                 </option>
-              ))}
-            </NativeSelect>
-          </FormControl>
+                {months.map((month) => (
+                  <option key={month} value={month}>
+                    {month}
+                  </option>
+                ))}
+              </NativeSelect>
+            </FormControl>
 
-          <FormControl>
-            <InputLabel htmlFor="ano">Ano *</InputLabel>
-            <NativeSelect id="ano" className="Selector">
-              <option key={"ano0"} value={""}></option>
-              <option key={getYear()} value={getYear()}>
-                {getYear()}
-              </option>
-              <option key={getYear() + 1} value={getYear() + 1}>
-                {getYear() + 1}
-              </option>
-            </NativeSelect>
-          </FormControl>
+            <FormControl>
+              <InputLabel htmlFor="ano">Ano *</InputLabel>
+              <NativeSelect id="ano" className="Selector">
+                <option key={"ano0"} value={""}>
+                  {" "}
+                </option>
+                <option key={getYear()} value={getYear()}>
+                  {getYear()}
+                </option>
+                <option key={getYear() + 1} value={getYear() + 1}>
+                  {getYear() + 1}
+                </option>
+              </NativeSelect>
+            </FormControl>
+          </div>
         </section>
       </form>
     </div>
