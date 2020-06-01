@@ -26,3 +26,7 @@
   line-height: 20px;
   font-size: 15px;
 }
+
+#GeneralReportFooter {
+  border-radius: 0px 0px 10px 10px;
+}
