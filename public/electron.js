@@ -1,6 +1,6 @@
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, ipcMain } = require("electron");
 const Log = require("electron-log");
-// const { autoUpdater } = require("electron-updater");
+const { autoUpdater } = require("electron-updater");
 const isDev = require("electron-is-dev");
 const Path = require("path");
 
@@ -16,46 +16,71 @@ const ipcEvents = require("./ipcEvents.js");
 // Logger & Auto-Updater
 //-------------------------------------------------------------------
 
-// autoUpdater.logger = Log;
-// autoUpdater.logger.transports.file.level = "info";
-
-// const sendStatusToWindow = (text) => {
-//   Log.info(text);
-//   win.webContents.send("message", text);
-// };
-
-// autoUpdater.on("checking-for-update", () => {
-//   sendStatusToWindow("Checking for update...");
-// });
-
-// autoUpdater.on("update-available", (info) => {
-//   sendStatusToWindow("Update available.");
-// });
-
-// autoUpdater.on("update-not-available", (info) => {
-//   sendStatusToWindow("Update not available.");
-// });
-
-// autoUpdater.on("error", (err) => {
-//   sendStatusToWindow("Error in auto-updater. " + err);
-// });
-
-// autoUpdater.on("download-progress", (progressObj) => {
-//   let log_message = "Download speed: " + progressObj.bytesPerSecond;
-//   log_message = log_message + " - Downloaded " + progressObj.percent + "%";
-//   log_message =
-//     log_message +
-//     " (" +
-//     progressObj.transferred +
-//     "/" +
-//     progressObj.total +
-//     ")";
-//   sendStatusToWindow(log_message);
-// });
-
-// autoUpdater.on("update-downloaded", (info) => {
-//   sendStatusToWindow("Update downloaded");
-// });
+ipcMain.handle("update", async (event, arg) => {
+  const { method } = arg;
+  let status;
+  try {
+    switch (method) {
+      case "check":
+        console.log("entrada:", arg);
+        const sendToFrontend = (data) => {
+          win.webContents.send("update", data);
+        };
+        autoUpdater.on("checking-for-update", () => {
+          sendToFrontend({
+            msg: "checking-for-update",
+            error: null,
+            speed: null,
+            percent: null,
+          });
+        });
+        autoUpdater.on("update-available", (info) => {
+          sendToFrontend({
+            msg: "update-available",
+            error: null,
+            speed: null,
+            percent: null,
+          });
+        });
+        autoUpdater.on("update-not-available", (info) => {
+          sendToFrontend({
+            msg: "update-not-available",
+            error: null,
+            speed: null,
+            percent: null,
+          });
+        });
+        autoUpdater.on("error", (err) => {
+          sendToFrontend({ msg: "error", error: err });
+        });
+        autoUpdater.on("download-progress", (progressObj) => {
+          sendToFrontend({
+            msg: "download-progress",
+            error: null,
+            speed: progressObj.bytesPerSecond,
+            percent: progressObj.percent,
+          });
+        });
+        autoUpdater.on("update-downloaded", (info) => {
+          sendToFrontend({
+            msg: "update-downloaded",
+            error: null,
+            speed: null,
+            percent: null,
+          });
+        });
+        status = await autoUpdater.checkForUpdatesAndNotify();
+        console.log("saida:", status);
+        break;
+      default:
+        console.log({ error: "This method do not exist." });
+    }
+    return status;
+  } catch (error) {
+    console.log("Erro no ipcEvents:", error);
+    return { error };
+  }
+});
 
 //-------------------------------------------------------------------
 // Window
@@ -95,18 +120,12 @@ const createDefaultWindow = () => {
       : `file://${Path.join(__dirname, "..", "build", "index.html")}`
   );
 
-  // sendStatusToWindow("Sistema na versao " + app.getVersion());
-
   return win;
 };
 
 app.on("ready", () => {
-  // Create the Menu
-  // const menu = Menu.buildFromTemplate(template);
-  // Menu.setApplicationMenu(menu);
   try {
     createDefaultWindow();
-    // autoUpdater.checkForUpdatesAndNotify();
   } catch (error) {
     Log.info("Startup Sequence Error:", error);
   }
