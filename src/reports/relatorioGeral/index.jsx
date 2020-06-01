@@ -21,9 +21,12 @@ export default function RelatorioGeral(props) {
   const { report } = props;
   const { reportRef } = props;
   const { reportClass } = props;
+  const { reportDate } = props;
 
   const headerInfo =
     report[report.length - 1].name === "info" ? report.pop().data : null;
+
+  // console.warn("RG.info:", headerInfo);
 
   const fundoReserva = report.find(
     (data) => !data.table && data.name === "fundoReserva"
@@ -39,6 +42,7 @@ export default function RelatorioGeral(props) {
         <GeneralReportHeader
           nomeCondominio={headerInfo.nomeCondominio}
           enderecoCondominio={headerInfo.enderecoCondominio}
+          date={reportDate}
         />
 
         {/* TODO MOSTRAR fundo reserva COMO UMA DESPESA COMUM */}

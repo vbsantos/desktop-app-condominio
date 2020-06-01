@@ -16,7 +16,7 @@
 
 #IndividualReportHeader #header-line1 {
   line-height: 50px;
-  font-size: 35px;
+  font-size: 30px;
 }
 
 #IndividualReportHeader #header-line2 {
@@ -31,4 +31,8 @@
 
 #IndividualReportHeader #header-line2 span {
   padding: 0 10px 0 10px;
+}
+
+#IndividualReportHeader {
+  border-radius: 10px 10px 0px 0px;
 }

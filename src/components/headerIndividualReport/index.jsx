@@ -7,11 +7,12 @@ export default function IndividualReportHeader(props) {
   const { complementoPagante } = props;
   const { nomePagante } = props;
   const { fracaoPagante } = props;
+  const { date } = props;
 
   return (
     <div id="IndividualReportHeader">
       <div className="bold" id="header-line1">
-        Relatório Individual
+        {`Relatório Individual ${date.mes} de ${date.ano}`}
       </div>
       <div id="header-line2">
         <span className="bold">{"Apartamento: " + complementoPagante}</span>

@@ -25,16 +25,20 @@
 }
 
 #GeneralReportHeader #header-line1 {
-  line-height: 50px;
-  font-size: 35px;
+  line-height: 40px;
+  font-size: 30px;
 }
 
 #GeneralReportHeader #header-line2 {
-  line-height: 30px;
+  line-height: 35px;
   font-size: 20px;
 }
 
 #GeneralReportHeader #header-line3 {
-  line-height: 30px;
+  line-height: 35px;
   font-size: 20px;
+}
+
+#GeneralReportHeader {
+  border-radius: 10px 10px 0px 0px;
 }

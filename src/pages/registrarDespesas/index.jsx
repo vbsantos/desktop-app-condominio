@@ -10,6 +10,7 @@ import DialogDespesaAgua from "../../dialogs/despesaAgua";
 import DialogDespesaFundoReserva from "../../dialogs/despesaFundoReserva";
 import DialogInformacao from "../../dialogs/informacao";
 import DialogAlerta from "../../dialogs/alerta";
+import DialogEscolherData from "../../dialogs/escolherData";
 
 // REPORTS
 import RelatorioCondominioRegistrar from "../../reports/relatorioRegistrar";
@@ -75,6 +76,9 @@ export default function RegistrarDespesas(props) {
   // Boolean for Alert Dialog
   const [dialogAlertDespesas, setDialogAlertDespesas] = useState(false);
 
+  // Boolean for Escolher Data Dialog
+  const [dialogEscolherData, setDialogEscolherData] = useState(false);
+
   console.groupCollapsed("RegistrarDespesas: System data");
   console.log("Footbar:", footbar);
   console.log("Data:", data);
@@ -132,7 +136,7 @@ export default function RegistrarDespesas(props) {
           const despesas = data.allNestedCondominio["Despesas"];
           if (despesas.length > 0) {
             await putReportsOnLastReports(categorias, data.allNestedCondominio);
-            navigate("/VisualizarRelatoriosGerados");
+            setDialogEscolherData(true);
           } else {
             setDialogAlertDespesas(true);
           }
@@ -379,6 +383,13 @@ export default function RegistrarDespesas(props) {
         <DialogAlerta
           open={[dialogAlertDespesas, setDialogAlertDespesas]}
           title="Não há despesas cadastradas"
+        />
+      )}
+      {/* ESCOLHER DATA DO RELATÓRIO */}
+      {dialogEscolherData && (
+        <DialogEscolherData
+          open={[dialogEscolherData, setDialogEscolherData]}
+          data={[data, setData]}
         />
       )}
       {/* ESCOLHER O TIPO DE DESPESA */}

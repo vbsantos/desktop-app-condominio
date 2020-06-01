@@ -25,6 +25,7 @@ export default function MainRoutes(props) {
     reports: { generalReport: false, data: [] },
     lastReports: {},
     base64Reports: {},
+    reportDate: { mes: "", ano: "" },
     systemVersion: require("../package.json").version,
   });
 
