@@ -31,7 +31,6 @@
     }
   },
   "scripts": {
-    "clear": "rm -ir build/* && rm -ir dist/*",
     "start": "concurrently \"BROWSER=none yarn react-start\" \"wait-on http://localhost:3000 && electron .\"",
     "postinstall": "electron-builder install-app-deps",
     "pack": "electron-builder --dir",
