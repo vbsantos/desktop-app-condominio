@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 
 // MATERIAL UI COMPONENTS
 import {
@@ -37,14 +37,6 @@ export default function FormPagante(props) {
       leituraAgua,
       condominioId: condominio.id,
     });
-    // não permite fração que não seja entre 0 e 1
-    // não permite registro de água menor que 0
-    // setFormCompleted(
-    //   formList.find((f) => f.value === "") === undefined &&
-    //     fracao > 0 &&
-    //     fracao <= 1 &&
-    //     leituraAgua >= 0
-    // );
     setFormCompleted(
       formList[0].value !== "" &&
         formList[3].value !== "" &&
