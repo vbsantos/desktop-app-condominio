@@ -117,10 +117,15 @@ export default function VisualizarRelatorios(props) {
   };
 
   const getDate2 = (report) => {
-    const reportJSON = JSON.parse(report.report);
-    const reportDate = reportJSON.find((table) => table.name === "info").data
-      .reportDate;
-    return `${reportDate.mes}/${reportDate.ano}`;
+    try {
+      const reportJSON = JSON.parse(report.report);
+      const reportDate = reportJSON.find((table) => table.name === "info").data
+        .reportDate;
+      return `${reportDate.mes}/${reportDate.ano}`;
+    } catch (error) {
+      const digits = report.createdAt.split("T")[0].split("-");
+      return `${digits[1]}/${digits[0]}`;
+    }
   };
 
   return (

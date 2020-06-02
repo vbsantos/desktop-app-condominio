@@ -10,9 +10,15 @@ export default function GeneralReportHeader(props) {
 
   return (
     <div id="GeneralReportFooter">
-      <div id="header-line1">{"Administrador: " + nomeAdministrador}</div>
-      <div id="header-line2">{"E-mail: " + emailAdministrador}</div>
-      <div id="header-line3">{"Telefone: " + telefoneAdministrar}</div>
+      {nomeAdministrador && (
+        <div id="header-line1">{"Administrador: " + nomeAdministrador}</div>
+      )}
+      {emailAdministrador && (
+        <div id="header-line2">{"E-mail: " + emailAdministrador}</div>
+      )}
+      {telefoneAdministrar && (
+        <div id="header-line3">{"Telefone: " + telefoneAdministrar}</div>
+      )}
     </div>
   );
 }

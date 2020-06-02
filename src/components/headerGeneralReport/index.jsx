@@ -11,6 +11,8 @@ export default function GeneralReportHeader(props) {
   const { enderecoCondominio } = props;
   const { date } = props;
 
+  const validDate = typeof date !== "undefined";
+
   return (
     <div id="GeneralReportHeader">
       <img id="header-left" src={logo} alt="Logo" />
@@ -18,12 +20,20 @@ export default function GeneralReportHeader(props) {
         <div id="header-line2">
           <span className="bold">{nomeCondominio}</span>
         </div>
-        <div id="header-line3">
-          <span className="bold">{enderecoCondominio}</span>
-        </div>
-        <div className="bold" id="header-line1">
-          {`Demonstrativo Financeiro ${date.mes} de ${date.ano}`}
-        </div>
+        {enderecoCondominio && (
+          <div id="header-line3">
+            <span className="bold">{enderecoCondominio}</span>
+          </div>
+        )}
+        {validDate ? (
+          <div className="bold" id="header-line1">
+            {`Demonstrativo Financeiro ${date.mes} de ${date.ano}`}
+          </div>
+        ) : (
+          <div className="bold" id="header-line1">
+            {"Demonstrativo Financeiro"}
+          </div>
+        )}
       </div>
     </div>
   );
