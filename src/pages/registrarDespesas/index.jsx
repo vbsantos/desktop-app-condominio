@@ -247,7 +247,7 @@ export default function RegistrarDespesas(props) {
     if (percentage[0] !== 0) {
       generalReport.push({
         table: false,
-        name: "fundoReserva",
+        name: `Fundo Reserva - ${percentage[0]}%`,
         data: percentage[1].toFixed(2),
       });
     }
@@ -309,7 +309,7 @@ export default function RegistrarDespesas(props) {
       if (percentage[0] !== 0) {
         individualReport.push({
           table: false,
-          name: "fundoReserva",
+          name: `Fundo Reserva - ${percentage[0]}%`,
           data: fundoReservaIndividual.toFixed(2),
         });
       }

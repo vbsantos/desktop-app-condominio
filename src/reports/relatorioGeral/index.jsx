@@ -29,7 +29,7 @@ export default function RelatorioGeral(props) {
   // console.warn("RG.info:", headerInfo);
 
   const fundoReserva = report.find(
-    (data) => !data.table && data.name === "fundoReserva"
+    (data) => !data.table && data.name.includes("Fundo Reserva")
   );
   const total = report.find((data) => !data.table && data.name === "total");
   const informacoes = report.find(
@@ -45,12 +45,11 @@ export default function RelatorioGeral(props) {
           date={reportDate}
         />
 
-        {/* TODO MOSTRAR fundo reserva COMO UMA DESPESA COMUM */}
         {fundoReserva && (
           <Table key={"fundoReserva"}>
             <TableHead>
               <TableRow className="Black" id="fundoReservaRow">
-                <TableCell className="col1">Fundo Reserva</TableCell>
+                <TableCell className="col1">{fundoReserva.name}</TableCell>
                 <TableCell className="col2"></TableCell>
                 <TableCell className="col3"></TableCell>
                 <TableCell className="col4">

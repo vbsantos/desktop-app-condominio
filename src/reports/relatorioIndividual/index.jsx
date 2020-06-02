@@ -43,7 +43,7 @@ export default function RelatorioIndividual(props) {
         : [
             [
               categoria.id,
-              categoria.name === "total" ? "Total" : "Fundo Reserva",
+              categoria.name === "total" ? "Total" : categoria.name,
               categoria.data,
               false,
             ],

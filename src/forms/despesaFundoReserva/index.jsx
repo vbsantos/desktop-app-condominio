@@ -25,15 +25,21 @@ export default function FormDespesaFundoReserva(props) {
   function formOnChange() {
     const formList = [...formRef.current.elements];
 
-    const porcentagemString = formList[2].value
+    const test = (input) => input !== "" && Number(input) >= 0;
+
+    const porcentagemString = formList[1].value
       .replace(",", ".")
       .replace("%", "")
       .replace(" ", "");
 
+    const goodInput = test(porcentagemString);
+
     setDespesa({
       id: despesa.id,
-      nome: "Fundo Reserva",
-      categoria: formList[1].value,
+      nome: goodInput
+        ? `Fundo Reserva - ${porcentagemString}%`
+        : "Fundo Reserva",
+      categoria: "",
       agua: null,
       aguaIndividual: false,
       rateioAutomatico: true,
@@ -47,9 +53,7 @@ export default function FormDespesaFundoReserva(props) {
       condominioId: condominio.id,
     });
 
-    setFormCompleted(
-      porcentagemString !== "" && Number(porcentagemString) >= 0
-    );
+    setFormCompleted(goodInput);
   }
 
   return (
@@ -66,14 +70,6 @@ export default function FormDespesaFundoReserva(props) {
               defaultValue={"Fundo Reserva"}
               disabled={true}
               id="nome"
-            ></Input>
-          </FormControl>
-          <FormControl>
-            <InputLabel htmlFor="categoria">Categoria *</InputLabel>
-            <Input
-              autoFocus
-              defaultValue={despesa.categoria}
-              id="categoria"
             ></Input>
           </FormControl>
         </section>
