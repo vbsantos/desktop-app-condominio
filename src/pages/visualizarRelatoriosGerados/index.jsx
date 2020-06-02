@@ -145,7 +145,6 @@ export default function VisualizarRelatoriosGerados(props) {
           reportClass="reportbase64"
           reportRef={null}
           report={JSON.parse(data.lastReports.rg)}
-          reportDate={data.reportDate}
         />
       </div>
       <hr />
@@ -156,7 +155,6 @@ export default function VisualizarRelatoriosGerados(props) {
               reportClass="reportbase64"
               reportRef={null}
               report={JSON.parse(ri.report)}
-              reportDate={data.reportDate}
             />
           </div>
         ))}

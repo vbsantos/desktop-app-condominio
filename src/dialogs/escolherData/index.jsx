@@ -35,6 +35,8 @@ export default function DraggableDialog(props) {
   // all system data
   const [data, setData] = props.data;
 
+  const [datePicked, setDatePicked] = props.picked;
+
   // Report Date
   const [date, setDate] = useState({ mes: "", ano: "" });
 
@@ -46,13 +48,14 @@ export default function DraggableDialog(props) {
 
   // function that runs when the dialog is suposed to close
   function handleClose() {
+    setDatePicked(false);
     setDialog(false);
   }
 
   // function that runs when you click the right button
   async function handleRightButton() {
     setData({ ...data, reportDate: { mes: date.mes, ano: date.ano } });
-    navigate("/VisualizarRelatoriosGerados");
+    setDatePicked(true);
     setDialog(false);
   }
 

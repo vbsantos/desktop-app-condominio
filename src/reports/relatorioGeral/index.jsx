@@ -21,7 +21,6 @@ export default function RelatorioGeral(props) {
   const { report } = props;
   const { reportRef } = props;
   const { reportClass } = props;
-  const { reportDate } = props;
 
   const headerInfo =
     report[report.length - 1].name === "info" ? report.pop().data : null;
@@ -42,7 +41,7 @@ export default function RelatorioGeral(props) {
         <GeneralReportHeader
           nomeCondominio={headerInfo.nomeCondominio}
           enderecoCondominio={headerInfo.enderecoCondominio}
-          date={reportDate}
+          date={headerInfo.reportDate}
         />
 
         {fundoReserva && (

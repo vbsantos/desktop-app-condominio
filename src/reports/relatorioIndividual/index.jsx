@@ -24,7 +24,6 @@ export default function RelatorioIndividual(props) {
   const { reportRef } = props;
   const { reportClass } = props;
   const { report } = props;
-  const { reportDate } = props;
 
   const info =
     report[report.length - 1].name === "info" ? report.pop().data : null;
@@ -63,7 +62,7 @@ export default function RelatorioIndividual(props) {
           complementoPagante={info.complementoPagante}
           nomePagante={info.nomePagante}
           fracaoPagante={info.fracaoPagante}
-          date={reportDate}
+          date={info.reportDate}
         />
 
         <div id="duasTabelas">

@@ -79,6 +79,9 @@ export default function RegistrarDespesas(props) {
   // Boolean for Escolher Data Dialog
   const [dialogEscolherData, setDialogEscolherData] = useState(false);
 
+  // Boolean if date is picked
+  const [datePicked, setDatePicked] = useState(false);
+
   console.groupCollapsed("RegistrarDespesas: System data");
   console.log("Footbar:", footbar);
   console.log("Data:", data);
@@ -132,15 +135,12 @@ export default function RegistrarDespesas(props) {
         console.log("RegistrarDespesas - Botão da direita");
         setFootbar({ ...footbar, action: -1 });
 
-        (async () => {
-          const despesas = data.allNestedCondominio["Despesas"];
-          if (despesas.length > 0) {
-            await putReportsOnLastReports(categorias, data.allNestedCondominio);
-            setDialogEscolherData(true);
-          } else {
-            setDialogAlertDespesas(true);
-          }
-        })();
+        const despesas = data.allNestedCondominio["Despesas"];
+        if (despesas.length > 0) {
+          setDialogEscolherData(true); // REVIEW
+        } else {
+          setDialogAlertDespesas(true);
+        }
 
         break;
     }
@@ -160,29 +160,38 @@ export default function RegistrarDespesas(props) {
       dialogEditDespesaAgua ||
       dialogEditDespesaFundoReserva ||
       dialogEditInformacao ||
-      dialogDeleteDespesa
+      dialogDeleteDespesa ||
+      dialogEscolherData
     );
     if (allDialogsClosed) {
-      async function getEverything() {
-        console.time("Get all data from database");
-        const allNestedBeneficiario = await window.ipcRenderer.invoke(
-          "beneficiarios",
-          {
-            method: "showNested",
-            content: { id: data.beneficiario.id },
-          }
-        );
-        const allNestedCondominio = allNestedBeneficiario["Condominios"].find(
-          (condominio) => condominio.id === data.allNestedCondominio.id
-        );
-        setData({
-          ...data,
-          allNestedBeneficiario,
-          allNestedCondominio,
-        });
-        console.timeEnd("Get all data from database");
+      if (datePicked) {
+        // REVIEW
+        (async () => {
+          await putReportsOnLastReports(categorias, data.allNestedCondominio);
+          navigate("/VisualizarRelatoriosGerados");
+        })();
+      } else {
+        async function getEverything() {
+          console.time("Get all data from database");
+          const allNestedBeneficiario = await window.ipcRenderer.invoke(
+            "beneficiarios",
+            {
+              method: "showNested",
+              content: { id: data.beneficiario.id },
+            }
+          );
+          const allNestedCondominio = allNestedBeneficiario["Condominios"].find(
+            (condominio) => condominio.id === data.allNestedCondominio.id
+          );
+          setData({
+            ...data,
+            allNestedBeneficiario,
+            allNestedCondominio,
+          });
+          console.timeEnd("Get all data from database");
+        }
+        getEverything();
       }
-      getEverything();
     }
   }, [
     dialogDespesaFixa,
@@ -196,6 +205,7 @@ export default function RegistrarDespesas(props) {
     dialogEditDespesaFundoReserva,
     dialogEditInformacao,
     dialogDeleteDespesa,
+    dialogEscolherData,
   ]);
 
   // This function runs only when something change in Despesas
@@ -272,6 +282,7 @@ export default function RegistrarDespesas(props) {
         nomeAdministrador: data.allNestedBeneficiario.nome,
         emailAdministrador: data.allNestedBeneficiario.email,
         telefoneAdministrar: data.allNestedBeneficiario.telefone,
+        reportDate: data.reportDate, // FIXME add date
       },
     });
     const generalReportJSON = JSON.stringify(generalReport);
@@ -339,6 +350,7 @@ export default function RegistrarDespesas(props) {
             ? Number(valorAgua.agua) - Number(pagante.leituraAgua)
             : null,
           aguaValorUnitario: despesaAgua ? valorAgua.precoAgua : null,
+          reportDate: data.reportDate, // FIXME add date
         },
       });
       // console.warn("Relatório Individual:", individualReport);
@@ -390,6 +402,7 @@ export default function RegistrarDespesas(props) {
         <DialogEscolherData
           open={[dialogEscolherData, setDialogEscolherData]}
           data={[data, setData]}
+          picked={[datePicked, setDatePicked]} // REVIEW
         />
       )}
       {/* ESCOLHER O TIPO DE DESPESA */}

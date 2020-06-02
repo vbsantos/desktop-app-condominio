@@ -116,18 +116,11 @@ export default function VisualizarRelatorios(props) {
     setValue(newValue);
   };
 
-  // This functions turns "2020-05-16T23:39:25.808Z" to "17 / 05 / 2020"
-  const getDate = (dateIsoString) => {
-    const timeZoneOffset = new Date().getTimezoneOffset() * 60000;
-    const localISOTime = new Date(new Date(dateIsoString) - timeZoneOffset)
-      .toISOString()
-      .slice(0, -1);
-    const simpleLocalTime = localISOTime
-      .split("T")[0]
-      .split("-")
-      .reverse()
-      .join(" / ");
-    return simpleLocalTime;
+  const getDate2 = (report) => {
+    const reportJSON = JSON.parse(report.report);
+    const reportDate = reportJSON.find((table) => table.name === "info").data
+      .reportDate;
+    return `${reportDate.mes}/${reportDate.ano}`;
   };
 
   return (
@@ -143,7 +136,7 @@ export default function VisualizarRelatorios(props) {
         {data.reports.data.map((report, index) => (
           <Tab
             key={"panelTab" + index}
-            label={getDate(report.createdAt)}
+            label={getDate2(report)}
             title={"Data em que o relatório foi gerado"}
             id={`vertical-tab-${index}`}
             aria-controls={`vertical-tabpanel-${index}`}
