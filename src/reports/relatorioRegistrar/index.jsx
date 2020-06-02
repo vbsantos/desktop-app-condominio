@@ -62,8 +62,6 @@ export default function RelatorioCondominioRegistrar(props) {
     setSelected({ id }); // pega o id da despesa
     const despesa = despesas.find((despesa) => despesa.id === id);
 
-    console.log(despesa); // TODO remover
-
     if (despesa.fundoReserva) {
       setDialogEditDespesaFundoReserva(true);
     } else if (despesa.informacao) {
@@ -77,7 +75,7 @@ export default function RelatorioCondominioRegistrar(props) {
     }
   };
 
-  // TODO colocar despesas (categoria) em ordem alfabética, e fundo reserva junto (como qqr despesa)
+  // TODO colocar despesas (categoria) em ordem alfabética
 
   return (
     <div id="relatorioCondominioRegistrar">

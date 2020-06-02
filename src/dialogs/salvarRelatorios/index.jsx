@@ -122,7 +122,6 @@ export default function DraggableDialog(props) {
     });
     if (valores.length > 0) {
       for (const valor of valores) {
-        //FIXME: usar bulkUpdate (?)
         await window.ipcRenderer.invoke("valores", {
           method: "update",
           content: { id: valor.id, valor: "0" },

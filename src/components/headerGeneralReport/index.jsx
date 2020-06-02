@@ -22,7 +22,6 @@ export default function GeneralReportHeader(props) {
           <span className="bold">{enderecoCondominio}</span>
         </div>
         <div className="bold" id="header-line1">
-          {/* TODO ADICIONAR MÊS E ANO */}
           {`Demonstrativo Financeiro ${date.mes} de ${date.ano}`}
         </div>
       </div>

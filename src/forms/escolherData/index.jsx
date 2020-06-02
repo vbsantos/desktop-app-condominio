@@ -67,9 +67,7 @@ export default function FormDespesa(props) {
             <FormControl>
               <InputLabel htmlFor="mes">Mês *</InputLabel>
               <NativeSelect id="mes" className="Selector">
-                <option key={"mes0"} value={""}>
-                  {" "}
-                </option>
+                <option key={"mes0"} value={""}></option>
                 {months.map((month) => (
                   <option key={month} value={month}>
                     {month}
@@ -81,8 +79,9 @@ export default function FormDespesa(props) {
             <FormControl>
               <InputLabel htmlFor="ano">Ano *</InputLabel>
               <NativeSelect id="ano" className="Selector">
-                <option key={"ano0"} value={""}>
-                  {" "}
+                <option key={"ano0"} value={""}></option>
+                <option key={getYear() - 1} value={getYear() - 1}>
+                  {getYear() - 1}
                 </option>
                 <option key={getYear()} value={getYear()}>
                   {getYear()}
