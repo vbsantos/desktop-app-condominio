@@ -391,7 +391,7 @@ export default function EscolherCondominio(props) {
           )}
         />
       )}
-      <h1 className="PageTitle">Selecione o Condominio</h1>
+      <h1 className="PageTitle">Selecione o Condomínio</h1>
       {/* TODOS OS CONDOMINIOS */}
       <Container maxWidth="xl">
         {/*CADA CONDOMINIO*/}
