@@ -27,17 +27,27 @@ function PaperComponent(props) {
 
 export default function DraggableDialog(props) {
   const [dialog, setDialog] = props.open;
+
   const [dialogDespesaFixa, setDialogDespesaFixa] = props.despesaFixa;
+
   const [
     dialogDespesaParcelada,
     setDialogDespesaParcelada,
   ] = props.despesaParcelada;
+
   const [dialogDespesaAgua, setDialogDespesaAgua] = props.despesaAgua;
+
   const [
     dialogDespesaFundoReserva,
     setDialogDespesaFundoReserva,
   ] = props.despesaFundoReserva;
+
   const [dialogInformacao, setDialogInformacao] = props.informacao;
+
+  const { despesas } = props;
+
+  // Function that stores the id of the selected Conta
+  const { setSelected } = props;
 
   // function that runs when the dialog is suposed to close
   function handleClose() {
@@ -58,12 +68,20 @@ export default function DraggableDialog(props) {
 
   // function that runs when you click a button
   async function handleButton3() {
+    const despesa = despesas.find(
+      (despesa) => despesa.aguaIndividual && !despesa.rateioAutomatico
+    );
+    const id = typeof despesa === "undefined" ? -1 : despesa.id;
+    setSelected({ id });
     setDialogDespesaAgua(true);
     setDialog(false);
   }
 
   // function that runs when you click a button
   async function handleButton4() {
+    const despesa = despesas.find((despesa) => despesa.fundoReserva);
+    const id = typeof despesa === "undefined" ? -1 : despesa.id;
+    setSelected({ id });
     setDialogDespesaFundoReserva(true);
     setDialog(false);
   }

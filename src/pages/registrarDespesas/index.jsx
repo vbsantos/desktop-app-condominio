@@ -137,7 +137,7 @@ export default function RegistrarDespesas(props) {
 
         const despesas = data.allNestedCondominio["Despesas"];
         if (despesas.length > 0) {
-          setDialogEscolherData(true); // REVIEW
+          setDialogEscolherData(true);
         } else {
           setDialogAlertDespesas(true);
         }
@@ -165,7 +165,6 @@ export default function RegistrarDespesas(props) {
     );
     if (allDialogsClosed) {
       if (datePicked) {
-        // REVIEW
         (async () => {
           await putReportsOnLastReports(categorias, data.allNestedCondominio);
           navigate("/VisualizarRelatoriosGerados");
@@ -282,7 +281,7 @@ export default function RegistrarDespesas(props) {
         nomeAdministrador: data.allNestedBeneficiario.nome,
         emailAdministrador: data.allNestedBeneficiario.email,
         telefoneAdministrar: data.allNestedBeneficiario.telefone,
-        reportDate: data.reportDate, // FIXME add date
+        reportDate: data.reportDate,
       },
     });
     const generalReportJSON = JSON.stringify(generalReport);
@@ -350,7 +349,7 @@ export default function RegistrarDespesas(props) {
             ? Number(valorAgua.agua) - Number(pagante.leituraAgua)
             : null,
           aguaValorUnitario: despesaAgua ? valorAgua.precoAgua : null,
-          reportDate: data.reportDate, // FIXME add date
+          reportDate: data.reportDate,
         },
       });
       // console.warn("Relatório Individual:", individualReport);
@@ -402,12 +401,13 @@ export default function RegistrarDespesas(props) {
         <DialogEscolherData
           open={[dialogEscolherData, setDialogEscolherData]}
           data={[data, setData]}
-          picked={[datePicked, setDatePicked]} // REVIEW
+          picked={[datePicked, setDatePicked]}
         />
       )}
       {/* ESCOLHER O TIPO DE DESPESA */}
       {dialogEscolherDespesa && (
         <DialogEscolherDespesa
+          despesas={data.allNestedCondominio["Despesas"]}
           open={[dialogEscolherDespesa, setDialogEscolherDespesa]}
           despesaFixa={[dialogDespesaFixa, setDialogDespesaFixa]}
           despesaParcelada={[dialogDespesaParcelada, setDialogDespesaParcelada]}
@@ -417,6 +417,7 @@ export default function RegistrarDespesas(props) {
             setDialogDespesaFundoReserva,
           ]}
           informacao={[dialogInformacao, setDialogInformacao]}
+          setSelected={setSelectedDespesa}
         />
       )}
 
