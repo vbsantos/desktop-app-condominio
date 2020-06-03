@@ -5,7 +5,7 @@ section {
   margin-bottom: 10px;
   text-align: center;
   color: black;
-  min-width: 440px;
+  width: 500px !important;
 }
 
 .MuiDialogActions-root {
