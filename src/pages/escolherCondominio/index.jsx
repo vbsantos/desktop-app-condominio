@@ -78,7 +78,7 @@ export default function EscolherCondominio(props) {
   const [dialogAlertDespesas, setDialogAlertDespesas] = useState(false);
   const [dialogAlertNoReports, setDialogAlertNoReports] = useState(false);
   const [dialogAlertPagante, setDialogAlertPagante] = useState(false);
-  const [dialogAlertFracao, setDialogAlertFracao] = useState(false);
+  // const [dialogAlertFracao, setDialogAlertFracao] = useState(false); FIXME
 
   console.groupCollapsed("EscolherCondominio: System data");
   console.log("Footbar:", footbar);
@@ -132,13 +132,14 @@ export default function EscolherCondominio(props) {
           .toFixed(5);
         const validFracao = sumFracao === "1.00000";
         setFootbar({ ...footbar, action: -1 });
-        if (validFracao && hasPagantes) {
+        if (hasPagantes) {
           navigate("/RegistrarDespesas");
-        } else if (!hasPagantes) {
-          setDialogAlertPagante(true);
         } else {
-          setDialogAlertFracao(true);
+          setDialogAlertPagante(true);
         }
+      // else { // FIXME
+      //   setDialogAlertFracao(true);
+      // }
     }
   }, [footbar.action]);
 
@@ -337,12 +338,13 @@ export default function EscolherCondominio(props) {
           content="Não é possível continuar sem Condôminos cadastrados no Condomínio selecionado"
         />
       )}
-      {dialogAlertFracao && (
+      {/* FIXME */}
+      {/* {dialogAlertFracao && (
         <DialogAlerta
           open={[dialogAlertFracao, setDialogAlertFracao]}
           content="A soma das frações dos Condôminos não é '1.00000', isso quer dizer que é possível que a divisão de valores das Despesas dê erro"
         />
-      )}
+       )}  */}
       {/* CONDOMINIO DIALOGS */}
       {dialogRegisterCondominioForm && (
         <DialogCondominio
