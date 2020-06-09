@@ -111,7 +111,7 @@ export default function FormPagante(props) {
       </section>
       <section>
         <DialogContentText color="inherit">
-          Última Leitura de água Contabilizado
+          Última Leitura de água
         </DialogContentText>
         <FormControl>
           <InputLabel htmlFor="leituraAgua">Leitura da Água *</InputLabel>

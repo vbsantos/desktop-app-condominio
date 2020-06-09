@@ -55,7 +55,7 @@ export default function FormCondominio(props) {
 
       <section>
         <DialogContentText color="inherit">
-          Última Leitura de água Contabilizado
+          Última Leitura de água
         </DialogContentText>
         <FormControl>
           <InputLabel htmlFor="leituraAgua">Leitura da água *</InputLabel>
