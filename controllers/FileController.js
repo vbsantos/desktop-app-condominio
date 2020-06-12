@@ -145,7 +145,7 @@ class FileController {
         reports.push(report);
       }
 
-      const waterReportBase64 = base64Reports.rw;
+      const waterReportBase64 = base64Reports.ra;
       if (waterReportBase64) {
         const waterReport = await this.createSinglePagePdf(waterReportBase64);
         const path = Path.resolve(

@@ -483,7 +483,7 @@ export default function RegistrarDespesas(props) {
     console.groupEnd("RIs");
 
     const lastReports = {
-      rw: relatorioAgua,
+      ra: relatorioAgua,
       rg: relatorioGeral,
       ris: relatoriosIndividuais,
     };

@@ -111,7 +111,7 @@ export default function VisualizarRelatoriosGerados(props) {
       tablesPng.push(stringBase64);
     }
     const base64Reports = {
-      rw: data.lastReports.rw ? tablesPng.shift() : null,
+      ra: data.lastReports.ra ? tablesPng.shift() : null,
       rg: tablesPng.shift(),
       ris: tablesPng,
     };
@@ -142,13 +142,13 @@ export default function VisualizarRelatoriosGerados(props) {
       {dialogCloseSystem && (
         <DialogCloseSystem open={[dialogCloseSystem, setDialogCloseSystem]} />
       )}
-      {data.lastReports.rw && (
+      {data.lastReports.ra && (
         <>
           <div>
             <RelatorioAgua
               reportClass="reportbase64"
               reportRef={null}
-              report={JSON.parse(data.lastReports.rw)}
+              report={JSON.parse(data.lastReports.ra)}
             />
           </div>
           <hr />
