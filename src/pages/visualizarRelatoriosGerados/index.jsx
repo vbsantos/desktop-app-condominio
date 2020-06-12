@@ -7,6 +7,7 @@ import DialogCloseSystem from "../../dialogs/fecharSistema";
 import Loading from "../../dialogs/carregando";
 
 // REPORTS
+import RelatorioAgua from "../../reports/relatorioAgua";
 import RelatorioGeral from "../../reports/relatorioGeral";
 import RelatorioIndividual from "../../reports/relatorioIndividual";
 
@@ -110,6 +111,7 @@ export default function VisualizarRelatoriosGerados(props) {
       tablesPng.push(stringBase64);
     }
     const base64Reports = {
+      rw: data.lastReports.rw ? tablesPng.shift() : null,
       rg: tablesPng.shift(),
       ris: tablesPng,
     };
@@ -139,6 +141,18 @@ export default function VisualizarRelatoriosGerados(props) {
       )}
       {dialogCloseSystem && (
         <DialogCloseSystem open={[dialogCloseSystem, setDialogCloseSystem]} />
+      )}
+      {data.lastReports.rw && (
+        <>
+          <div>
+            <RelatorioAgua
+              reportClass="reportbase64"
+              reportRef={null}
+              report={JSON.parse(data.lastReports.rw)}
+            />
+          </div>
+          <hr />
+        </>
       )}
       <div>
         <RelatorioGeral

@@ -15,6 +15,11 @@ import DialogEscolherData from "../../dialogs/escolherData";
 // REPORTS
 import RelatorioCondominioRegistrar from "../../reports/relatorioRegistrar";
 
+// FUNCTIONS
+function comparar(despesa1, despesa2) {
+  return despesa1.id - despesa2.id;
+}
+
 export default function RegistrarDespesas(props) {
   const [footbar, setFootbar] = props.buttons;
   const [data, setData] = props.data;
@@ -361,7 +366,105 @@ export default function RegistrarDespesas(props) {
     return individualReportsJSON;
   };
 
+  // This function turns the WaterReport data into a string
+  const makeWaterReportJSON = async (condominio, pagantes, despesas) => {
+    const despesaAgua = despesas.filter((despesa) => despesa.aguaIndividual);
+    const despesaAguaPrimaria = despesaAgua.find(
+      (despesa) => !despesa.rateioAutomatico
+    );
+    const despesaAguaSecundaria = despesaAgua.find(
+      (despesa) => despesa.rateioAutomatico
+    );
+    const totalIndividual = Number(despesaAguaPrimaria.valor); // soma de todos os pagantes (R$)
+    const totalComum = Number(despesaAguaSecundaria.valor); // diferença entre geral e pagantes (R$)
+    const total = Number(totalIndividual) + Number(totalComum); // geral (R$)
+    const valoresIndividuais = despesaAguaPrimaria["Valores"]; // valores individuais da despesa de água primária
+    const precoAgua = valoresIndividuais[0].precoAgua; // valor do metro cubico da agua
+
+    let totalAnteriorIndividual = 0; // (m³)
+    let totalAtualIndividual = 0; // (m³)
+    let totalConsumoIndividual = 0; // (m³)
+
+    const waterReport = [];
+
+    waterReport.push({
+      table: true,
+      name: "aguaIndividual",
+      data: valoresIndividuais
+        .sort(comparar) // ORDENA POR ID
+        .map((individual) => {
+          const pagante = pagantes.find(
+            (pagante) => pagante.id === individual.paganteId
+          );
+
+          const consumo = Number(individual.agua) - Number(pagante.leituraAgua);
+
+          totalAnteriorIndividual += Number(pagante.leituraAgua);
+          totalAtualIndividual += Number(individual.agua);
+          totalConsumoIndividual += consumo;
+
+          return {
+            unidade: pagante.complemento,
+            anterior: Number(pagante.leituraAgua),
+            atual: Number(individual.agua),
+            consumo,
+            valor: Number(individual.valor),
+          };
+        }),
+    });
+
+    waterReport.push({
+      table: true,
+      name: "aguaComum",
+      data: {
+        unidade: "Condomínio",
+        anterior: Number(condominio.leituraAgua),
+        atual: Number(despesaAguaSecundaria.agua),
+        consumo:
+          Number(despesaAguaSecundaria.agua) - Number(condominio.leituraAgua),
+        valor: Number(totalComum),
+      },
+    });
+
+    waterReport.push({
+      table: false,
+      name: "info",
+      data: {
+        precoAgua, // (R$)
+        totalAnteriorIndividual, // (m³)
+        totalAtualIndividual, // (m³)
+        totalConsumoIndividual, // (m³)
+        totalIndividual, // (R$)
+        total, // (R$)
+        nomeCondominio: condominio.nome,
+        enderecoCondominio: condominio.endereco,
+        nomeAdministrador: data.allNestedBeneficiario.nome,
+        emailAdministrador: data.allNestedBeneficiario.email,
+        telefoneAdministrar: data.allNestedBeneficiario.telefone,
+        reportDate: data.reportDate,
+      },
+    });
+
+    const waterReportJSON = JSON.stringify(waterReport);
+    return waterReportJSON;
+  };
+
   async function putReportsOnLastReports(categorias, condominio) {
+    const existDepesaAgua = !!condominio["Despesas"].find(
+      (despesa) => despesa.aguaIndividual
+    );
+    let relatorioAgua = null;
+    if (existDepesaAgua) {
+      relatorioAgua = await makeWaterReportJSON(
+        condominio,
+        condominio["Pagantes"],
+        condominio["Despesas"]
+      );
+      console.groupCollapsed("RA");
+      console.log(relatorioAgua);
+      console.groupEnd("RA");
+    }
+
     const relatorioGeral = await makeGeneralReportJSON(
       categorias,
       condominio["Despesas"]
@@ -380,6 +483,7 @@ export default function RegistrarDespesas(props) {
     console.groupEnd("RIs");
 
     const lastReports = {
+      rw: relatorioAgua,
       rg: relatorioGeral,
       ris: relatoriosIndividuais,
     };
