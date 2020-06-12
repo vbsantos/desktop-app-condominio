@@ -145,6 +145,22 @@ class FileController {
         reports.push(report);
       }
 
+      const waterReportBase64 = base64Reports.rw;
+      if (waterReportBase64) {
+        const waterReport = await this.createSinglePagePdf(waterReportBase64);
+        const path = Path.resolve(
+          filePath,
+          "relatorio_agua_" + this.getTimestamp() + ".pdf"
+        );
+        await fs.writeFile(path, waterReport, function (err) {
+          if (err) {
+            console.log("Error saving file '" + path + "'");
+            throw new Error(err);
+          }
+          console.log("The file '" + path + "' was saved!");
+        });
+      }
+
       // Save reports
       for (const index in reports) {
         const path = Path.resolve(
