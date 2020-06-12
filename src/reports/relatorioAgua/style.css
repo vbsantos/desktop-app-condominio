@@ -1,0 +1,76 @@
+#relatorioAgua .MuiTableContainer-root {
+  text-align: center;
+  width: 900px !important;
+  margin: 0 auto 0 auto;
+  padding: 0;
+}
+
+#relatorioAgua .MuiTable-root {
+  background-color: white !important;
+  border: 2px solid var(--report-color);
+}
+
+#relatorioAgua .MuiTable-root * {
+  font-size: 18px !important;
+  line-height: 30px;
+}
+
+#relatorioAgua .MuiTable-root {
+  margin-bottom: 10px;
+}
+
+#relatorioAgua .Black .MuiTableCell-root {
+  background-color: var(--report-color) !important;
+  color: white !important;
+  font-weight: 600 !important;
+  padding-top: 1px !important;
+}
+
+#relatorioAgua .Black .MuiTableCell-root {
+  margin: 0;
+  padding: 0;
+}
+
+#relatorioAgua .Linha .MuiTableCell-root {
+  margin: 0;
+  padding: 0;
+  color: var(--report-color);
+}
+
+#relatorioAgua .MuiTableCell-root.col1 {
+  padding-left: 10px !important;
+  width: 100px !important;
+  text-align: left;
+}
+
+#relatorioAgua .MuiTableCell-root.col2 {
+  width: 130px !important;
+  text-align: right;
+}
+
+#relatorioAgua .MuiTableCell-root.col3 {
+  width: 130px !important;
+  text-align: right;
+}
+
+#relatorioAgua .MuiTableCell-root.col4 {
+  width: 130px !important;
+  text-align: right;
+}
+
+#relatorioAgua .MuiTableCell-root.col5 {
+  width: 170px !important;
+  padding-left: 30px;
+  text-align: center;
+}
+
+#relatorioAgua .MuiTableCell-root.col6 {
+  /* width: 90px !important; */
+  text-align: right;
+  padding-right: 80px;
+}
+
+#relatorioAgua .MuiTableCell-root.uniqueCol {
+  text-align: left;
+  padding: 1px 1px 1px 10px;
+}
