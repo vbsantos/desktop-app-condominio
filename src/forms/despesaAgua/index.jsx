@@ -86,14 +86,14 @@ export default function FormDespesa(props) {
 
     const registroIndividualAtual = registrosIndividuaisFields.reduce(
       (acc, field) => {
-        return +acc + +field.value.replace(",", ".");
+        return Number(acc) + Number(field.value.replace(",", "."));
       },
       0
     );
 
     const registroIndividualAnterior = registrosIndividuaisAnteriores.reduce(
       (acc, item) => {
-        return +acc + +item;
+        return Number(acc) + Number(item);
       },
       0
     );
@@ -103,8 +103,11 @@ export default function FormDespesa(props) {
 
     const consumoComum = registroGeralConsumo - registroIndividualConsumo;
 
-    const valorTotalIndividual = +registroIndividualConsumo * +precoAgua;
-    const valorTotalComum = +consumoComum * +precoAgua;
+    const valorTotalIndividual =
+      Math.ceil(Number(registroIndividualConsumo) * Number(precoAgua) * 100) /
+      100; // REVIEW MATH.CEIL(TOTAL)
+    const valorTotalComum =
+      Math.ceil(Number(consumoComum) * Number(precoAgua) * 100) / 100; // REVIEW MATH.CEIL(TOTAL)
 
     setValor2(function () {
       const precoComum = consumoComum * precoAgua;
@@ -123,8 +126,8 @@ export default function FormDespesa(props) {
           ).leituraAgua;
           const leituraAguaNova =
             Number(leituraAguaAtual) - Number(leituraAguaAntiga);
-          const valor = Number(leituraAguaNova * precoAgua).toFixed(2);
-          valoresIndividuaisFields[index].value = "R$ " + valor;
+          const valor = Number(leituraAguaNova * precoAgua);
+          valoresIndividuaisFields[index].value = "R$ " + valor.toFixed(2);
           return {
             id:
               valores.length > 0 && valores[0].id !== ""
@@ -153,7 +156,7 @@ export default function FormDespesa(props) {
       rateioAutomatico: false,
       permanente: true,
       fundoReserva: false,
-      valor: valorTotalIndividual.toFixed(2),
+      valor: valorTotalIndividual,
       parcelaAtual: null,
       numParcelas: null,
       informacao: false,
@@ -170,7 +173,7 @@ export default function FormDespesa(props) {
       rateioAutomatico: true,
       permanente: true,
       fundoReserva: false,
-      valor: valorTotalComum.toFixed(2),
+      valor: valorTotalComum,
       parcelaAtual: null,
       numParcelas: null,
       informacao: false,
