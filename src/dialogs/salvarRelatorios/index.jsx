@@ -74,6 +74,13 @@ export default function DraggableDialog(props) {
         condominioId,
       },
     });
+    await window.ipcRenderer.invoke("waterReports", {
+      method: "create",
+      content: {
+        report: lastReports.ra,
+        condominioId,
+      },
+    });
     for (const individualReport of lastReports.ris) {
       await window.ipcRenderer.invoke("individualReports", {
         method: "create",
