@@ -388,3 +388,50 @@ ipcMain.handle("files", async (event, arg) => {
     return { error };
   }
 });
+
+const waterReportController = require("../controllers/WaterReportController.js");
+const WaterReport = new waterReportController();
+ipcMain.handle("waterReports", async (event, arg) => {
+  const { method, content } = arg;
+  let status;
+  try {
+    switch (method) {
+      case "create":
+        console.log("entrada:", arg);
+        status = await WaterReport.create(content);
+        console.log("saida:", status);
+        break;
+      case "index":
+        console.log("entrada:", arg);
+        status = await WaterReport.index();
+        console.log("saida:", status);
+        break;
+      case "indexByOwnerId":
+        console.log("entrada:", arg);
+        status = await WaterReport.indexByOwnerId(content.id);
+        console.log("saida:", status);
+        break;
+      case "show":
+        console.log("entrada:", arg);
+        status = await WaterReport.show(content.id);
+        console.log("saida:", status);
+        break;
+      case "update":
+        console.log("entrada:", arg);
+        status = await WaterReport.update(content);
+        console.log("saida:", status);
+        break;
+      case "delete":
+        console.log("entrada:", arg);
+        status = await WaterReport.delete(content.id);
+        console.log("saida:", status);
+        break;
+      default:
+        console.log({ error: "This method do not exist." });
+    }
+    return status;
+  } catch (error) {
+    console.log("Erro no ipcEvents:", error);
+    return { error };
+  }
+});
