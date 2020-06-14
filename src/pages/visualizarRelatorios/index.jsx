@@ -8,6 +8,7 @@ import { Tabs, Tab } from "@material-ui/core";
 import "./style.css";
 
 // REPORTS
+import RelatorioAgua from "../../reports/relatorioAgua";
 import RelatorioGeral from "../../reports/relatorioGeral";
 import RelatorioIndividual from "../../reports/relatorioIndividual";
 
@@ -152,10 +153,21 @@ export default function VisualizarRelatorios(props) {
       {data.reports.data.map((dt, index) => (
         <TabPanel key={"panel" + index} id="panel" value={value} index={index}>
           {data.reports.generalReport ? (
-            <RelatorioGeral
-              reportRef={reportRef}
-              report={JSON.parse(dt.report)}
-            />
+            <>
+              <RelatorioGeral
+                reportRef={reportRef}
+                report={JSON.parse(dt.report)}
+              />
+              {data.reports.data2[index].report && (
+                <>
+                  <hr />
+                  <RelatorioAgua
+                    reportRef={reportRef}
+                    report={JSON.parse(data.reports.data2[index].report)} // REVIEW gambiarra pra mostrar relatório de água
+                  />
+                </>
+              )}
+            </>
           ) : (
             <RelatorioIndividual
               reportRef={reportRef}

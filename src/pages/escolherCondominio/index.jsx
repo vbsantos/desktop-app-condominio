@@ -244,14 +244,22 @@ export default function EscolherCondominio(props) {
     if (!e) var e = window.event;
     e.cancelBubble = true;
     if (e.stopPropagation) e.stopPropagation();
-    const response = await window.ipcRenderer.invoke("generalReports", {
+    const generalReports = await window.ipcRenderer.invoke("generalReports", {
       method: "indexByOwnerId",
       content: { id: data.allNestedCondominio.id },
     });
-    if (response[0]) {
+    // Mostrar ambos relatórios (demonstrativo e água) na mesma página
+    const waterReports = await window.ipcRenderer.invoke("waterReports", {
+      method: "indexByOwnerId",
+      content: { id: data.allNestedCondominio.id },
+    });
+    // console.warn("generalReports:", generalReports);
+    // console.warn("waterReports:", waterReports);
+    if (generalReports[0] && waterReports[0]) {
       const reports = {
         generalReport: true,
-        data: response,
+        data: generalReports, // general reports
+        data2: waterReports, // water reports
       };
       setData({ ...data, reports });
       navigate("/VisualizarRelatorios");
@@ -279,14 +287,17 @@ export default function EscolherCondominio(props) {
   }
 
   async function handlePaganteReport(id) {
-    const response = await window.ipcRenderer.invoke("individualReports", {
-      method: "indexByOwnerId",
-      content: { id },
-    });
-    if (response[0]) {
+    const individualReports = await window.ipcRenderer.invoke(
+      "individualReports",
+      {
+        method: "indexByOwnerId",
+        content: { id },
+      }
+    );
+    if (individualReports[0]) {
       const reports = {
         generalReport: false,
-        data: response,
+        data: individualReports, // individual reports
       };
       setData({ ...data, reports });
       navigate("/VisualizarRelatorios");
