@@ -21,7 +21,7 @@
 }
 
 #WaterReportHeader #header-right {
-  width: 668px;
+  width: calc(100% - 2 * 116px);
 }
 
 #WaterReportHeader #header-line1 {
