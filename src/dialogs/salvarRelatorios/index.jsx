@@ -67,6 +67,13 @@ export default function DraggableDialog(props) {
 
   // this function saves de reports (data.lastReports) on the database
   const saveAllReportsDatabase = async () => {
+    await window.ipcRenderer.invoke("apportionmentReports", {
+      method: "create",
+      content: {
+        report: lastReports.rr,
+        condominioId,
+      },
+    });
     await window.ipcRenderer.invoke("generalReports", {
       method: "create",
       content: {
@@ -150,7 +157,7 @@ export default function DraggableDialog(props) {
           await updateRegistroCondominio(despesa.condominioId, despesa.agua);
         }
       }
-      await updateValorDespesaToZero(despesa.id, despesa["Valores"]); // ZERAR VALORES
+      //await updateValorDespesaToZero(despesa.id, despesa["Valores"]); // REVIEW ZERAR VALORES
       if (!despesa.permanente) {
         await updateDespesaParcelada(despesa); // ATUALIZAR DESPESAS PARCELADAS
       }
