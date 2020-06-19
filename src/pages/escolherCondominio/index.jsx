@@ -248,18 +248,24 @@ export default function EscolherCondominio(props) {
       method: "indexByOwnerId",
       content: { id: data.allNestedCondominio.id },
     });
-    // Mostrar ambos relatórios (demonstrativo e água) na mesma página
+    // Mostrar todos relatórios gerais (demonstrativo, rateio e água) na mesma página
     const waterReports = await window.ipcRenderer.invoke("waterReports", {
       method: "indexByOwnerId",
       content: { id: data.allNestedCondominio.id },
     });
-    // console.warn("generalReports:", generalReports);
-    // console.warn("waterReports:", waterReports);
-    if (generalReports[0] && waterReports[0]) {
+    const apportionmentReports = await window.ipcRenderer.invoke(
+      "apportionmentReports",
+      {
+        method: "indexByOwnerId",
+        content: { id: data.allNestedCondominio.id },
+      }
+    );
+    if (generalReports[0] && waterReports[0] && apportionmentReports[0]) {
       const reports = {
         generalReport: true,
         data: generalReports, // general reports
-        data2: waterReports, // water reports
+        data2: apportionmentReports, // apportionment reports
+        data3: waterReports, // water reports
       };
       setData({ ...data, reports });
       navigate("/VisualizarRelatorios");
