@@ -1,9 +1,17 @@
 #relatorioAgua .MuiTableContainer-root {
   text-align: center;
-  width: 900px !important;
   margin: 0 auto 0 auto;
   padding: 0;
 }
+
+#relatorioAgua .MuiTableContainer-root.pdfStyle {
+  width: 900px !important;
+}
+
+/* #relatorioAgua .MuiTableContainer-root.screenStyle {
+  padding-left: 1%;
+  padding-right: 1%;
+} */
 
 #relatorioAgua .MuiTable-root {
   background-color: white !important;
@@ -11,8 +19,8 @@
 }
 
 #relatorioAgua .MuiTable-root * {
-  font-size: 18px !important;
-  line-height: 30px;
+  font-size: 15px !important;
+  line-height: 25px;
 }
 
 #relatorioAgua .MuiTable-root {

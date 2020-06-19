@@ -1,0 +1,66 @@
+#relatorioRateio .MuiTableContainer-root {
+  text-align: center;
+  margin: 0 auto 0 auto;
+  padding: 0;
+}
+
+#relatorioRateio .MuiTableContainer-root.pdfStyle {
+  width: 1600px !important;
+}
+
+#relatorioRateio .MuiTableContainer-root.screenStyle {
+  min-width: 900px !important;
+  max-width: 1600px !important;
+}
+
+#relatorioRateio .MuiTable-root {
+  background-color: white !important;
+  border: 2px solid var(--report-color);
+}
+
+#relatorioRateio .MuiTable-root * {
+  font-size: 15px !important;
+}
+
+#relatorioRateio .MuiTable-root {
+  margin-bottom: 10px;
+}
+
+#relatorioRateio .Black .MuiTableCell-root {
+  background-color: var(--report-color) !important;
+  color: white !important;
+  font-weight: 600 !important;
+  padding-top: 1px !important;
+}
+
+#relatorioRateio .Black .MuiTableCell-root {
+  margin: 0;
+  padding: 0;
+}
+
+#relatorioRateio .Linha .MuiTableCell-root {
+  margin: 0;
+  padding: 0;
+  color: var(--report-color);
+}
+
+#relatorioRateio .MuiTableCell-root.col_start {
+  padding-left: 10px;
+  width: 100px;
+  text-align: left;
+}
+
+#relatorioRateio .MuiTableCell-root.col_end {
+  padding-right: 10px;
+  width: 120px;
+  text-align: right;
+}
+
+#relatorioRateio .MuiTableCell-root.col {
+  text-align: center;
+}
+
+#relatorioRateio .MuiTableCell-root.uniqueCol {
+  text-align: left;
+  padding: 1px 1px 1px 10px;
+}

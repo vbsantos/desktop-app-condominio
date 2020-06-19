@@ -5,10 +5,18 @@
 #relatorioIndividual .MuiTableContainer-root {
   overflow: hidden;
   text-align: center;
-  width: 900px !important;
   margin: 0 auto 10px auto;
   padding: 0;
 }
+
+#relatorioIndividual .MuiTableContainer-root.pdfStyle {
+  width: 900px !important;
+}
+
+/* #relatorioIndividual .MuiTableContainer-root.screenStyle {
+  padding-left: 1%;
+  padding-right: 1%;
+} */
 
 #relatorioIndividual .MuiTableRow-head * {
   background-color: var(--report-color);
@@ -19,7 +27,7 @@
 #relatorioIndividual .MuiTableRow-root * {
   padding: 1px 8px 1px 8px;
   font-weight: 400;
-  font-size: 16px !important;
+  font-size: 15px !important;
   color: var(--report-color);
 }
 

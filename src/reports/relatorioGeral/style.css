@@ -1,9 +1,17 @@
 #relatorioGeral .MuiTableContainer-root {
   text-align: center;
-  width: 900px !important;
   margin: 0 auto 0 auto;
   padding: 0;
 }
+
+#relatorioGeral .MuiTableContainer-root.pdfStyle {
+  width: 900px !important;
+}
+
+/* #relatorioGeral .MuiTableContainer-root.screenStyle {
+  padding-left: 1%;
+  padding-right: 1%;
+} */
 
 #relatorioGeral .MuiTable-root {
   background-color: white !important;
@@ -11,7 +19,7 @@
 }
 
 #relatorioGeral .MuiTable-root * {
-  font-size: 18px !important;
+  font-size: 15px !important;
 }
 
 #relatorioGeral .MuiTable-root {
