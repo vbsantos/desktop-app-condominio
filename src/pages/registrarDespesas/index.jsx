@@ -449,6 +449,112 @@ export default function RegistrarDespesas(props) {
     return waterReportJSON;
   };
 
+  // This function turns the ApportionmentReport data into a string
+  const makeApportionmentReportJSON = async (
+    condominio,
+    pagantes,
+    despesas
+  ) => {
+    const tabela1 = pagantes.map((pagante) => {
+      const id = pagante.id;
+      const unidade = pagante.complemento;
+      const fracao = pagante.fracao;
+      const valores = [];
+      let totalPagante = 0;
+      despesas.forEach((despesa) => {
+        console.warn(despesa["Valores"]);
+        const rateioAuto = despesa.rateioAutomatico;
+        const fundoReserva = despesa.fundoReserva;
+        if (!fundoReserva) {
+          let valor = 0;
+          if (rateioAuto) {
+            valor = Number(despesa.valor) * Number(fracao);
+          } else {
+            valor = Number(
+              despesa["Valores"].find((valor) => valor.paganteId === id).valor
+            );
+          }
+          totalPagante += valor;
+          console.warn({
+            id: despesa.id,
+            nome: despesa.nome,
+            valor,
+            id,
+            unidade,
+            valores,
+            totalPagante,
+          });
+          valores.push({
+            id: despesa.id,
+            nome: despesa.nome,
+            valor,
+          });
+        }
+      });
+      return {
+        id,
+        unidade,
+        valores,
+        total: totalPagante,
+      };
+    });
+
+    const despesaFundoReserva = despesas.find(
+      (despesa) => despesa.fundoReserva
+    );
+    tabela1.forEach((pagante) => {
+      const fundoReservaIndividual = pagante.total * (percentage[0] / 100);
+      pagante.total += fundoReservaIndividual;
+      pagante.valores.push({
+        id: despesaFundoReserva.id,
+        nome: despesaFundoReserva.nome,
+        valor: fundoReservaIndividual,
+      });
+    });
+
+    const apportionmentReport = [];
+    apportionmentReport.push({
+      table: true,
+      name: "despesasIndividuais",
+      data: tabela1,
+    });
+
+    // Total de cada despesa
+    const totais = [];
+    despesas.forEach((despesa) => {
+      const rateioAuto = despesa.rateioAutomatico;
+      const fundoReserva = despesa.fundoReserva;
+      if (!fundoReserva) {
+        let total = 0;
+        if (rateioAuto) {
+          total = Number(despesa.valor);
+        } else {
+          total = Number(despesa.valor);
+        }
+        totais.push(total);
+      }
+    });
+    totais.push(percentage[1]);
+
+    apportionmentReport.push({
+      table: false,
+      name: "info",
+      data: {
+        totais,
+        total: total + percentage[1],
+        nomeCondominio: condominio.nome,
+        enderecoCondominio: condominio.endereco,
+        nomeAdministrador: data.allNestedBeneficiario.nome,
+        emailAdministrador: data.allNestedBeneficiario.email,
+        telefoneAdministrar: data.allNestedBeneficiario.telefone,
+        reportDate: data.reportDate,
+      },
+    });
+
+    const apportionmentReportJSON = JSON.stringify(apportionmentReport);
+    return apportionmentReportJSON;
+  };
+
   async function putReportsOnLastReports(categorias, condominio) {
     const existDepesaAgua = !!condominio["Despesas"].find(
       (despesa) => despesa.aguaIndividual
@@ -464,6 +570,16 @@ export default function RegistrarDespesas(props) {
       console.log(relatorioAgua);
       console.groupEnd("RA");
     }
+
+    // get apportionment report json
+    const relatorioRateio = await makeApportionmentReportJSON(
+      condominio,
+      condominio["Pagantes"],
+      condominio["Despesas"].filter((despesa) => !despesa.informacao)
+    );
+    console.groupCollapsed("RR");
+    console.log(relatorioRateio);
+    console.groupEnd("RR");
 
     const relatorioGeral = await makeGeneralReportJSON(
       categorias,
@@ -483,6 +599,7 @@ export default function RegistrarDespesas(props) {
     console.groupEnd("RIs");
 
     const lastReports = {
+      rr: relatorioRateio,
       ra: relatorioAgua,
       rg: relatorioGeral,
       ris: relatoriosIndividuais,
