@@ -21,6 +21,7 @@ export default function RelatorioGeral(props) {
   const { report } = props;
   const { reportRef } = props;
   const { reportClass } = props;
+  const { view } = props;
 
   const headerInfo =
     report[report.length - 1].name === "info" ? report.pop().data : null;
@@ -37,7 +38,7 @@ export default function RelatorioGeral(props) {
 
   return (
     <div id="relatorioGeral">
-      <TableContainer className={reportClass} ref={reportRef}>
+      <TableContainer className={`reportClass ${view}`} ref={reportRef}>
         <GeneralReportHeader
           nomeCondominio={headerInfo.nomeCondominio}
           enderecoCondominio={headerInfo.enderecoCondominio}

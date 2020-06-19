@@ -24,6 +24,7 @@ export default function RelatorioIndividual(props) {
   const { reportRef } = props;
   const { reportClass } = props;
   const { report } = props;
+  const { view } = props;
 
   const info =
     report[report.length - 1].name === "info" ? report.pop().data : null;
@@ -57,7 +58,7 @@ export default function RelatorioIndividual(props) {
 
   return (
     <div id="relatorioIndividual">
-      <TableContainer className={reportClass} ref={reportRef}>
+      <TableContainer className={`reportClass ${view}`} ref={reportRef}>
         <IndividualReportHeader
           complementoPagante={info.complementoPagante}
           nomePagante={info.nomePagante}

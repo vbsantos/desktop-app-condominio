@@ -20,10 +20,11 @@ export default function RelatorioAgua(props) {
   const { report } = props;
   const { reportRef } = props;
   const { reportClass } = props;
+  const { view } = props;
 
   const headerInfo = report[2];
-  console.warn(headerInfo);
-  console.warn(report);
+  // console.warn(headerInfo);
+  // console.warn(report);
 
   const keys = Object.keys(report[0].data[0]);
 
@@ -33,7 +34,7 @@ export default function RelatorioAgua(props) {
 
   return (
     <div id="relatorioAgua">
-      <TableContainer className={reportClass} ref={reportRef}>
+      <TableContainer className={`reportClass ${view}`} ref={reportRef}>
         <WaterReportHeader
           nomeCondominio={headerInfo.data.nomeCondominio}
           enderecoCondominio={headerInfo.data.enderecoCondominio}
