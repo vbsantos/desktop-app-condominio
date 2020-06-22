@@ -462,7 +462,7 @@ export default function RegistrarDespesas(props) {
       const valores = [];
       let totalPagante = 0;
       despesas.forEach((despesa) => {
-        console.warn(despesa["Valores"]);
+        // console.warn("Valores:", despesa["Valores"]);
         const rateioAuto = despesa.rateioAutomatico;
         const fundoReserva = despesa.fundoReserva;
         if (!fundoReserva) {
@@ -475,15 +475,7 @@ export default function RegistrarDespesas(props) {
             );
           }
           totalPagante += valor;
-          console.warn({
-            id: despesa.id,
-            nome: despesa.nome,
-            valor,
-            id,
-            unidade,
-            valores,
-            totalPagante,
-          });
+          // console.warn("Despesa", {id: despesa.id,nome: despesa.nome,valor,id,unidade,valores,totalPagante,});
           valores.push({
             id: despesa.id,
             nome: despesa.nome,
