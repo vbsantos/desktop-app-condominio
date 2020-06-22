@@ -74,6 +74,18 @@ export default function DraggableDialog(props) {
     setDialog(false);
   }
 
+  const getUpdatedValores = (valores, response = null) => {
+    return valores.map((valor) => {
+      return {
+        despesaId: response ? response.id : valor.despesaId,
+        paganteId: valor.paganteId,
+        precoAgua: valor.precoAgua,
+        agua: valor.agua,
+        valor: valor.valor,
+      };
+    });
+  };
+
   // function that runs when you click the right button
   async function handleRightButton() {
     if (despesa.id === "") {
@@ -106,15 +118,7 @@ export default function DraggableDialog(props) {
         });
         console.warn("Despesa Cadastrada:", response);
       }
-      const neoValores = valores.map((valor) => {
-        return {
-          despesaId: response.id,
-          paganteId: valor.paganteId,
-          precoAgua: valor.precoAgua,
-          agua: valor.agua,
-          valor: valor.valor,
-        };
-      });
+      const neoValores = getUpdatedValores(valores, response);
       // console.warn("CREATE NEO VALORES:", neoValores);
       if (valores.length > 0) {
         const response2 = await window.ipcRenderer.invoke("valores", {
@@ -139,9 +143,10 @@ export default function DraggableDialog(props) {
           console.warn("Valores Editados:", response2);
         } else {
           // console.warn("IT IS A CREATION:", valores);
+          const neoValores = getUpdatedValores(valores);
           const response2 = await window.ipcRenderer.invoke("valores", {
             method: "bulkCreate",
-            content: valores,
+            content: neoValores,
           });
           console.warn("Valores Cadastrados:", response2);
         }
