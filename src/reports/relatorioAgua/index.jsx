@@ -34,7 +34,7 @@ export default function RelatorioAgua(props) {
 
   return (
     <div id="relatorioAgua">
-      <TableContainer className={`reportClass ${view}`} ref={reportRef}>
+      <TableContainer className={`${reportClass} ${view}`} ref={reportRef}>
         <WaterReportHeader
           nomeCondominio={headerInfo.data.nomeCondominio}
           enderecoCondominio={headerInfo.data.enderecoCondominio}

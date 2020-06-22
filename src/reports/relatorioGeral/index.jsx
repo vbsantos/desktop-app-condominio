@@ -38,7 +38,7 @@ export default function RelatorioGeral(props) {
 
   return (
     <div id="relatorioGeral">
-      <TableContainer className={`reportClass ${view}`} ref={reportRef}>
+      <TableContainer className={`${reportClass} ${view}`} ref={reportRef}>
         <GeneralReportHeader
           nomeCondominio={headerInfo.nomeCondominio}
           enderecoCondominio={headerInfo.enderecoCondominio}

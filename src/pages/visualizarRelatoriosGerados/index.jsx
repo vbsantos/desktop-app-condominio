@@ -115,11 +115,13 @@ export default function VisualizarRelatoriosGerados(props) {
       tablesPng.push(stringBase64);
     }
     const base64Reports = {
-      rr: tablesPng.shift(),
       rg: tablesPng.shift(),
+      rr: tablesPng.shift(),
       ra: data.lastReports.ra ? tablesPng.shift() : null,
       ris: tablesPng,
     };
+    console.warn(tablesPng); //TODO REMOVE
+    console.warn(base64Reports); //TODO REMOVE
     setData({
       ...data,
       base64Reports,

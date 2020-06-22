@@ -58,7 +58,7 @@ export default function RelatorioIndividual(props) {
 
   return (
     <div id="relatorioIndividual">
-      <TableContainer className={`reportClass ${view}`} ref={reportRef}>
+      <TableContainer className={`${reportClass} ${view}`} ref={reportRef}>
         <IndividualReportHeader
           complementoPagante={info.complementoPagante}
           nomePagante={info.nomePagante}
