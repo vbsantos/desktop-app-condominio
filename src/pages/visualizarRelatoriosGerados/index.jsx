@@ -120,8 +120,6 @@ export default function VisualizarRelatoriosGerados(props) {
       ra: data.lastReports.ra ? tablesPng.shift() : null,
       ris: tablesPng,
     };
-    console.warn(tablesPng); //TODO REMOVE
-    console.warn(base64Reports); //TODO REMOVE
     setData({
       ...data,
       base64Reports,
@@ -165,7 +163,7 @@ export default function VisualizarRelatoriosGerados(props) {
           reportClass="reportbase64"
           reportRef={null}
           report={JSON.parse(data.lastReports.rr)}
-          view={reportView} // REVIEW só aqui muda a aparência
+          view={reportView} // só aqui muda a aparência
         />
       </div>
       {data.lastReports.ra && (

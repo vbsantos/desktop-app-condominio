@@ -98,7 +98,7 @@ export default function VisualizarRelatorios(props) {
           content: {
             rg: imgData1,
             rr: imgData2,
-            ra: refWaterReport.current ? imgData3 : null, // REVIEW funciona sem despesa de água?
+            ra: refWaterReport.current ? imgData3 : null,
           },
         });
       } else {
@@ -187,7 +187,7 @@ export default function VisualizarRelatorios(props) {
               <RelatorioRateio
                 reportRef={apportionmentReportRef}
                 report={JSON.parse(data.reports.data2[index].report)}
-                view={reportView} // REVIEW só aqui muda a aparência
+                view={reportView} // só aqui muda a aparência
               />
               {data.reports.data2[index].report && (
                 <>

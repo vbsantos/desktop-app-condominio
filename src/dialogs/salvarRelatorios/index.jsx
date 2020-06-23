@@ -157,7 +157,7 @@ export default function DraggableDialog(props) {
           await updateRegistroCondominio(despesa.condominioId, despesa.agua);
         }
       }
-      //await updateValorDespesaToZero(despesa.id, despesa["Valores"]); // REVIEW ZERAR VALORES
+      //await updateValorDespesaToZero(despesa.id, despesa["Valores"]); // ZERAR VALORES
       if (!despesa.permanente) {
         await updateDespesaParcelada(despesa); // ATUALIZAR DESPESAS PARCELADAS
       }
@@ -210,7 +210,7 @@ export default function DraggableDialog(props) {
           <br />- Salvar os relatórios no sistema;
           <br />- Incrementar parcelas das despesas;
           <br />- Atualizar registros de água;
-          <br />- Zerar custos das despesas;
+          {/* <br />- Zerar custos das despesas; */}
           <br />
           <br />
           Caso prossiga, não poderá ser desfeita.
