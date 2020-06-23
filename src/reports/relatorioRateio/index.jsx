@@ -71,24 +71,26 @@ export default function RelatorioGeral(props) {
                 {pagante.valores.map((valor, index) => (
                   <TableCell
                     key={"linha_" + pagante.unidade + index}
-                    className="col"
+                    className="table_values col"
                   >{`R$ ${valor.valor.toFixed(2)}`}</TableCell>
                 ))}
 
-                <TableCell className="col_end">{`R$ ${pagante.total.toFixed(
+                <TableCell className="table_values col_end">{`R$ ${pagante.total.toFixed(
                   2
                 )}`}</TableCell>
               </TableRow>
             ))}
             <TableRow key={"total"} className="Black">
-              <TableCell className="col_start">{"TOTAL:"}</TableCell>
+              <TableCell className="table_footer col_start">
+                {"TOTAL:"}
+              </TableCell>
               {headerInfo.data.totais.map((total, index) => (
                 <TableCell
                   key={"total_" + index}
-                  className="col"
+                  className="table_footer col"
                 >{`R$ ${total.toFixed(2)}`}</TableCell>
               ))}
-              <TableCell className="col_end">{`R$ ${headerInfo.data.total.toFixed(
+              <TableCell className="table_footer col_end">{`R$ ${headerInfo.data.total.toFixed(
                 2
               )}`}</TableCell>
             </TableRow>

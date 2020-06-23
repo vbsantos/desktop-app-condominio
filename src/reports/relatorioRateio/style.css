@@ -64,3 +64,8 @@
   text-align: left;
   padding: 1px 1px 1px 10px;
 }
+
+#relatorioRateio .MuiTableCell-root.table_footer {
+  /* table footer no-wrap */
+  white-space: nowrap;
+}

@@ -494,15 +494,17 @@ export default function RegistrarDespesas(props) {
     const despesaFundoReserva = despesas.find(
       (despesa) => despesa.fundoReserva
     );
-    tabela1.forEach((pagante) => {
-      const fundoReservaIndividual = pagante.total * (percentage[0] / 100);
-      pagante.total += fundoReservaIndividual;
-      pagante.valores.push({
-        id: despesaFundoReserva.id,
-        nome: despesaFundoReserva.nome,
-        valor: fundoReservaIndividual,
+    if (despesaFundoReserva) {
+      tabela1.forEach((pagante) => {
+        const fundoReservaIndividual = pagante.total * (percentage[0] / 100);
+        pagante.total += fundoReservaIndividual;
+        pagante.valores.push({
+          id: despesaFundoReserva.id,
+          nome: despesaFundoReserva.nome,
+          valor: fundoReservaIndividual,
+        });
       });
-    });
+    }
 
     const apportionmentReport = [];
     apportionmentReport.push({
@@ -526,7 +528,9 @@ export default function RegistrarDespesas(props) {
         totais.push(total);
       }
     });
-    totais.push(percentage[1]);
+    if (despesaFundoReserva) {
+      totais.push(percentage[1]);
+    }
 
     apportionmentReport.push({
       table: false,
