@@ -149,7 +149,7 @@ export default function FormDespesa(props) {
         undefined &&
         valoresList.find(
           (field) =>
-            !Number(field.value.replace(",", ".")) ||
+            isNaN(Number(field.value.replace(",", "."))) ||
             Number(field.value.replace(",", ".")) < 0
         ) === undefined
     );

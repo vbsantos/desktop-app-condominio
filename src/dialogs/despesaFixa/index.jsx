@@ -119,7 +119,7 @@ export default function DraggableDialog(props) {
         console.warn("Despesa Cadastrada:", response);
       }
       const neoValores = getUpdatedValores(valores, response);
-      console.warn("CREATE NEO VALORES:", neoValores);
+      // console.warn("CREATE NEO VALORES:", neoValores);
       if (valores.length > 0) {
         const response2 = await window.ipcRenderer.invoke("valores", {
           method: "bulkCreate",

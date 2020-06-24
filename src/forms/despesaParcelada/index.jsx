@@ -98,12 +98,16 @@ export default function FormDespesa(props) {
     });
 
     setFormCompleted(
-      Number(valor) >= 0 &&
-        Number(parcelaAtual) > 0 &&
+      Number(parcelaAtual) > 0 &&
         Number(numParcelas) > 0 &&
         Number(parcelaAtual) <= Number(numParcelas) &&
         formList.find((field) => !field.disabled && field.value === "") ===
-          undefined
+          undefined &&
+        valoresList.find(
+          (field) =>
+            isNaN(Number(field.value.replace(",", "."))) ||
+            Number(field.value.replace(",", ".")) < 0
+        ) === undefined
     );
   }
 
