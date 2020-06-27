@@ -24,17 +24,13 @@ export default function FormCondominio(props) {
 
   function formOnChange() {
     const formList = [...formRef.current.elements];
-    const leituraAgua = formList[2].value.replace(",", ".");
     setCondominio({
       id: condominio.id,
       nome: formList[0].value,
       endereco: formList[1].value,
-      leituraAgua,
       beneficiarioId: beneficiario.id,
     });
-    setFormCompleted(
-      formList[0].value !== "" && leituraAgua !== "" && Number(leituraAgua) >= 0
-    );
+    setFormCompleted(formList[0].value !== "");
   }
 
   return (
@@ -50,16 +46,6 @@ export default function FormCondominio(props) {
         <FormControl>
           <InputLabel htmlFor="endereco">Endereço</InputLabel>
           <Input defaultValue={condominio.endereco} id="endereco"></Input>
-        </FormControl>
-      </section>
-
-      <section>
-        <DialogContentText color="inherit">
-          Última Leitura de água
-        </DialogContentText>
-        <FormControl>
-          <InputLabel htmlFor="leituraAgua">Leitura da água *</InputLabel>
-          <Input defaultValue={condominio.leituraAgua} id="leituraAgua"></Input>
         </FormControl>
       </section>
 

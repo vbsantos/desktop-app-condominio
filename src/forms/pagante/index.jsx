@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 
 // MATERIAL UI COMPONENTS
 import {
@@ -7,6 +7,11 @@ import {
   FormControl,
   InputLabel,
   Input,
+  FormGroup,
+  FormControlLabel,
+  Switch,
+  Typography,
+  Grid,
 } from "@material-ui/core";
 
 export default function FormPagante(props) {
@@ -26,6 +31,7 @@ export default function FormPagante(props) {
     const formList = [...formRef.current.elements];
     const fracao = formList[4].value.replace(",", ".");
     const leituraAgua = formList[6].value.replace(",", ".");
+    const unidadeComercial = formList[7].checked;
     setPagante({
       id: pagante.id,
       nome: formList[0].value,
@@ -35,6 +41,7 @@ export default function FormPagante(props) {
       fracao,
       box: formList[5].value,
       leituraAgua,
+      unidadeComercial,
       condominioId: condominio.id,
     });
     setFormCompleted(
@@ -121,6 +128,39 @@ export default function FormPagante(props) {
             id="leituraAgua"
           ></Input>
         </FormControl>
+      </section>
+      <section>
+        <DialogContentText color="inherit">Tipo de Unidade</DialogContentText>
+        <FormGroup>
+          <Typography component="div">
+            <Grid
+              container
+              component="label"
+              justify="center"
+              alignItems="center"
+              spacing={1}
+            >
+              <Grid item xs>
+                Residencial
+              </Grid>
+              <Grid item xs>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      // onChange={(e) => setComercial(e.target.checked)}
+                      value="cb1"
+                      checked={pagante.unidadeComercial}
+                      color="primary"
+                    />
+                  }
+                />
+              </Grid>
+              <Grid item xs>
+                Comercial
+              </Grid>
+            </Grid>
+          </Typography>
+        </FormGroup>
       </section>
 
       {/* FEEDBACK */}

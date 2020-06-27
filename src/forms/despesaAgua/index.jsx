@@ -29,11 +29,9 @@ export default function FormDespesa(props) {
 
   // store all current values of the form fields
   const [despesa, setDespesa] = props.despesa;
-  // console.log("despesa:", despesa);
 
   // despesa secudaria de agua
   const [despesa2, setDespesa2] = props.despesa2;
-  // console.log("despesa2:", despesa2);
 
   // store despesa2 value
   const [valor2, setValor2] = useState(despesa2.valor);
@@ -49,10 +47,17 @@ export default function FormDespesa(props) {
 
   // function that runs each time there is a change in the form
   function formOnChange() {
+    console.groupCollapsed("Dados da despesa de água");
+
     const formList = [...formRef.current.elements];
-    const valoresList = formList.slice(2);
-    const precoAguaField = valoresList[0];
-    const precoAgua = Number(precoAguaField.value.replace(",", "."));
+
+    const valoresList = formList.slice(5);
+
+    const precoAguaResidencial = Number(formList[2].value.replace(",", "."));
+
+    const precoAguaComercial = Number(formList[3].value.replace(",", "."));
+
+    const valorTotalDespesa = Number(formList[4].value.replace(",", "."));
 
     // fields registros de água individuais
     const registrosIndividuaisFields = valoresList.filter((field) =>
@@ -65,86 +70,69 @@ export default function FormDespesa(props) {
     );
 
     // array com registros individuais anteriores
-    const registrosIndividuaisAnteriores = registrosIndividuaisFields.map(
+    const dadosPagantesAgua = registrosIndividuaisFields.map(
       (registroIndividualAtual) => {
-        const pagante_id = Number(registroIndividualAtual.id.slice(14));
-        const registroAnterior = condominio["Pagantes"].find(
-          (pagante) => pagante.id === pagante_id
-        ).leituraAgua;
-        return registroAnterior;
+        const paganteId = Number(registroIndividualAtual.id.slice(14));
+        const pagante = condominio["Pagantes"].find(
+          (pagante) => pagante.id === paganteId
+        );
+        const unidadeComercial = pagante.unidadeComercial;
+        const leituraAnterior = pagante.leituraAgua;
+        const leituraAtual = registrosIndividuaisFields
+          .find((field) => field.id === `aguaIndividual${pagante.id}`)
+          .value.replace(",", ".");
+        const consumo = leituraAtual - leituraAnterior;
+        const precoUnitario = unidadeComercial
+          ? precoAguaComercial
+          : precoAguaResidencial;
+        const valor = unidadeComercial
+          ? consumo < 10
+            ? 10 * precoAguaComercial
+            : consumo * precoAguaComercial
+          : consumo * precoAguaResidencial;
+        valoresIndividuaisFields.find(
+          (field) => field.id === `valorAguaIndividual${paganteId}`
+        ).value = `R$ ${valor.toFixed(2)}`;
+        return {
+          paganteId: pagante.id,
+          unidadeComercial,
+          leituraAnterior,
+          leituraAtual,
+          consumo,
+          precoUnitario,
+          valor,
+        };
       }
     );
 
-    // registro de água geral que entra no condominio
-    const registroGeralAtual = valoresList[1].value.replace(",", ".");
-
-    // registro de água geral anterior
-    const registroGeralAnterior = condominio.leituraAgua;
-
-    // registro de água geral só desse mês
-    const registroGeralConsumo = registroGeralAtual - registroGeralAnterior;
-
-    const registroIndividualAtual = registrosIndividuaisFields.reduce(
-      (acc, field) => {
-        return Number(acc) + Number(field.value.replace(",", "."));
-      },
-      0
-    );
-
-    const registroIndividualAnterior = registrosIndividuaisAnteriores.reduce(
-      (acc, item) => {
-        return Number(acc) + Number(item);
-      },
-      0
-    );
-
-    const registroIndividualConsumo =
-      registroIndividualAtual - registroIndividualAnterior;
-
-    const consumoComum = registroGeralConsumo - registroIndividualConsumo;
-
-    const valorTotalIndividual =
-      Math.ceil(Number(registroIndividualConsumo) * Number(precoAgua) * 100) /
-      100; // REVIEW MATH.CEIL(TOTAL)
-    const valorTotalComum =
-      Math.ceil(Number(consumoComum) * Number(precoAgua) * 100) / 100; // REVIEW MATH.CEIL(TOTAL)
-
-    setValor2(function () {
-      const precoComum = consumoComum * precoAgua;
-      valoresList[2].value = "R$ " + precoComum.toFixed(2);
-      return precoComum;
+    const newValores = dadosPagantesAgua.map((aguaIndividual) => {
+      return {
+        id:
+          valores.length > 0 && valores[0].id !== ""
+            ? valores.find(
+                (valor) =>
+                  valor.paganteId === aguaIndividual.paganteId &&
+                  valor.despesaId === despesa.id
+              ).id
+            : "",
+        precoAgua: aguaIndividual.precoUnitario,
+        agua: aguaIndividual.leituraAtual,
+        valor: aguaIndividual.valor,
+        paganteId: aguaIndividual.paganteId,
+        despesaId: despesa.id,
+      };
     });
 
-    setValores(
-      (function () {
-        // TODO - turn into a outside function
-        return registrosIndividuaisFields.map((valoraguafield, index) => {
-          const leituraAguaAtual = valoraguafield.value.replace(",", ".");
-          const paganteId = Number(valoraguafield.id.slice(14));
-          const leituraAguaAntiga = condominio["Pagantes"].find(
-            (pagante) => pagante.id === paganteId
-          ).leituraAgua;
-          const leituraAguaNova =
-            Number(leituraAguaAtual) - Number(leituraAguaAntiga);
-          const valor = Number(leituraAguaNova * precoAgua);
-          valoresIndividuaisFields[index].value = "R$ " + valor.toFixed(2);
-          return {
-            id:
-              valores.length > 0 && valores[0].id !== ""
-                ? valores.find(
-                    (valor) =>
-                      valor.paganteId === paganteId &&
-                      valor.despesaId === despesa.id
-                  ).id
-                : "",
-            precoAgua: precoAgua,
-            agua: leituraAguaAtual,
-            valor,
-            paganteId,
-            despesaId: despesa.id,
-          };
-        });
-      })()
+    setValores(newValores);
+
+    const registroIndividualAtual = dadosPagantesAgua.reduce(
+      (acc, pagante) => Number(acc) + Number(pagante.leituraAtual),
+      0
+    );
+
+    const valorTotalIndividual = dadosPagantesAgua.reduce(
+      (acc, pagante) => Number(acc) + Number(pagante.valor),
+      0
     );
 
     setDespesa({
@@ -163,12 +151,15 @@ export default function FormDespesa(props) {
       Valores: valores,
       condominioId: condominio.id,
     });
+    // console.log("Despesa Água Primária:", despesa);
+
+    const valorTotalComum = valorTotalDespesa - valorTotalIndividual;
 
     setDespesa2({
       id: despesa2.id,
       nome: "Consumo de Água - Área Comum",
       categoria: formList[1].value,
-      agua: registroGeralAtual,
+      agua: 0, // não utilizado
       aguaIndividual: true,
       rateioAutomatico: true,
       permanente: true,
@@ -180,20 +171,49 @@ export default function FormDespesa(props) {
       Valores: [],
       condominioId: condominio.id,
     });
+    // console.log("Despesa Água Secundária:", despesa2);
 
-    setFormCompleted(
-      formList.find((field) => !field.disabled && field.value === "") ===
-        undefined &&
-        allValuesGood(valoresIndividuaisFields, valorTotalComum, precoAgua)
-    );
+    setFormCompleted(true);
+
+    console.groupEnd("Dados da despesa de água");
   }
+
+  const getOldUnitaryValue = (tipoUnidade) => {
+    let paganteId;
+    let valorUnitario;
+    let unidade;
+    let nulo = false;
+
+    if (tipoUnidade === "comercial") {
+      // comercial
+      unidade = condominio["Pagantes"].find(
+        (pagante) => pagante.unidadeComercial
+      );
+    } else {
+      // residencial
+      unidade = condominio["Pagantes"].find(
+        (pagante) => !pagante.unidadeComercial
+      );
+    }
+    if (unidade) {
+      paganteId = unidade.id;
+    } else {
+      nulo = true;
+    }
+
+    valorUnitario = nulo
+      ? "0.00"
+      : valores.find((valor) => valor.paganteId === paganteId).precoAgua;
+
+    return String(valorUnitario);
+  };
 
   return (
     <div>
       <form ref={formRef} onChange={formOnChange}>
         {/* INFORMAÇÕES DA DESPESA */}
         <section>
-          <DialogContentText key={"despesaTitle"} color="inherit">
+          <DialogContentText color="inherit">
             Informações da Despesa
           </DialogContentText>
           <FormControl>
@@ -216,57 +236,64 @@ export default function FormDespesa(props) {
 
         {/* VALORES */}
         <section>
-          <DialogContentText key={"valoresTitle"} color="inherit">
+          <DialogContentText color="inherit">
             Valor Unitário da Água
-          </DialogContentText>
-          <FormControl key={"valorAguaForm"}>
-            <InputLabel htmlFor={"valorAguaLabel"}>
-              Valor do m³ da água *
-            </InputLabel>
-            <Input
-              defaultValue={
-                valores.length > 0 && valores[0].id !== ""
-                  ? String(valores[0].precoAgua)
-                  : ""
-              }
-              id={"valorAguaCondominio"}
-            ></Input>
-          </FormControl>
-        </section>
-
-        {/* REGISTRO AGUA GERAL */}
-        <section>
-          <DialogContentText key={"valoresTitle"} color="inherit">
-            Leitura de água atual do Condomínio
           </DialogContentText>
           <div id="containerAgua">
             <div id="esquerdaAgua">
-              <FormControl key={"aguaComumForm"}>
-                <InputLabel>Leitura de água Geral *</InputLabel>
+              <FormControl>
+                <InputLabel htmlFor={"valorAguaLabel"}>
+                  Valor do m³ Residencial *
+                </InputLabel>
                 <Input
-                  id={"aguaComum"}
-                  defaultValue={despesa2.id ? despesa2.agua : ""}
+                  defaultValue={
+                    valores.length > 0 && valores[0].id !== ""
+                      ? getOldUnitaryValue("residencial")
+                      : ""
+                  }
+                  id={"valorAguaResidencial"}
                 ></Input>
               </FormControl>
             </div>
             <div id="direitaAgua">
-              <FormControl key={"valorAguaComumForm"}>
-                <InputLabel>Custo para o Condomínio</InputLabel>
+              <FormControl>
+                <InputLabel htmlFor={"valorAguaLabel"}>
+                  Valor do m³ Comercial *
+                </InputLabel>
                 <Input
-                  id={"valorAguaComum"}
                   defaultValue={
-                    despesa2.id ? "R$ " + Number(valor2).toFixed(2) : " "
+                    valores.length > 0 && valores[0].id !== ""
+                      ? getOldUnitaryValue("comercial")
+                      : ""
                   }
-                  disabled={true}
+                  id={"valorAguaComercial"}
                 ></Input>
               </FormControl>
             </div>
           </div>
         </section>
 
+        {/* VALOR TOTAL DESPESA */}
+        <section>
+          <DialogContentText color="inherit">
+            Custo da Despesa (Individuais + Comum)
+          </DialogContentText>
+          <FormControl>
+            <InputLabel htmlFor={"valorAguaLabel"}>Valor (R$) *</InputLabel>
+            <Input
+              defaultValue={
+                despesa.id === ""
+                  ? ""
+                  : (Number(despesa.valor) + Number(despesa2.valor)).toFixed(2)
+              }
+              id={"valorDespesa"}
+            ></Input>
+          </FormControl>
+        </section>
+
         {/* REGISTRO AGUA INDIVIDUAL */}
         <section>
-          <DialogContentText key={"valoresTitle"} color="inherit">
+          <DialogContentText color="inherit">
             Leituras de Água Individuais atuais dos Condôminos
           </DialogContentText>
           <div id="containerAgua">

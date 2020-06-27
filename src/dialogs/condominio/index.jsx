@@ -46,7 +46,6 @@ export default function DraggableDialog(props) {
     props.condominio || {
       id: "",
       nome: "",
-      leituraAgua: "",
       beneficiarioId: beneficiario.id,
     }
   );
