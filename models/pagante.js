@@ -10,14 +10,12 @@ module.exports = (sequelize, DataTypes) => {
       email: DataTypes.STRING,
       box: DataTypes.STRING,
       telefone: DataTypes.STRING,
+      unidadeComercial: DataTypes.BOOLEAN,
       condominioId: DataTypes.INTEGER,
     },
     {}
   );
   Pagante.associate = function (models) {
-    // associations can be defined here
-    // Pagante.hasMany(models.IndividualReport);
-
     Pagante.belongsTo(models.Condominio, {
       foreignKey: "condominioId",
     });
