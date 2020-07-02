@@ -58,9 +58,7 @@ export default function RelatorioIndividual(props) {
   // console.warn("RI:", JSON.parse(JSON.stringify(reportData)));
 
   const table1 = reportData.splice(0, Math.ceil(reportData.length / 2));
-  console.log(table1);
   const table2 = reportData;
-  console.log(table2);
 
   return (
     <div id="relatorioIndividual">
