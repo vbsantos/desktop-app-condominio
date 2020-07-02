@@ -19,11 +19,11 @@ export default function ApportionmentReportHeader(props) {
       <div id="header-right">
         {validDate ? (
           <div className="bold" id="header-line1">
-            {`Tabela de Cobranças ${date.mes} de ${date.ano}`}
+            {`Planilha de Cobranças ${date.mes} de ${date.ano}`}
           </div>
         ) : (
           <div className="bold" id="header-line1">
-            {"Tabela de Cobranças"}
+            {"Planilha de Cobranças"}
           </div>
         )}
         <div id="header-line2">
