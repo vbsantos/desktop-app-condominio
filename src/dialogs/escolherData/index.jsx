@@ -38,7 +38,13 @@ export default function DraggableDialog(props) {
   const [datePicked, setDatePicked] = props.picked;
 
   // Report Date
-  const [date, setDate] = useState({ mes: "", ano: "" });
+  const [date, setDate] = useState({
+    mes: "",
+    ano: "",
+    competencia: "",
+    emissao: "",
+    vencimento: "",
+  });
 
   // true when all the fields of the form are filled
   const [formCompleted, setFormCompleted] = useState(false);
@@ -54,7 +60,16 @@ export default function DraggableDialog(props) {
 
   // function that runs when you click the right button
   async function handleRightButton() {
-    setData({ ...data, reportDate: { mes: date.mes, ano: date.ano } });
+    setData({
+      ...data,
+      reportDate: {
+        mes: date.mes,
+        ano: date.ano,
+        competencia: date.competencia,
+        emissao: date.emissao,
+        vencimento: date.vencimento,
+      },
+    });
     setDatePicked(true);
     setDialog(false);
   }

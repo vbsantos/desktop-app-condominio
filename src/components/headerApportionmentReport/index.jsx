@@ -12,26 +12,30 @@ export default function ApportionmentReportHeader(props) {
   const { date } = props;
 
   const validDate = typeof date !== "undefined";
+  const validEmissao = date.emissao !== undefined;
+  const validVencimento = date.vencimento !== undefined;
 
   return (
     <div id="ApportionmentReportHeader">
       <img id="header-left" src={logo} alt="Logo" />
       <div id="header-right">
-        {validDate ? (
-          <div className="bold" id="header-line1">
-            {`Planilha de Cobranças ${date.mes} de ${date.ano}`}
-          </div>
-        ) : (
-          <div className="bold" id="header-line1">
-            {"Planilha de Cobranças"}
-          </div>
-        )}
+        <div className="bold" id="header-line1">
+          {"Planilha de Previsão de Receita Mensal"}
+        </div>
         <div id="header-line2">
-          <span className="bold">{nomeCondominio}</span>
+          <span className="bold">{`${nomeCondominio} - ${enderecoCondominio}`}</span>
         </div>
         {enderecoCondominio && (
           <div id="header-line3">
-            <span className="bold">{enderecoCondominio}</span>
+            <span className="bold">
+              {validEmissao ? `Emissão: ${date.emissao}  ` : ""}
+              {validDate
+                ? validEmissao && validVencimento
+                  ? `Competência: ${date.competencia}  `
+                  : `Competência: ${date.mes}/${date.ano}  `
+                : ""}
+              {validVencimento ? `Vencimento: ${date.vencimento}  ` : ""}
+            </span>
           </div>
         )}
       </div>

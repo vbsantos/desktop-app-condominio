@@ -37,8 +37,12 @@ export default function FormDespesa(props) {
     "Dezembro",
   ];
 
-  const getMonth = () => new Date().getMonth();
+  // const getMonth = () => new Date().getMonth();
   const getYear = () => new Date().getFullYear();
+
+  const pad = (num, size) => {
+    return String(num).padStart(size, "0");
+  };
 
   // function that runs each time there is a change in the form
   function formOnChange() {
@@ -47,10 +51,16 @@ export default function FormDespesa(props) {
 
     const mes = formList[0].value;
     const ano = formList[1].value;
+    const emissao = formList[2].value;
+    const vencimento = formList[3].value;
+    const competencia = `${pad(months.indexOf(mes) + 1, 2)}/${ano}`;
 
     setDate({
       mes,
       ano,
+      competencia,
+      emissao,
+      vencimento,
     });
 
     setFormCompleted(mes !== "" && ano !== "");
@@ -90,6 +100,28 @@ export default function FormDespesa(props) {
                   {getYear() + 1}
                 </option>
               </NativeSelect>
+            </FormControl>
+          </div>
+        </section>
+        <section>
+          <DialogContentText key={"dataTitle"} color="inherit">
+            Emissão
+          </DialogContentText>
+          <div>
+            <FormControl>
+              <InputLabel htmlFor="emissao">Data de Emissão</InputLabel>
+              <Input id="emissao"></Input>
+            </FormControl>
+          </div>
+        </section>
+        <section>
+          <DialogContentText key={"dataTitle"} color="inherit">
+            Vencimento
+          </DialogContentText>
+          <div>
+            <FormControl>
+              <InputLabel htmlFor="vencimento">Data de Vencimento</InputLabel>
+              <Input id="vencimento"></Input>
             </FormControl>
           </div>
         </section>
