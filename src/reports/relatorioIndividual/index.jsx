@@ -42,10 +42,14 @@ export default function RelatorioIndividual(props) {
           ])
         : [
             [
-              categoria.id,
+              categoria.data.id,
               categoria.name === "total" ? "Total" : categoria.name,
-              categoria.data,
-              false,
+              categoria.data.value === undefined
+                ? categoria.data
+                : categoria.data.value,
+              categoria.data.id === undefined || categoria.name === "total"
+                ? false
+                : true,
             ],
           ]
     )
@@ -54,7 +58,9 @@ export default function RelatorioIndividual(props) {
   // console.warn("RI:", JSON.parse(JSON.stringify(reportData)));
 
   const table1 = reportData.splice(0, Math.ceil(reportData.length / 2));
+  console.log(table1);
   const table2 = reportData;
+  console.log(table2);
 
   return (
     <div id="relatorioIndividual">

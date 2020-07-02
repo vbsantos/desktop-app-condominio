@@ -262,7 +262,10 @@ export default function RegistrarDespesas(props) {
       generalReport.push({
         table: false,
         name: `Fundo Reserva - ${percentage[0]}%`,
-        data: percentage[1].toFixed(2),
+        data: {
+          id: despesas.find((despesa) => despesa.fundoReserva).id,
+          value: percentage[1].toFixed(2),
+        },
       });
     }
     if (informacoes.length > 0) {
@@ -325,13 +328,16 @@ export default function RegistrarDespesas(props) {
         individualReport.push({
           table: false,
           name: `Fundo Reserva - ${percentage[0]}%`,
-          data: fundoReservaIndividual.toFixed(2),
+          data: {
+            id: despesas.find((despesa) => despesa.fundoReserva).id,
+            value: fundoReservaIndividual.toFixed(2),
+          },
         });
       }
       individualReport.push({
         table: false,
         name: "total",
-        data: (totalIndividual + fundoReservaIndividual).toFixed(2),
+        data: { value: (totalIndividual + fundoReservaIndividual).toFixed(2) },
       });
       const despesaAgua = despesas.find(
         (despesa) => despesa.aguaIndividual === true

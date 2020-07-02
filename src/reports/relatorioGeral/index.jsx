@@ -46,17 +46,33 @@ export default function RelatorioGeral(props) {
         />
 
         {fundoReserva && (
-          <Table key={"fundoReserva"}>
+          <Table>
             <TableHead>
-              <TableRow className="Black" id="fundoReservaRow">
+              <TableRow className="Black">
+                <TableCell className="col1">{"1.RECEITA"}</TableCell>
+                <TableCell className="col2">Cód.</TableCell>
+                <TableCell className="col3">Parcela</TableCell>
+                <TableCell className="col4">Valor</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              <TableRow className="Linha">
                 <TableCell className="col1">{fundoReserva.name}</TableCell>
+                <TableCell className="col2">{fundoReserva.data.id}</TableCell>
+                <TableCell className="col3">{"Fixa"}</TableCell>
+                <TableCell className="col4">
+                  {"R$ " + Number(fundoReserva.data.value).toFixed(2)}
+                </TableCell>
+              </TableRow>
+              <TableRow className="Black">
+                <TableCell className="col1">SUB-TOTAL:</TableCell>
                 <TableCell className="col2"></TableCell>
                 <TableCell className="col3"></TableCell>
                 <TableCell className="col4">
-                  {"R$ " + Number(fundoReserva.data).toFixed(2)}
+                  {"R$ " + Number(fundoReserva.data.value).toFixed(2)}
                 </TableCell>
               </TableRow>
-            </TableHead>
+            </TableBody>
           </Table>
         )}
 

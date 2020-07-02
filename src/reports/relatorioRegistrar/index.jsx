@@ -81,11 +81,18 @@ export default function RelatorioCondominioRegistrar(props) {
     <div id="relatorioCondominioRegistrar">
       <TableContainer ref={reportRef}>
         {percentage[0] !== 0 && (
-          <Table key={"fundoReserva"}>
+          <Table>
             <TableHead>
+              <TableRow className="Black">
+                <TableCell className="col1">{"1.RECEITA"}</TableCell>
+                <TableCell className="col2">Cód.</TableCell>
+                <TableCell className="col3">Parcela</TableCell>
+                <TableCell className="col4">Valor</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
               <TableRow
-                className="Black"
-                id="fundoReservaRow"
+                className="Linha"
                 onClick={() =>
                   selectAndOpenDialog(
                     despesas.find((despesa) => despesa.fundoReserva).id || ""
@@ -95,13 +102,23 @@ export default function RelatorioCondominioRegistrar(props) {
                 <TableCell className="col1">
                   Fundo Reserva - {percentage[0]} %
                 </TableCell>
+                <TableCell className="col2">
+                  {despesas.find((despesa) => despesa.fundoReserva).id}
+                </TableCell>
+                <TableCell className="col3">{"Fixa"}</TableCell>
+                <TableCell className="col4">
+                  {"R$ " + percentage[1].toFixed(2)}
+                </TableCell>
+              </TableRow>
+              <TableRow className="Black">
+                <TableCell className="col1">SUB-TOTAL:</TableCell>
                 <TableCell className="col2"></TableCell>
                 <TableCell className="col3"></TableCell>
                 <TableCell className="col4">
                   {"R$ " + percentage[1].toFixed(2)}
                 </TableCell>
               </TableRow>
-            </TableHead>
+            </TableBody>
           </Table>
         )}
 
