@@ -139,7 +139,7 @@ class FileController {
       fs.writeFileSync(
         Path.resolve(
           filePath,
-          "tabela_cobrancas_" + this.getTimestamp() + ".pdf"
+          "planilha_cobrancas_" + this.getTimestamp() + ".pdf"
         ),
         apportionmentReport
       );
@@ -163,7 +163,7 @@ class FileController {
     try {
       // Choose path to save documento
       const filePath = await this.saveReportAsDialog(
-        "RelatorioIndividual_" + this.getTimestamp()
+        "relatorio_individual_" + this.getTimestamp()
       );
       // Create PDF and embed PNG
       const pdfBytes = await this.createSinglePagePdf(base64imageString);
@@ -199,7 +199,7 @@ class FileController {
       );
       const path = Path.resolve(
         filePath,
-        "relatorio_cobrancas_" + this.getTimestamp() + ".pdf"
+        "planilha_cobrancas_" + this.getTimestamp() + ".pdf"
       );
       await fs.writeFile(path, apportionmentReport, function (err) {
         if (err) {
