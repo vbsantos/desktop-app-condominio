@@ -323,7 +323,8 @@ export default function RegistrarDespesas(props) {
           data: [...despesasByCategory],
         };
       });
-      const fundoReservaIndividual = (percentage[0] / 100) * totalIndividual;
+      // const fundoReservaIndividual = (percentage[0] / 100) * totalIndividual;
+      const fundoReservaIndividual = percentage[1] * pagante.fracao;
       if (percentage[0] !== 0) {
         individualReport.push({
           table: false,
@@ -492,6 +493,7 @@ export default function RegistrarDespesas(props) {
       return {
         id,
         unidade,
+        fracao,
         valores,
         total: totalPagante,
       };
@@ -502,7 +504,8 @@ export default function RegistrarDespesas(props) {
     );
     if (despesaFundoReserva) {
       tabela1.forEach((pagante) => {
-        const fundoReservaIndividual = pagante.total * (percentage[0] / 100);
+        // const fundoReservaIndividual = pagante.total * (percentage[0] / 100);
+        const fundoReservaIndividual = percentage[1] * pagante.fracao;
         pagante.total += fundoReservaIndividual;
         pagante.valores.push({
           id: despesaFundoReserva.id,
