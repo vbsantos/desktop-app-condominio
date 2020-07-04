@@ -246,6 +246,7 @@ export default function RegistrarDespesas(props) {
   // Stores the general report reference
   const reportRef = useRef(null);
 
+  // REVIEW gr
   // This function turns the GeneralReport data into a string
   const makeGeneralReportJSON = async (categorias, despesas) => {
     const generalReport = categorias.map((categoria) => {
@@ -296,6 +297,7 @@ export default function RegistrarDespesas(props) {
     return generalReportJSON;
   };
 
+  // REVIEW ir
   // This function turns the IndividualReport data into a string
   const makeIndividualReportJSON = async (categorias, despesas, pagantes) => {
     const individualReportsJSON = pagantes.map((pagante) => {
@@ -305,16 +307,17 @@ export default function RegistrarDespesas(props) {
           .filter((despesa) => despesa.categoria === categoria)
           .map((despesa) => {
             const valor = despesa.rateioAutomatico
-              ? Math.ceil(despesa.valor * pagante.fracao * 100) / 100 // valor final condômino
+              ? despesa.valor * pagante.fracao // valor final condômino
               : Number(
                   despesa["Valores"].find(
                     (valor) => valor.paganteId === pagante.id
                   ).valor
                 );
             totalIndividual += valor;
+            // console.warn(`[${pagante.complemento}] valor:`, valor);
             return {
               ...despesa,
-              valor: valor.toFixed(2),
+              valor: valor,
             };
           });
         return {
@@ -373,6 +376,7 @@ export default function RegistrarDespesas(props) {
     return individualReportsJSON;
   };
 
+  // REVIEW wr
   // This function turns the WaterReport data into a string
   const makeWaterReportJSON = async (condominio, pagantes, despesas) => {
     const despesaAgua = despesas.filter((despesa) => despesa.aguaIndividual);
@@ -456,6 +460,7 @@ export default function RegistrarDespesas(props) {
     return waterReportJSON;
   };
 
+  // REVIEW ar
   // This function turns the ApportionmentReport data into a string
   const makeApportionmentReportJSON = async (
     condominio,
@@ -490,6 +495,7 @@ export default function RegistrarDespesas(props) {
           });
         }
       });
+      // console.warn(`[${unidade}] totalPagante`, totalPagante);
       return {
         id,
         unidade,

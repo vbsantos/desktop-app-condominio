@@ -86,7 +86,9 @@ export default function RelatorioIndividual(props) {
                       ? `${pad(despesa[0], 4)} - ${despesa[1]}`
                       : `${despesa[1]}`}
                   </TableCell>
-                  <TableCell id="valor">{"R$ " + despesa[2]}</TableCell>
+                  <TableCell id="valor">
+                    {"R$ " + Number(despesa[2]).toFixed(2)}
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -106,7 +108,9 @@ export default function RelatorioIndividual(props) {
                       ? `${pad(despesa[0], 4)} - ${despesa[1]}`
                       : `${despesa[1]}`}
                   </TableCell>
-                  <TableCell id="valor">{"R$ " + despesa[2]}</TableCell>
+                  <TableCell id="valor">
+                    {"R$ " + Number(despesa[2]).toFixed(2)}
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>

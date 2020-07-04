@@ -75,8 +75,6 @@ export default function RelatorioCondominioRegistrar(props) {
     }
   };
 
-  // TODO colocar despesas (categoria) em ordem alfabética
-
   return (
     <div id="relatorioCondominioRegistrar">
       <TableContainer ref={reportRef}>
