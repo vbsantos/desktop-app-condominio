@@ -1,24 +1,28 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-// CSS
-import "./style.css";
-
 // DIALOGS
 import DialogSaveReports from "../../dialogs/salvarRelatorios";
 import DialogCloseSystem from "../../dialogs/fecharSistema";
 import Loading from "../../dialogs/carregando";
 
 // REPORTS
+import RelatorioRateio from "../../reports/relatorioRateio";
+import RelatorioAgua from "../../reports/relatorioAgua";
 import RelatorioGeral from "../../reports/relatorioGeral";
 import RelatorioIndividual from "../../reports/relatorioIndividual";
 
 // COMPONENT TO PNG
 import html2canvas from "html2canvas";
 
+// CSS
+import "./style.css";
+
 export default function VisualizarRelatoriosGerados(props) {
   const [footbar, setFootbar] = props.buttons;
   const [data, setData] = props.data;
+
+  const [reportView, setReportView] = useState("screenStyle");
 
   const [loading, setLoading] = useState(false);
 
@@ -101,6 +105,7 @@ export default function VisualizarRelatoriosGerados(props) {
 
   // This function turns the html tables in an object with them base64 string
   const getReportsBase64 = async () => {
+    setReportView("pdfStyle");
     const tablesHTML = Array.from(
       document.getElementsByClassName("reportbase64")
     );
@@ -111,19 +116,22 @@ export default function VisualizarRelatoriosGerados(props) {
     }
     const base64Reports = {
       rg: tablesPng.shift(),
+      rr: tablesPng.shift(),
+      ra: data.lastReports.ra ? tablesPng.shift() : null,
       ris: tablesPng,
     };
     setData({
       ...data,
       base64Reports,
     });
+    setReportView("screenStyle");
   };
 
   return (
     <div id="VisualizarRelatoriosGerados">
       {loading && (
         <Loading
-          title={"Por favor aguarde enquanto os relatórios são processados"}
+          title={"Por favor aguarde enquanto os Relatórios são processados"}
           open={[loading, setLoading]}
         />
       )}
@@ -140,13 +148,38 @@ export default function VisualizarRelatoriosGerados(props) {
       {dialogCloseSystem && (
         <DialogCloseSystem open={[dialogCloseSystem, setDialogCloseSystem]} />
       )}
+
       <div>
         <RelatorioGeral
           reportClass="reportbase64"
           reportRef={null}
           report={JSON.parse(data.lastReports.rg)}
+          view={"pdfStyle"}
         />
       </div>
+      <hr />
+      <div>
+        <RelatorioRateio
+          reportClass="reportbase64"
+          reportRef={null}
+          report={JSON.parse(data.lastReports.rr)}
+          view={reportView} // só aqui muda a aparência
+        />
+      </div>
+      {data.lastReports.ra && (
+        <>
+          <hr />
+          <div>
+            <RelatorioAgua
+              reportClass="reportbase64"
+              reportRef={null}
+              report={JSON.parse(data.lastReports.ra)}
+              view={"pdfStyle"}
+            />
+          </div>
+        </>
+      )}
+      <hr />
       <div>
         {data.lastReports.ris.map((ri) => (
           <div key={"ri" + ri.paganteId}>
@@ -154,6 +187,7 @@ export default function VisualizarRelatoriosGerados(props) {
               reportClass="reportbase64"
               reportRef={null}
               report={JSON.parse(ri.report)}
+              view={"pdfStyle"}
             />
           </div>
         ))}

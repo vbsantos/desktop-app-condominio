@@ -1,9 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
-// CSS
-import "./style.css";
-
 // DIALOGS
 import DialogExcluirDespesa from "../../dialogs/deletarDespesa";
 import DialogEscolherDespesa from "../../dialogs/escolherDespesa";
@@ -11,10 +8,17 @@ import DialogDespesaFixa from "../../dialogs/despesaFixa";
 import DialogDespesaParcelada from "../../dialogs/despesaParcelada";
 import DialogDespesaAgua from "../../dialogs/despesaAgua";
 import DialogDespesaFundoReserva from "../../dialogs/despesaFundoReserva";
+import DialogInformacao from "../../dialogs/informacao";
 import DialogAlerta from "../../dialogs/alerta";
+import DialogEscolherData from "../../dialogs/escolherData";
 
 // REPORTS
 import RelatorioCondominioRegistrar from "../../reports/relatorioRegistrar";
+
+// FUNCTIONS
+function comparar(despesa1, despesa2) {
+  return despesa1.id - despesa2.id;
+}
 
 export default function RegistrarDespesas(props) {
   const [footbar, setFootbar] = props.buttons;
@@ -31,6 +35,9 @@ export default function RegistrarDespesas(props) {
 
   // Store the fundoReserva percentage and value
   const [percentage, setPercentage] = useState([0, 0]);
+
+  // Store informations
+  const [informacoes, setInformacoes] = useState([]);
 
   // ID of the selected Despesa
   const [selectedDespesa, setSelectedDespesa] = useState({ id: -1 });
@@ -49,6 +56,8 @@ export default function RegistrarDespesas(props) {
   const [dialogDespesaFundoReserva, setDialogDespesaFundoReserva] = useState(
     false
   );
+  // Boolean for Informação Dialog
+  const [dialogInformacao, setDialogInformacao] = useState(false);
 
   // EDITAR DESPESA
   // Boolean for Despesa Fixa Dialog
@@ -64,12 +73,19 @@ export default function RegistrarDespesas(props) {
     dialogEditDespesaFundoReserva,
     setDialogEditDespesaFundoReserva,
   ] = useState(false);
+  const [dialogEditInformacao, setDialogEditInformacao] = useState(false);
 
   // Boolean for Delete Dialog
   const [dialogDeleteDespesa, setDialogDeleteDespesa] = useState(false);
 
   // Boolean for Alert Dialog
-  const [dialogAlert, setDialogAlert] = useState(false);
+  const [dialogAlertDespesas, setDialogAlertDespesas] = useState(false);
+
+  // Boolean for Escolher Data Dialog
+  const [dialogEscolherData, setDialogEscolherData] = useState(false);
+
+  // Boolean if date is picked
+  const [datePicked, setDatePicked] = useState(false);
 
   console.groupCollapsed("RegistrarDespesas: System data");
   console.log("Footbar:", footbar);
@@ -92,7 +108,7 @@ export default function RegistrarDespesas(props) {
           position: "center",
           visible: true,
           enabled: true,
-          value: "Registrar Nova Despesa",
+          value: "Registrar Despesa",
         },
         {
           id: 2,
@@ -124,15 +140,12 @@ export default function RegistrarDespesas(props) {
         console.log("RegistrarDespesas - Botão da direita");
         setFootbar({ ...footbar, action: -1 });
 
-        (async () => {
-          const despesas = data.allNestedCondominio["Despesas"];
-          if (despesas.length > 0) {
-            await putReportsOnLastReports(categorias, data.allNestedCondominio);
-            navigate("/VisualizarRelatoriosGerados");
-          } else {
-            setDialogAlert(true);
-          }
-        })();
+        const despesas = data.allNestedCondominio["Despesas"];
+        if (despesas.length > 0) {
+          setDialogEscolherData(true);
+        } else {
+          setDialogAlertDespesas(true);
+        }
 
         break;
     }
@@ -146,44 +159,57 @@ export default function RegistrarDespesas(props) {
       dialogDespesaParcelada ||
       dialogDespesaAgua ||
       dialogDespesaFundoReserva ||
+      dialogInformacao ||
       dialogEditDespesaFixa ||
       dialogEditDespesaParcelada ||
       dialogEditDespesaAgua ||
       dialogEditDespesaFundoReserva ||
-      dialogDeleteDespesa
+      dialogEditInformacao ||
+      dialogDeleteDespesa ||
+      dialogEscolherData
     );
     if (allDialogsClosed) {
-      async function getEverything() {
-        console.time("Get all data from database");
-        const allNestedBeneficiario = await window.ipcRenderer.invoke(
-          "beneficiarios",
-          {
-            method: "showNested",
-            content: { id: data.beneficiario.id },
-          }
-        );
-        const allNestedCondominio = allNestedBeneficiario["Condominios"].filter(
-          (condominio) => condominio.id === data.allNestedCondominio.id
-        )[0];
-        setData({
-          ...data,
-          allNestedBeneficiario,
-          allNestedCondominio,
-        });
-        console.timeEnd("Get all data from database");
+      if (datePicked) {
+        (async () => {
+          await putReportsOnLastReports(categorias, data.allNestedCondominio);
+          navigate("/VisualizarRelatoriosGerados");
+        })();
+      } else {
+        async function getEverything() {
+          console.time("Get all data from database");
+          const allNestedBeneficiario = await window.ipcRenderer.invoke(
+            "beneficiarios",
+            {
+              method: "showNested",
+              content: { id: data.beneficiario.id },
+            }
+          );
+          const allNestedCondominio = allNestedBeneficiario["Condominios"].find(
+            (condominio) => condominio.id === data.allNestedCondominio.id
+          );
+          setData({
+            ...data,
+            allNestedBeneficiario,
+            allNestedCondominio,
+          });
+          console.timeEnd("Get all data from database");
+        }
+        getEverything();
       }
-      getEverything();
     }
   }, [
     dialogDespesaFixa,
     dialogDespesaParcelada,
     dialogDespesaAgua,
     dialogDespesaFundoReserva,
+    dialogInformacao,
     dialogEditDespesaFixa,
     dialogEditDespesaParcelada,
     dialogEditDespesaAgua,
     dialogEditDespesaFundoReserva,
+    dialogEditInformacao,
     dialogDeleteDespesa,
+    dialogEscolherData,
   ]);
 
   // This function runs only when something change in Despesas
@@ -191,18 +217,21 @@ export default function RegistrarDespesas(props) {
     let total = 0;
     let allCategorias = [];
     let porcentagem = 0;
+    const infos = [];
 
     for (const despesa of data.allNestedCondominio["Despesas"]) {
-      if (!despesa.fundoReserva) {
+      if (despesa.fundoReserva) {
+        porcentagem = Number(despesa.valor);
+      } else if (despesa.informacao) {
+        infos.push({ id: despesa.id, text: despesa.nome });
+      } else {
         total += Number(despesa.valor);
         allCategorias.push(despesa.categoria);
-      } else {
-        porcentagem = Number(despesa.valor);
       }
     }
+    setInformacoes(infos);
     setTotal(total);
     setPercentage([porcentagem, (porcentagem / 100) * total]);
-    // remove duplicates
     setCategorias([...new Set(allCategorias)]);
 
     console.groupCollapsed("Dados das Despesas");
@@ -210,12 +239,14 @@ export default function RegistrarDespesas(props) {
     console.log("categorias", categorias);
     console.log("total", total);
     console.log("percentage", percentage);
+    console.log("informacoes", informacoes);
     console.groupEnd("Dados das Despesas");
   }, [data.allNestedCondominio["Despesas"]]);
 
   // Stores the general report reference
   const reportRef = useRef(null);
 
+  // REVIEW gr
   // This function turns the GeneralReport data into a string
   const makeGeneralReportJSON = async (categorias, despesas) => {
     const generalReport = categorias.map((categoria) => {
@@ -231,8 +262,18 @@ export default function RegistrarDespesas(props) {
     if (percentage[0] !== 0) {
       generalReport.push({
         table: false,
-        name: "fundoReserva",
-        data: percentage[1].toFixed(2),
+        name: `Fundo Reserva - ${percentage[0]}%`,
+        data: {
+          id: despesas.find((despesa) => despesa.fundoReserva).id,
+          value: percentage[1].toFixed(2),
+        },
+      });
+    }
+    if (informacoes.length > 0) {
+      generalReport.push({
+        table: false,
+        name: "informacoes",
+        data: informacoes,
       });
     }
     generalReport.push({
@@ -244,14 +285,19 @@ export default function RegistrarDespesas(props) {
       table: false,
       name: "info",
       data: {
-        nameCondominio: data.allNestedCondominio.nome,
-        nameAdministrador: data.allNestedBeneficiario.nome,
+        nomeCondominio: data.allNestedCondominio.nome,
+        enderecoCondominio: data.allNestedCondominio.endereco,
+        nomeAdministrador: data.allNestedBeneficiario.nome,
+        emailAdministrador: data.allNestedBeneficiario.email,
+        telefoneAdministrar: data.allNestedBeneficiario.telefone,
+        reportDate: data.reportDate,
       },
     });
     const generalReportJSON = JSON.stringify(generalReport);
     return generalReportJSON;
   };
 
+  // REVIEW ir
   // This function turns the IndividualReport data into a string
   const makeIndividualReportJSON = async (categorias, despesas, pagantes) => {
     const individualReportsJSON = pagantes.map((pagante) => {
@@ -261,16 +307,17 @@ export default function RegistrarDespesas(props) {
           .filter((despesa) => despesa.categoria === categoria)
           .map((despesa) => {
             const valor = despesa.rateioAutomatico
-              ? Number(despesa.valor * pagante.fracao)
+              ? despesa.valor * pagante.fracao // valor final condômino
               : Number(
-                  despesa["Valores"].filter(
+                  despesa["Valores"].find(
                     (valor) => valor.paganteId === pagante.id
-                  )[0].valor
+                  ).valor
                 );
             totalIndividual += valor;
+            // console.warn(`[${pagante.complemento}] valor:`, valor);
             return {
               ...despesa,
-              valor: valor.toFixed(2),
+              valor: valor,
             };
           });
         return {
@@ -279,18 +326,22 @@ export default function RegistrarDespesas(props) {
           data: [...despesasByCategory],
         };
       });
-      const fundoReservaIndividual = (percentage[0] / 100) * totalIndividual;
+      // const fundoReservaIndividual = (percentage[0] / 100) * totalIndividual;
+      const fundoReservaIndividual = percentage[1] * pagante.fracao;
       if (percentage[0] !== 0) {
         individualReport.push({
           table: false,
-          name: "fundoReserva",
-          data: fundoReservaIndividual.toFixed(2),
+          name: `Fundo Reserva - ${percentage[0]}%`,
+          data: {
+            id: despesas.find((despesa) => despesa.fundoReserva).id,
+            value: fundoReservaIndividual.toFixed(2),
+          },
         });
       }
       individualReport.push({
         table: false,
         name: "total",
-        data: (totalIndividual + fundoReservaIndividual).toFixed(2),
+        data: { value: (totalIndividual + fundoReservaIndividual).toFixed(2) },
       });
       const despesaAgua = despesas.find(
         (despesa) => despesa.aguaIndividual === true
@@ -313,6 +364,7 @@ export default function RegistrarDespesas(props) {
             ? Number(valorAgua.agua) - Number(pagante.leituraAgua)
             : null,
           aguaValorUnitario: despesaAgua ? valorAgua.precoAgua : null,
+          reportDate: data.reportDate,
         },
       });
       // console.warn("Relatório Individual:", individualReport);
@@ -324,7 +376,222 @@ export default function RegistrarDespesas(props) {
     return individualReportsJSON;
   };
 
+  // REVIEW wr
+  // This function turns the WaterReport data into a string
+  const makeWaterReportJSON = async (condominio, pagantes, despesas) => {
+    const despesaAgua = despesas.filter((despesa) => despesa.aguaIndividual);
+    const despesaAguaPrimaria = despesaAgua.find(
+      (despesa) => !despesa.rateioAutomatico
+    );
+    const despesaAguaSecundaria = despesaAgua.find(
+      (despesa) => despesa.rateioAutomatico
+    );
+    const totalIndividual = Number(despesaAguaPrimaria.valor); // soma de todos os pagantes (R$)
+    const totalComum = Number(despesaAguaSecundaria.valor); // diferença entre geral e pagantes (R$)
+    const total = Number(totalIndividual) + Number(totalComum); // geral (R$)
+    const valoresIndividuais = despesaAguaPrimaria["Valores"]; // valores individuais da despesa de água primária
+    const precoAgua = valoresIndividuais[0].precoAgua; // valor do metro cubico da agua
+
+    let totalAnteriorIndividual = 0; // (m³)
+    let totalAtualIndividual = 0; // (m³)
+    let totalConsumoIndividual = 0; // (m³)
+
+    const waterReport = [];
+
+    waterReport.push({
+      table: true,
+      name: "aguaIndividual",
+      data: valoresIndividuais
+        .sort(comparar) // ORDENA POR ID
+        .map((individual) => {
+          const pagante = pagantes.find(
+            (pagante) => pagante.id === individual.paganteId
+          );
+
+          const consumo = Number(individual.agua) - Number(pagante.leituraAgua);
+
+          totalAnteriorIndividual += Number(pagante.leituraAgua);
+          totalAtualIndividual += Number(individual.agua);
+          totalConsumoIndividual += consumo;
+
+          return {
+            unidade: pagante.complemento,
+            anterior: Number(pagante.leituraAgua),
+            atual: Number(individual.agua),
+            consumo,
+            valor: Number(individual.valor),
+          };
+        }),
+    });
+
+    waterReport.push({
+      table: true,
+      name: "aguaComum",
+      data: {
+        unidade: "Condomínio",
+        anterior: Number(condominio.leituraAgua),
+        atual: Number(despesaAguaSecundaria.agua),
+        consumo:
+          Number(despesaAguaSecundaria.agua) - Number(condominio.leituraAgua),
+        valor: Number(totalComum),
+      },
+    });
+
+    waterReport.push({
+      table: false,
+      name: "info",
+      data: {
+        precoAgua, // (R$)
+        totalAnteriorIndividual, // (m³)
+        totalAtualIndividual, // (m³)
+        totalConsumoIndividual, // (m³)
+        totalIndividual, // (R$)
+        total, // (R$)
+        nomeCondominio: condominio.nome,
+        enderecoCondominio: condominio.endereco,
+        nomeAdministrador: data.allNestedBeneficiario.nome,
+        emailAdministrador: data.allNestedBeneficiario.email,
+        telefoneAdministrar: data.allNestedBeneficiario.telefone,
+        reportDate: data.reportDate,
+      },
+    });
+
+    const waterReportJSON = JSON.stringify(waterReport);
+    return waterReportJSON;
+  };
+
+  // REVIEW ar
+  // This function turns the ApportionmentReport data into a string
+  const makeApportionmentReportJSON = async (
+    condominio,
+    pagantes,
+    despesas
+  ) => {
+    const tabela1 = pagantes.map((pagante) => {
+      const id = pagante.id;
+      const unidade = pagante.complemento;
+      const fracao = pagante.fracao;
+      const valores = [];
+      let totalPagante = 0;
+      despesas.forEach((despesa) => {
+        // console.warn("Valores:", despesa["Valores"]);
+        const rateioAuto = despesa.rateioAutomatico;
+        const fundoReserva = despesa.fundoReserva;
+        if (!fundoReserva) {
+          let valor = 0;
+          if (rateioAuto) {
+            valor = Number(despesa.valor) * Number(fracao);
+          } else {
+            valor = Number(
+              despesa["Valores"].find((valor) => valor.paganteId === id).valor
+            );
+          }
+          totalPagante += valor;
+          // console.warn("Despesa", {id: despesa.id,nome: despesa.nome,valor,id,unidade,valores,totalPagante,});
+          valores.push({
+            id: despesa.id,
+            nome: despesa.nome,
+            valor,
+          });
+        }
+      });
+      // console.warn(`[${unidade}] totalPagante`, totalPagante);
+      return {
+        id,
+        unidade,
+        fracao,
+        valores,
+        total: totalPagante,
+      };
+    });
+
+    const despesaFundoReserva = despesas.find(
+      (despesa) => despesa.fundoReserva
+    );
+    if (despesaFundoReserva) {
+      tabela1.forEach((pagante) => {
+        // const fundoReservaIndividual = pagante.total * (percentage[0] / 100);
+        const fundoReservaIndividual = percentage[1] * pagante.fracao;
+        pagante.total += fundoReservaIndividual;
+        pagante.valores.push({
+          id: despesaFundoReserva.id,
+          nome: despesaFundoReserva.nome,
+          valor: fundoReservaIndividual,
+        });
+      });
+    }
+
+    const apportionmentReport = [];
+    apportionmentReport.push({
+      table: true,
+      name: "despesasIndividuais",
+      data: tabela1,
+    });
+
+    // Total de cada despesa
+    const totais = [];
+    despesas.forEach((despesa) => {
+      const rateioAuto = despesa.rateioAutomatico;
+      const fundoReserva = despesa.fundoReserva;
+      if (!fundoReserva) {
+        let total = 0;
+        if (rateioAuto) {
+          total = Number(despesa.valor);
+        } else {
+          total = Number(despesa.valor);
+        }
+        totais.push(total);
+      }
+    });
+    if (despesaFundoReserva) {
+      totais.push(percentage[1]);
+    }
+
+    apportionmentReport.push({
+      table: false,
+      name: "info",
+      data: {
+        totais,
+        total: total + percentage[1],
+        nomeCondominio: condominio.nome,
+        enderecoCondominio: condominio.endereco,
+        nomeAdministrador: data.allNestedBeneficiario.nome,
+        emailAdministrador: data.allNestedBeneficiario.email,
+        telefoneAdministrar: data.allNestedBeneficiario.telefone,
+        reportDate: data.reportDate,
+      },
+    });
+
+    const apportionmentReportJSON = JSON.stringify(apportionmentReport);
+    return apportionmentReportJSON;
+  };
+
   async function putReportsOnLastReports(categorias, condominio) {
+    const existDepesaAgua = !!condominio["Despesas"].find(
+      (despesa) => despesa.aguaIndividual
+    );
+    let relatorioAgua = null;
+    if (existDepesaAgua) {
+      relatorioAgua = await makeWaterReportJSON(
+        condominio,
+        condominio["Pagantes"],
+        condominio["Despesas"]
+      );
+      console.groupCollapsed("RA");
+      console.log(relatorioAgua);
+      console.groupEnd("RA");
+    }
+
+    // get apportionment report json
+    const relatorioRateio = await makeApportionmentReportJSON(
+      condominio,
+      condominio["Pagantes"],
+      condominio["Despesas"].filter((despesa) => !despesa.informacao)
+    );
+    console.groupCollapsed("RR");
+    console.log(relatorioRateio);
+    console.groupEnd("RR");
+
     const relatorioGeral = await makeGeneralReportJSON(
       categorias,
       condominio["Despesas"]
@@ -343,6 +610,8 @@ export default function RegistrarDespesas(props) {
     console.groupEnd("RIs");
 
     const lastReports = {
+      rr: relatorioRateio,
+      ra: relatorioAgua,
       rg: relatorioGeral,
       ris: relatoriosIndividuais,
     };
@@ -353,16 +622,24 @@ export default function RegistrarDespesas(props) {
   return (
     <>
       {/* ALERTA */}
-      {dialogAlert && (
+      {dialogAlertDespesas && (
         <DialogAlerta
-          open={[dialogAlert, setDialogAlert]}
+          open={[dialogAlertDespesas, setDialogAlertDespesas]}
           title="Não há despesas cadastradas"
-          // content="Para cadastrar novos Moradores é necessário deletar as despesas (com rateio manual) já cadastradas."
+        />
+      )}
+      {/* ESCOLHER DATA DO RELATÓRIO */}
+      {dialogEscolherData && (
+        <DialogEscolherData
+          open={[dialogEscolherData, setDialogEscolherData]}
+          data={[data, setData]}
+          picked={[datePicked, setDatePicked]}
         />
       )}
       {/* ESCOLHER O TIPO DE DESPESA */}
       {dialogEscolherDespesa && (
         <DialogEscolherDespesa
+          despesas={data.allNestedCondominio["Despesas"]}
           open={[dialogEscolherDespesa, setDialogEscolherDespesa]}
           despesaFixa={[dialogDespesaFixa, setDialogDespesaFixa]}
           despesaParcelada={[dialogDespesaParcelada, setDialogDespesaParcelada]}
@@ -371,6 +648,8 @@ export default function RegistrarDespesas(props) {
             dialogDespesaFundoReserva,
             setDialogDespesaFundoReserva,
           ]}
+          informacao={[dialogInformacao, setDialogInformacao]}
+          setSelected={setSelectedDespesa}
         />
       )}
 
@@ -404,17 +683,24 @@ export default function RegistrarDespesas(props) {
         />
       )}
 
+      {/* CADASTRAR INFORMAÇÃO */}
+      {dialogInformacao && (
+        <DialogInformacao
+          open={[dialogInformacao, setDialogInformacao]}
+          delete={[dialogDeleteDespesa, setDialogDeleteDespesa]}
+          condominio={data.allNestedCondominio}
+        />
+      )}
+
       {/* EDITA A DESPESA */}
       {dialogEditDespesaFixa && (
         <DialogDespesaFixa
           open={[dialogEditDespesaFixa, setDialogEditDespesaFixa]}
           delete={[dialogDeleteDespesa, setDialogDeleteDespesa]}
           condominio={data.allNestedCondominio}
-          despesa={
-            data.allNestedCondominio["Despesas"].filter(
-              (despesa) => despesa.id === selectedDespesa.id
-            )[0]
-          }
+          despesa={data.allNestedCondominio["Despesas"].find(
+            (despesa) => despesa.id === selectedDespesa.id
+          )}
         />
       )}
       {dialogEditDespesaParcelada && (
@@ -422,11 +708,9 @@ export default function RegistrarDespesas(props) {
           open={[dialogEditDespesaParcelada, setDialogEditDespesaParcelada]}
           delete={[dialogDeleteDespesa, setDialogDeleteDespesa]}
           condominio={data.allNestedCondominio}
-          despesa={
-            data.allNestedCondominio["Despesas"].filter(
-              (despesa) => despesa.id === selectedDespesa.id
-            )[0]
-          }
+          despesa={data.allNestedCondominio["Despesas"].find(
+            (despesa) => despesa.id === selectedDespesa.id
+          )}
         />
       )}
       {dialogEditDespesaAgua && (
@@ -434,11 +718,9 @@ export default function RegistrarDespesas(props) {
           open={[dialogEditDespesaAgua, setDialogEditDespesaAgua]}
           delete={[dialogDeleteDespesa, setDialogDeleteDespesa]}
           condominio={data.allNestedCondominio}
-          despesa={
-            data.allNestedCondominio["Despesas"].filter(
-              (despesa) => despesa.id === selectedDespesa.id
-            )[0]
-          }
+          despesa={data.allNestedCondominio["Despesas"].find(
+            (despesa) => despesa.id === selectedDespesa.id
+          )}
         />
       )}
       {dialogEditDespesaFundoReserva && (
@@ -449,11 +731,21 @@ export default function RegistrarDespesas(props) {
           ]}
           delete={[dialogDeleteDespesa, setDialogDeleteDespesa]}
           condominio={data.allNestedCondominio}
-          despesa={
-            data.allNestedCondominio["Despesas"].filter(
-              (despesa) => despesa.id === selectedDespesa.id
-            )[0]
-          }
+          despesa={data.allNestedCondominio["Despesas"].find(
+            (despesa) => despesa.id === selectedDespesa.id
+          )}
+        />
+      )}
+
+      {/* EDITAR INFORMAÇÃO */}
+      {dialogEditInformacao && (
+        <DialogInformacao
+          open={[dialogEditInformacao, setDialogEditInformacao]}
+          delete={[dialogDeleteDespesa, setDialogDeleteDespesa]}
+          condominio={data.allNestedCondominio}
+          despesa={data.allNestedCondominio["Despesas"].find(
+            (despesa) => despesa.id === selectedDespesa.id
+          )}
         />
       )}
 
@@ -461,11 +753,10 @@ export default function RegistrarDespesas(props) {
       {dialogDeleteDespesa && (
         <DialogExcluirDespesa
           open={[dialogDeleteDespesa, setDialogDeleteDespesa]}
-          despesa={
-            data.allNestedCondominio["Despesas"].filter(
-              (despesa) => despesa.id === selectedDespesa.id
-            )[0]
-          }
+          despesa={data.allNestedCondominio["Despesas"].find(
+            (despesa) => despesa.id === selectedDespesa.id
+          )}
+          despesas={data.allNestedCondominio["Despesas"]}
         />
       )}
 
@@ -490,9 +781,11 @@ export default function RegistrarDespesas(props) {
           dialogEditDespesaFundoReserva,
           setDialogEditDespesaFundoReserva,
         ]}
+        dialogEditInformacao={[dialogEditInformacao, setDialogEditInformacao]}
         categorias={[categorias, setCategorias]}
         valorTotal={[total, setTotal]}
         valorFundoReserva={[percentage, setPercentage]}
+        informacoes={[informacoes, setInformacoes]}
       />
     </>
   );

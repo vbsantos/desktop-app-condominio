@@ -12,6 +12,7 @@ import {
 
 // COMPONENTS
 import GeneralReportHeader from "../../components/headerGeneralReport";
+import GeneralReportFooter from "../../components/footerGeneralReport";
 
 // CSS
 import "./style.css";
@@ -20,17 +21,66 @@ export default function RelatorioGeral(props) {
   const { report } = props;
   const { reportRef } = props;
   const { reportClass } = props;
+  const { view } = props;
 
-  const info =
+  const headerInfo =
     report[report.length - 1].name === "info" ? report.pop().data : null;
+
+  // console.warn("RG.info:", headerInfo);
+
+  const fundoReserva = report.find(
+    (data) => !data.table && data.name.includes("Fundo Reserva")
+  );
+  fundoReserva.data = isNaN(fundoReserva.data.value)
+    ? { value: fundoReserva.data }
+    : fundoReserva.data;
+  // console.warn("fundoReserva", fundoReserva);
+
+  const total = report.find((data) => !data.table && data.name === "total");
+  const informacoes = report.find(
+    (data) => !data.table && data.name === "informacoes"
+  );
 
   return (
     <div id="relatorioGeral">
-      <TableContainer className={reportClass} ref={reportRef}>
+      <TableContainer className={`${reportClass} ${view}`} ref={reportRef}>
         <GeneralReportHeader
-          nomeCondominio={info.nameCondominio}
-          nomeAdministrador={info.nameAdministrador}
+          nomeCondominio={headerInfo.nomeCondominio}
+          enderecoCondominio={headerInfo.enderecoCondominio}
+          date={headerInfo.reportDate}
         />
+
+        {fundoReserva && (
+          <Table>
+            <TableHead>
+              <TableRow className="Black">
+                <TableCell className="col1">{"1.RECEITA"}</TableCell>
+                <TableCell className="col2">Cód.</TableCell>
+                <TableCell className="col3">Parcela</TableCell>
+                <TableCell className="col4">Valor</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              <TableRow className="Linha">
+                <TableCell className="col1">{fundoReserva.name}</TableCell>
+                <TableCell className="col2">{fundoReserva.data.id}</TableCell>
+                <TableCell className="col3">{"Fixa"}</TableCell>
+                <TableCell className="col4">
+                  {"R$ " + Number(fundoReserva.data.value).toFixed(2)}
+                </TableCell>
+              </TableRow>
+              <TableRow className="Black">
+                <TableCell className="col1">SUB-TOTAL:</TableCell>
+                <TableCell className="col2"></TableCell>
+                <TableCell className="col3"></TableCell>
+                <TableCell className="col4">
+                  {"R$ " + Number(fundoReserva.data.value).toFixed(2)}
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        )}
+
         {report.map((categoria) => {
           // cada categoria
           let subtotal = 0;
@@ -40,8 +90,9 @@ export default function RelatorioGeral(props) {
                 <TableHead>
                   <TableRow key={categoria.name + "header"} className="Black">
                     <TableCell className="col1">{categoria.name}</TableCell>
-                    <TableCell className="col2">Parcela</TableCell>
-                    <TableCell className="col3">Valor</TableCell>
+                    <TableCell className="col2">Cód.</TableCell>
+                    <TableCell className="col3">Parcela</TableCell>
+                    <TableCell className="col4">Valor</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -51,7 +102,8 @@ export default function RelatorioGeral(props) {
                     return (
                       <TableRow key={categoria + despesa.id} className="Linha">
                         <TableCell className="col1">{despesa.nome}</TableCell>
-                        <TableCell className="col2">
+                        <TableCell className="col2">{despesa.id}</TableCell>
+                        <TableCell className="col3">
                           {despesa.permanente
                             ? "Fixa"
                             : `${
@@ -60,7 +112,7 @@ export default function RelatorioGeral(props) {
                                 despesa.numParcelas
                               }`}
                         </TableCell>
-                        <TableCell className="col3">
+                        <TableCell className="col4">
                           {"R$ " + Number(despesa.valor).toFixed(2)}
                         </TableCell>
                       </TableRow>
@@ -69,7 +121,8 @@ export default function RelatorioGeral(props) {
                   <TableRow key={categoria + "subtotal"} className="Black">
                     <TableCell className="col1">SUB-TOTAL:</TableCell>
                     <TableCell className="col2"></TableCell>
-                    <TableCell className="col3">
+                    <TableCell className="col3"></TableCell>
+                    <TableCell className="col4">
                       {"R$ " + Number(subtotal).toFixed(2)}
                     </TableCell>
                   </TableRow>
@@ -79,40 +132,40 @@ export default function RelatorioGeral(props) {
           );
         })}
 
-        {/* fundo reserva e soma total dos valores */}
-        {report.map((info) => {
-          if (!info.table) {
-            if (info.name === "fundoReserva") {
-              return (
-                <Table key={"fundoReserva"}>
-                  <TableHead>
-                    <TableRow className="Black" id="fundoReservaRow">
-                      <TableCell className="col1">Fundo Reserva</TableCell>
-                      <TableCell className="col2"></TableCell>
-                      <TableCell className="col3">
-                        {"R$ " + Number(info.data).toFixed(2)}
-                      </TableCell>
-                    </TableRow>
-                  </TableHead>
-                </Table>
-              );
-            } else if (info.name === "total") {
-              return (
-                <Table key={"total"}>
-                  <TableHead>
-                    <TableRow className="Black">
-                      <TableCell className="col1">TOTAL:</TableCell>
-                      <TableCell className="col2"></TableCell>
-                      <TableCell className="col3">
-                        {"R$ " + Number(info.data).toFixed(2)}
-                      </TableCell>
-                    </TableRow>
-                  </TableHead>
-                </Table>
-              );
-            }
-          }
-        })}
+        <Table key={"total"}>
+          <TableHead>
+            <TableRow className="Black">
+              <TableCell className="col1">TOTAL:</TableCell>
+              <TableCell className="col2"></TableCell>
+              <TableCell className="col3"></TableCell>
+              <TableCell className="col4">
+                {"R$ " + Number(total.data).toFixed(2)}
+              </TableCell>
+            </TableRow>
+          </TableHead>
+        </Table>
+
+        {informacoes && (
+          <Table key={"informacoes"}>
+            <TableHead>
+              <TableRow className="Black" id="informacoesRow">
+                <TableCell className="col1">Informações</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {informacoes.data.map((informacao) => (
+                <TableRow key={"informacoes" + informacao.id}>
+                  <TableCell className="uniqueCol">{informacao.text}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        )}
+        <GeneralReportFooter
+          nomeAdministrador={headerInfo.nomeAdministrador}
+          emailAdministrador={headerInfo.emailAdministrador}
+          telefoneAdministrar={headerInfo.telefoneAdministrar}
+        />
       </TableContainer>
     </div>
   );

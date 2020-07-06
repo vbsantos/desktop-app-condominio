@@ -5,15 +5,13 @@ module.exports = (sequelize, DataTypes) => {
     {
       nome: DataTypes.STRING,
       beneficiarioId: DataTypes.INTEGER,
+      endereco: DataTypes.STRING,
     },
     {}
   );
   Condominio.associate = function (models) {
-    // associations can be defined here
     Condominio.hasMany(models.Pagante);
     Condominio.hasMany(models.Despesa);
-    // Condominio.hasMany(models.GeneralReport);
-
     Condominio.belongsTo(models.Beneficiario, {
       foreignKey: "beneficiarioId",
     });

@@ -54,11 +54,11 @@ export default function FormDespesa(props) {
           return {
             id:
               valores.length > 0 && valores[0].id !== ""
-                ? valores.filter(
+                ? valores.find(
                     (valor) =>
                       valor.paganteId === pagante_id &&
                       valor.despesaId === despesa.id
-                  )[0].id
+                  ).id
                 : "",
             precoAgua: null,
             agua: null,
@@ -71,30 +71,43 @@ export default function FormDespesa(props) {
       setValorTotal(somaValorTotal.toFixed(2));
     }
 
+    const parcelaAtual = formList[3].value.split(".")[0];
+    const numParcelas = formList[4].value.split(".")[0];
+    const valor = formList[5].value.replace(",", ".");
     setDespesa({
       id: despesa.id,
       nome: formList[0].value,
       categoria: formList[1].value,
+      agua: null,
+      aguaIndividual: false,
       rateioAutomatico: formList[2].checked,
       permanente: false,
-      aguaIndividual: false,
       fundoReserva: false,
       valor: rateioAuto
-        ? formList[5].value.replace(",", ".")
+        ? valor
         : valoresList
             .reduce((acc, field) => {
               return Number(acc) + Number(field.value.replace(",", "."));
             }, 0)
             .toFixed(2),
-      parcelaAtual: formList[3].value,
-      numParcelas: formList[4].value,
+      parcelaAtual,
+      numParcelas,
+      informacao: false,
       Valores: valores,
       condominioId: condominio.id,
     });
 
     setFormCompleted(
-      formList.filter((field) => !field.disabled && field.value === "")[0] ===
-        undefined
+      Number(parcelaAtual) > 0 &&
+        Number(numParcelas) > 0 &&
+        Number(parcelaAtual) <= Number(numParcelas) &&
+        formList.find((field) => !field.disabled && field.value === "") ===
+          undefined &&
+        valoresList.find(
+          (field) =>
+            isNaN(Number(field.value.replace(",", "."))) ||
+            Number(field.value.replace(",", ".")) < 0
+        ) === undefined
     );
   }
 
@@ -107,11 +120,11 @@ export default function FormDespesa(props) {
             Informações da Despesa
           </DialogContentText>
           <FormControl>
-            <InputLabel htmlFor="nome">Nome</InputLabel>
+            <InputLabel htmlFor="nome">Nome *</InputLabel>
             <Input autoFocus defaultValue={despesa.nome} id="nome"></Input>
           </FormControl>
           <FormControl>
-            <InputLabel htmlFor="categoria">Categoria</InputLabel>
+            <InputLabel htmlFor="categoria">Categoria *</InputLabel>
             <Input defaultValue={despesa.categoria} id="categoria"></Input>
           </FormControl>
         </section>
@@ -159,14 +172,14 @@ export default function FormDespesa(props) {
             Informações das Parcelas
           </DialogContentText>
           <FormControl>
-            <InputLabel htmlFor="parcelaAtual">Parcela Atual</InputLabel>
+            <InputLabel htmlFor="parcelaAtual">Parcela Atual *</InputLabel>
             <Input
               defaultValue={despesa.parcelaAtual}
               id="parcelaAtual"
             ></Input>
           </FormControl>
           <FormControl>
-            <InputLabel htmlFor="numParcelas">Total de Parcelas</InputLabel>
+            <InputLabel htmlFor="numParcelas">Total de Parcelas *</InputLabel>
             <Input defaultValue={despesa.numParcelas} id="numParcelas"></Input>
           </FormControl>
         </section>
@@ -180,16 +193,16 @@ export default function FormDespesa(props) {
             {condominio["Pagantes"].map((pagante) => (
               <FormControl key={"valorIndividualForm" + pagante.id}>
                 <InputLabel htmlFor={"valorIndividual" + pagante.id}>
-                  Custo para {pagante.complemento}
+                  Custo para {pagante.complemento} *
                 </InputLabel>
                 <Input
                   id={"valorIndividual" + pagante.id}
                   defaultValue={
                     valores.length > 0 && valores[0].id !== ""
                       ? Number(
-                          valores.filter(
+                          valores.find(
                             (valor) => valor["paganteId"] === pagante.id
-                          )[0].valor
+                          ).valor
                         ).toFixed(2)
                       : ""
                   }
@@ -203,7 +216,7 @@ export default function FormDespesa(props) {
               Custo da Parcela Atual
             </DialogContentText>
             <FormControl>
-              <InputLabel htmlFor="valor">Valor (R$)</InputLabel>
+              <InputLabel htmlFor="valor">Valor (R$) *</InputLabel>
               <Input
                 defaultValue={despesa.valor}
                 id="valor"

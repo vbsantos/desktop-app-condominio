@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React from "react";
 
 // MATERIAL UI COMPONENTS
 import {
@@ -40,6 +40,10 @@ export default function RelatorioCondominioRegistrar(props) {
     dialogEditDespesaFundoReserva,
     setDialogEditDespesaFundoReserva,
   ] = props.dialogEditDespesaFundoReserva;
+  const [
+    dialogEditInformacao,
+    setDialogEditInformacao,
+  ] = props.dialogEditInformacao;
 
   // Store the Contas by Categoria
   const [categorias, setCategorias] = props.categorias;
@@ -50,15 +54,18 @@ export default function RelatorioCondominioRegistrar(props) {
   // Store the fundoReserva percentage
   const [percentage, setPercentage] = props.valorFundoReserva;
 
+  // Store the informacoes
+  const [informacoes, setInformacoes] = props.informacoes;
+
   // Function that runs when you click in a Conta row
   const selectAndOpenDialog = (id) => {
     setSelected({ id }); // pega o id da despesa
     const despesa = despesas.find((despesa) => despesa.id === id);
 
-    console.log(despesa);
-
     if (despesa.fundoReserva) {
       setDialogEditDespesaFundoReserva(true);
+    } else if (despesa.informacao) {
+      setDialogEditInformacao(true);
     } else if (despesa.aguaIndividual) {
       setDialogEditDespesaAgua(true);
     } else if (despesa.permanente) {
@@ -71,6 +78,48 @@ export default function RelatorioCondominioRegistrar(props) {
   return (
     <div id="relatorioCondominioRegistrar">
       <TableContainer ref={reportRef}>
+        {percentage[0] !== 0 && (
+          <Table>
+            <TableHead>
+              <TableRow className="Black">
+                <TableCell className="col1">{"1.RECEITA"}</TableCell>
+                <TableCell className="col2">Cód.</TableCell>
+                <TableCell className="col3">Parcela</TableCell>
+                <TableCell className="col4">Valor</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              <TableRow
+                className="Linha"
+                onClick={() =>
+                  selectAndOpenDialog(
+                    despesas.find((despesa) => despesa.fundoReserva).id || ""
+                  )
+                }
+              >
+                <TableCell className="col1">
+                  Fundo Reserva - {percentage[0]} %
+                </TableCell>
+                <TableCell className="col2">
+                  {despesas.find((despesa) => despesa.fundoReserva).id}
+                </TableCell>
+                <TableCell className="col3">{"Fixa"}</TableCell>
+                <TableCell className="col4">
+                  {"R$ " + percentage[1].toFixed(2)}
+                </TableCell>
+              </TableRow>
+              <TableRow className="Black">
+                <TableCell className="col1">SUB-TOTAL:</TableCell>
+                <TableCell className="col2"></TableCell>
+                <TableCell className="col3"></TableCell>
+                <TableCell className="col4">
+                  {"R$ " + percentage[1].toFixed(2)}
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        )}
+
         {categorias.map((categoria) => {
           const categoriaContas = despesas.filter(
             (despesa) => despesa.categoria === categoria
@@ -83,8 +132,9 @@ export default function RelatorioCondominioRegistrar(props) {
               <TableHead>
                 <TableRow key={categoria + "header"} className="Black">
                   <TableCell className="col1">{categoria}</TableCell>
-                  <TableCell className="col2">Parcela</TableCell>
-                  <TableCell className="col3">Valor</TableCell>
+                  <TableCell className="col2">Cód.</TableCell>
+                  <TableCell className="col3">Parcela</TableCell>
+                  <TableCell className="col4">Valor</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -97,7 +147,8 @@ export default function RelatorioCondominioRegistrar(props) {
                     <TableCell className="col1">
                       {categoriaConta.nome}
                     </TableCell>
-                    <TableCell className="col2">
+                    <TableCell className="col2">{categoriaConta.id}</TableCell>
+                    <TableCell className="col3">
                       {categoriaConta.permanente
                         ? "Fixa"
                         : `${
@@ -106,7 +157,7 @@ export default function RelatorioCondominioRegistrar(props) {
                             categoriaConta.numParcelas
                           }`}
                     </TableCell>
-                    <TableCell className="col3">
+                    <TableCell className="col4">
                       {"R$ " + Number(categoriaConta.valor).toFixed(2)}
                     </TableCell>
                   </TableRow>
@@ -114,7 +165,8 @@ export default function RelatorioCondominioRegistrar(props) {
                 <TableRow key={categoria + "subtotal"} className="Black">
                   <TableCell className="col1">SUB-TOTAL:</TableCell>
                   <TableCell className="col2"></TableCell>
-                  <TableCell className="col3">
+                  <TableCell className="col3"></TableCell>
+                  <TableCell className="col4">
                     {"R$ " + Number(subtotal).toFixed(2)}
                   </TableCell>
                 </TableRow>
@@ -122,41 +174,39 @@ export default function RelatorioCondominioRegistrar(props) {
             </Table>
           );
         })}
-        {percentage[0] !== 0 && (
-          <Table key={"fundoReserva"}>
-            <TableHead>
-              <TableRow
-                className="Black"
-                id="fundoReservaRow"
-                onClick={() =>
-                  selectAndOpenDialog(
-                    despesas.filter((despesa) => despesa.fundoReserva)[0].id ||
-                      ""
-                  )
-                }
-              >
-                <TableCell className="col1">
-                  Fundo Reserva - {percentage[0]} %
-                </TableCell>
-                <TableCell className="col2"></TableCell>
-                <TableCell className="col3">
-                  {"R$ " + percentage[1].toFixed(2)}
-                </TableCell>
-              </TableRow>
-            </TableHead>
-          </Table>
-        )}
+
         <Table key={"total"}>
           <TableHead>
             <TableRow className="Black">
               <TableCell className="col1">TOTAL:</TableCell>
               <TableCell className="col2"></TableCell>
-              <TableCell className="col3">
+              <TableCell className="col3"></TableCell>
+              <TableCell className="col4">
                 {"R$ " + (total + percentage[1]).toFixed(2)}
               </TableCell>
             </TableRow>
           </TableHead>
         </Table>
+
+        {informacoes.length > 0 && (
+          <Table key={"informacoes"}>
+            <TableHead>
+              <TableRow className="Black" id="informacoesRow">
+                <TableCell className="col1">Informações</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {informacoes.map((informacao) => (
+                <TableRow
+                  key={"informacao" + informacao.id}
+                  onClick={() => selectAndOpenDialog(informacao.id)}
+                >
+                  <TableCell className="uniqueCol">{informacao.text}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        )}
       </TableContainer>
     </div>
   );

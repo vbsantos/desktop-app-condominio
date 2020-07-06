@@ -67,10 +67,24 @@ export default function DraggableDialog(props) {
 
   // this function saves de reports (data.lastReports) on the database
   const saveAllReportsDatabase = async () => {
+    await window.ipcRenderer.invoke("apportionmentReports", {
+      method: "create",
+      content: {
+        report: lastReports.rr,
+        condominioId,
+      },
+    });
     await window.ipcRenderer.invoke("generalReports", {
       method: "create",
       content: {
         report: lastReports.rg,
+        condominioId,
+      },
+    });
+    await window.ipcRenderer.invoke("waterReports", {
+      method: "create",
+      content: {
+        report: lastReports.ra,
         condominioId,
       },
     });
@@ -108,6 +122,13 @@ export default function DraggableDialog(props) {
     });
   };
 
+  const updateRegistroCondominio = async (condominioId, novoRegistro) => {
+    await window.ipcRenderer.invoke("condominios", {
+      method: "update",
+      content: { id: condominioId, leituraAgua: novoRegistro },
+    });
+  };
+
   const updateValorDespesaToZero = async (despesaId, valores) => {
     await window.ipcRenderer.invoke("despesas", {
       method: "update",
@@ -115,7 +136,6 @@ export default function DraggableDialog(props) {
     });
     if (valores.length > 0) {
       for (const valor of valores) {
-        //FIXME: usar bulkUpdate (?)
         await window.ipcRenderer.invoke("valores", {
           method: "update",
           content: { id: valor.id, valor: "0" },
@@ -129,11 +149,15 @@ export default function DraggableDialog(props) {
     for (const despesa of despesas) {
       if (despesa.fundoReserva) continue; // NÃO FAZ ALTERAÇÕES NO FUNDO RESERVA
       if (despesa.aguaIndividual) {
-        for (const individual of despesa["Valores"]) {
-          await updateRegistroPagante(individual.paganteId, individual.agua); // SALVAR NOVO REGISTRO DE ÁGUA
+        if (!despesa.rateioAutomatico) {
+          for (const individual of despesa["Valores"]) {
+            await updateRegistroPagante(individual.paganteId, individual.agua); // SALVAR NOVO REGISTRO DE ÁGUA
+          }
+        } else {
+          await updateRegistroCondominio(despesa.condominioId, despesa.agua);
         }
       }
-      await updateValorDespesaToZero(despesa.id, despesa["Valores"]); // ZERAR VALORES
+      //await updateValorDespesaToZero(despesa.id, despesa["Valores"]); // ZERAR VALORES
       if (!despesa.permanente) {
         await updateDespesaParcelada(despesa); // ATUALIZAR DESPESAS PARCELADAS
       }
@@ -162,7 +186,7 @@ export default function DraggableDialog(props) {
 
   return loading ? (
     <Loading
-      title={"Por favor aguarde enquanto os relatórios são salvos"}
+      title={"Por favor aguarde enquanto os Relatórios são salvos"}
       open={[loading, setLoading]}
     />
   ) : (
@@ -178,9 +202,19 @@ export default function DraggableDialog(props) {
           id="draggable-dialog-title"
           color="inherit"
         >
-          Tem certeza que deseja salvar relatórios?
+          Deseja salvar Relatórios?
         </DialogTitle>
-        <DialogContent>Essa ação não poderá ser desfeita.</DialogContent>
+        <DialogContent>
+          Essa ação irá:
+          <br />
+          <br />- Salvar os relatórios no sistema;
+          <br />- Incrementar parcelas das despesas;
+          <br />- Atualizar registros de água;
+          {/* <br />- Zerar custos das despesas; */}
+          <br />
+          <br />
+          Caso prossiga, não poderá ser desfeita.
+        </DialogContent>
         <DialogActions>
           <Button
             autoFocus

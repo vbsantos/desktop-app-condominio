@@ -11,6 +11,9 @@ import VisualizarRelatoriosGerados from "./pages/visualizarRelatoriosGerados";
 // COMPONENTS
 import Footbar from "./components/footbar";
 
+// SNACKBARS
+import SnackbarSystemUpdate from "./snackbars/update";
+
 // CSS
 import "./style.css";
 
@@ -22,6 +25,8 @@ export default function MainRoutes(props) {
     reports: { generalReport: false, data: [] },
     lastReports: {},
     base64Reports: {},
+    reportDate: { mes: "", ano: "" },
+    systemVersion: require("../package.json").version,
   });
 
   const [footbarButtons, setFootbarButtons] = useState({
@@ -53,6 +58,7 @@ export default function MainRoutes(props) {
 
   return (
     <>
+      <SnackbarSystemUpdate />
       <div id="MainContainer">
         <Routes>
           <Route

@@ -8,6 +8,8 @@ import { Tabs, Tab } from "@material-ui/core";
 import "./style.css";
 
 // REPORTS
+import RelatorioRateio from "../../reports/relatorioRateio";
+import RelatorioAgua from "../../reports/relatorioAgua";
 import RelatorioGeral from "../../reports/relatorioGeral";
 import RelatorioIndividual from "../../reports/relatorioIndividual";
 
@@ -26,9 +28,12 @@ export default function VisualizarRelatorios(props) {
 
   // Used to control the tabs
   const [value, setValue] = useState(0);
+  const [reportView, setReportView] = useState("screenStyle");
 
   // Stores the general report reference
   const reportRef = useRef(null);
+  const waterReportRef = useRef(null);
+  const apportionmentReportRef = useRef(null);
 
   console.groupCollapsed("VisualizarRelatorios: System data");
   console.log("Footbar:", footbar);
@@ -69,25 +74,45 @@ export default function VisualizarRelatorios(props) {
   }, []);
 
   // This funcions turns a React Component into a PDF
-  const getComponentPrint = (ref) => {
-    if (ref.current) {
-      html2canvas(ref.current).then((canvas) => {
-        const imgData = canvas.toDataURL("image/png");
-        //salva o base64 em uma variável que vai pro backend
-        if (data.reports.generalReport) {
-          window.ipcRenderer.invoke("files", {
-            method: "generateGeneralReport",
-            content: imgData,
-          });
-        } else {
-          window.ipcRenderer.invoke("files", {
-            method: "generateIndividualReport",
-            content: imgData,
-          });
+  const getComponentPrint = async (
+    refGeneralReport,
+    refApportionmentReport,
+    refWaterReport
+  ) => {
+    setReportView("pdfStyle");
+    if (refGeneralReport.current) {
+      if (data.reports.generalReport) {
+        let imgData1;
+        let imgData2;
+        let imgData3;
+        const canvas1 = await html2canvas(refGeneralReport.current);
+        imgData1 = await canvas1.toDataURL("image/png");
+        const canvas2 = await html2canvas(refApportionmentReport.current);
+        imgData2 = await canvas2.toDataURL("image/png");
+        if (refWaterReport.current) {
+          const canvas3 = await html2canvas(refWaterReport.current);
+          imgData3 = await canvas3.toDataURL("image/png");
         }
-      });
+        window.ipcRenderer.invoke("files", {
+          method: "generateGeneralReport",
+          content: {
+            rg: imgData1,
+            rr: imgData2,
+            ra: refWaterReport.current ? imgData3 : null,
+          },
+        });
+      } else {
+        const canvas = await html2canvas(refGeneralReport.current);
+        const imgData = await canvas.toDataURL("image/png");
+        window.ipcRenderer.invoke("files", {
+          method: "generateIndividualReport",
+          content: imgData,
+        });
+      }
+      setReportView("screenStyle");
       return true;
     }
+    setReportView("screenStyle");
     return false;
   };
 
@@ -106,7 +131,7 @@ export default function VisualizarRelatorios(props) {
       case 2:
         console.log("VisualizarRelatorios - Botão da direita");
         setFootbar({ ...footbar, action: -1 });
-        getComponentPrint(reportRef);
+        getComponentPrint(reportRef, apportionmentReportRef, waterReportRef);
         break;
     }
   }, [footbar.action]);
@@ -116,18 +141,16 @@ export default function VisualizarRelatorios(props) {
     setValue(newValue);
   };
 
-  // This functions turns "2020-05-16T23:39:25.808Z" to "17 / 05 / 2020"
-  const getDate = (dateIsoString) => {
-    const timeZoneOffset = new Date().getTimezoneOffset() * 60000;
-    const localISOTime = new Date(new Date(dateIsoString) - timeZoneOffset)
-      .toISOString()
-      .slice(0, -1);
-    const simpleLocalTime = localISOTime
-      .split("T")[0]
-      .split("-")
-      .reverse()
-      .join(" / ");
-    return simpleLocalTime;
+  const getDate2 = (report) => {
+    try {
+      const reportJSON = JSON.parse(report.report);
+      const reportDate = reportJSON.find((table) => table.name === "info").data
+        .reportDate;
+      return `${reportDate.mes}/${reportDate.ano}`;
+    } catch (error) {
+      const digits = report.createdAt.split("T")[0].split("-");
+      return `${digits[1]}/${digits[0]}`;
+    }
   };
 
   return (
@@ -143,7 +166,7 @@ export default function VisualizarRelatorios(props) {
         {data.reports.data.map((report, index) => (
           <Tab
             key={"panelTab" + index}
-            label={getDate(report.createdAt)}
+            label={getDate2(report)}
             title={"Data em que o relatório foi gerado"}
             id={`vertical-tab-${index}`}
             aria-controls={`vertical-tabpanel-${index}`}
@@ -154,14 +177,34 @@ export default function VisualizarRelatorios(props) {
       {data.reports.data.map((dt, index) => (
         <TabPanel key={"panel" + index} id="panel" value={value} index={index}>
           {data.reports.generalReport ? (
-            <RelatorioGeral
-              reportRef={reportRef}
-              report={JSON.parse(dt.report)}
-            />
+            <>
+              <RelatorioGeral
+                reportRef={reportRef}
+                report={JSON.parse(dt.report)}
+                view={"pdfStyle"}
+              />
+              <hr />
+              <RelatorioRateio
+                reportRef={apportionmentReportRef}
+                report={JSON.parse(data.reports.data2[index].report)}
+                view={reportView} // só aqui muda a aparência
+              />
+              {data.reports.data2[index].report && (
+                <>
+                  <hr />
+                  <RelatorioAgua
+                    reportRef={waterReportRef}
+                    report={JSON.parse(data.reports.data3[index].report)}
+                    view={"pdfStyle"}
+                  />
+                </>
+              )}
+            </>
           ) : (
             <RelatorioIndividual
               reportRef={reportRef}
               report={JSON.parse(dt.report)}
+              view={"pdfStyle"}
             />
           )}
         </TabPanel>

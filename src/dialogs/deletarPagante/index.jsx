@@ -8,7 +8,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  Paper
+  Paper,
 } from "@material-ui/core";
 
 // MATERIAL UI ICONS
@@ -41,7 +41,7 @@ export default function DraggableDialog(props) {
   async function handleRightButton() {
     const response = await window.ipcRenderer.invoke("pagantes", {
       method: "delete",
-      content: { id: pagante.id }
+      content: { id: pagante.id },
     });
     response === 1
       ? console.warn(`Pagante excluido: [id=${pagante.id}]`)
@@ -62,10 +62,10 @@ export default function DraggableDialog(props) {
           id="draggable-dialog-title"
           color="inherit"
         >
-          Tem certeza que deseja excluir <strong>{pagante.nome}</strong>?
+          Deseja excluir <strong>{pagante.nome}</strong>?
         </DialogTitle>
         <DialogContent>
-          {`A exclusão desse morador acarretará na exclusão de todos os boletos dele e não poderá ser desfeita.`}
+          {`A exclusão desse Condômino acarretará na exclusão de todos os Relatórios dele e não poderá ser desfeita.`}
         </DialogContent>
         <DialogActions>
           <Button

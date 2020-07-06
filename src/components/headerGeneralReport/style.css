@@ -4,8 +4,8 @@
 
 #GeneralReportHeader {
   background-color: white;
-  border: 2px solid black;
-  color: black;
+  border: 2px solid var(--report-color);
+  color: var(--report-color);
   display: flex;
 
   margin-top: 10px;
@@ -21,21 +21,24 @@
 }
 
 #GeneralReportHeader #header-right {
-  width: 668px;
+  width: calc(100% - 2 * 116px);
 }
 
 #GeneralReportHeader #header-line1 {
-  padding-top: 5px;
-  line-height: calc(110px / 3);
+  line-height: 40px;
   font-size: 30px;
 }
 
 #GeneralReportHeader #header-line2 {
-  line-height: calc(110px / 3);
+  line-height: 35px;
   font-size: 20px;
 }
 
 #GeneralReportHeader #header-line3 {
-  line-height: calc(110px / 3);
+  line-height: 35px;
   font-size: 20px;
+}
+
+#GeneralReportHeader {
+  border-radius: 10px 10px 0px 0px;
 }

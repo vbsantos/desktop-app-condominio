@@ -2,8 +2,9 @@ import React, { useRef } from "react";
 
 // MATERIAL UI COMPONENTS
 import {
-  DialogContentText,
   FormControl,
+  DialogContent,
+  DialogContentText,
   InputLabel,
   Input,
 } from "@material-ui/core";
@@ -26,17 +27,36 @@ export default function FormCondominio(props) {
     setCondominio({
       id: condominio.id,
       nome: formList[0].value,
+      endereco: formList[1].value,
       beneficiarioId: beneficiario.id,
     });
-    setFormCompleted(formList.filter((f) => f.value === "")[0] === undefined);
+    setFormCompleted(formList[0].value !== "");
   }
 
   return (
     <form ref={formRef} onChange={formOnChange}>
-      <FormControl>
-        <InputLabel htmlFor="nome">Nome</InputLabel>
-        <Input autoFocus defaultValue={condominio.nome} id="nome"></Input>
-      </FormControl>
+      <section>
+        <DialogContentText color="inherit">
+          Informações do Condomínio
+        </DialogContentText>
+        <FormControl>
+          <InputLabel htmlFor="nome">Nome *</InputLabel>
+          <Input autoFocus defaultValue={condominio.nome} id="nome"></Input>
+        </FormControl>
+        <FormControl>
+          <InputLabel htmlFor="endereco">Endereço</InputLabel>
+          <Input defaultValue={condominio.endereco} id="endereco"></Input>
+        </FormControl>
+      </section>
+
+      {/* FEEDBACK */}
+      {!formCompleted && (
+        <DialogContent>
+          {condominio.id === ""
+            ? "É necessário preencher os campos obrigatórios (*) para cadastrar"
+            : "É necessário modificar algum campo para salvar"}
+        </DialogContent>
+      )}
     </form>
   );
 }

@@ -1,6 +1,6 @@
 {
   "name": "desktop-app-condominio",
-  "version": "0.9.4",
+  "version": "0.15.0",
   "description": "Software para gerenciar condomínio",
   "repository": "https://github.com/vbsantos/desktop-app-condominio",
   "author": "Vinícius Bohrer <vbsanttos@gmail.com>",
@@ -37,10 +37,10 @@
     "react-start": "react-scripts start",
     "react-build": "react-scripts build",
     "react-test": "react-scripts test",
-    "dist-windows": "yarn react-build && electron-builder -w --ia32 exe",
-    "dist-macos": "yarn react-build && electron-builder -m tar.gz",
-    "dist-linux": "yarn react-build && electron-builder -l deb",
-    "publish": "electron-builder --win --ia32 -p always"
+    "dist-windows": "yarn && yarn react-build && electron-builder -w --ia32 exe",
+    "dist-macos": "yarn && yarn react-build && electron-builder -m tar.gz",
+    "dist-linux": "yarn && yarn react-build && electron-builder -l deb",
+    "publish": "yarn && yarn react-build && electron-builder --win --ia32 -p always"
   },
   "dependencies": {
     "@material-ui/core": "^4.9.3",

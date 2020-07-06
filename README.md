@@ -5,9 +5,6 @@
 - Cadastro de Pagantes (Dono ou Inquilino);
 - Rateio de contas do condomínio;
 - Geração de Relatórios (tabelas);
-- Geração e armazenamento de Boletos com os valores calculados pelo sistema;
-  - Boletos pela API Boleto.Cloud
-- Envio automatizado de e-mails para os inquilinos/proprietários;
 
 ---
 
@@ -55,12 +52,6 @@ Relatorio Individual:
 yarn sequelize model:generate --name RelatorioIndividual --attributes report:string,paganteId:integer
 ```
 
-Boleto:
-
-```bash
-yarn sequelize model:generate --name Boleto --attributes emissao:string,vencimento:string,documento:string,numero:string,titulo:string,valor:string,paganteId:integer
-```
-
 ### Relações
 
 - Beneficiarios (**1-N**) Condominios
@@ -68,7 +59,6 @@ yarn sequelize model:generate --name Boleto --attributes emissao:string,vencimen
 - Condominios (**1-N**) Despesas
 - Condominios (**1-N**) Relatorios
 - Despesas (**1-N**) Valors
-- Pagantes (**1-N**) Boletos
 - Pagantes (**1-N**) Relatorios
 
 ## Controllers
@@ -77,23 +67,14 @@ yarn sequelize model:generate --name Boleto --attributes emissao:string,vencimen
 - Condominio
 - Pagante
 - Despesa
-- Boleto
 - Valor
 - RelatorioGeral
 - RelatorioIndividual
-- API \*
-- Email \*
 
-\* Por fazer
-
-## Pages/Screens
+## Pages
 
 - Visualizar/Registrar/Editar Administrador/Beneficiário
 - Visualizar/Registrar/Editar Condomínio
+- Visualizar Relatórios
 - Visualizar/Registrar/Editar Despesas
-- Confirmar Geração de Relatórios
-- Relatórios Gerais \*
-- Relatórios Individuais \*
-- Gerar Boletos \*
-
-\* Por fazer
+- Confirmar Geração de Relatórios Gerais e Individuais

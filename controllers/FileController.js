@@ -1,6 +1,6 @@
 "use strict";
 
-const { PDFDocument } = require("pdf-lib");
+const { PDFDocument, PageSizes } = require("pdf-lib");
 const { dialog } = require("electron");
 const Path = require("path");
 const fs = require("fs");
@@ -52,7 +52,28 @@ class FileController {
     // Get the width/height of the PNG image scaled down to 50% of its original size
     const pngDims = pngImage.scale(0.6);
     // Add a blank page to the document
-    const page = pdfDoc.addPage();
+    const page = pdfDoc.addPage(PageSizes.A4);
+    // Get the width and height of the page
+    const { width, height } = page.getSize();
+    // Draw the PNG image near the lower right corner of the JPG image
+    page.drawImage(pngImage, {
+      x: 20,
+      y: height - pngDims.height - 20,
+      width: width - 40,
+      height: pngDims.height,
+    });
+    // Serialize the PDFDocument to bytes (a Uint8Array)
+    return await pdfDoc.save();
+  };
+  createLandscapeSinglePagePdf = async (base64imageString) => {
+    // Create a new PDFDocument
+    const pdfDoc = await PDFDocument.create();
+    // Embed the PNG image bytes
+    const pngImage = await pdfDoc.embedPng(base64imageString);
+    // Get the width/height of the PNG image scaled down to 50% of its original size
+    const pngDims = pngImage.scale(0.5);
+    // Add a blank page to the document
+    const page = pdfDoc.addPage([PageSizes.A4[1], PageSizes.A4[0]]);
     // Get the width and height of the page
     const { width, height } = page.getSize();
     // Draw the PNG image near the lower right corner of the JPG image
@@ -75,8 +96,8 @@ class FileController {
     const pngDims1 = pngImage1.scale(0.6);
     const pngDims2 = pngImage2.scale(0.6);
     // Add a blank page to the document
-    const page1 = pdfDoc.addPage();
-    const page2 = pdfDoc.addPage();
+    const page1 = pdfDoc.addPage(PageSizes.A4);
+    const page2 = pdfDoc.addPage(PageSizes.A4);
     // Get the width and height of the page
     const { width, height } = page1.getSize();
     // Draw the PNG image near the lower right corner of the JPG image
@@ -97,15 +118,42 @@ class FileController {
   };
   generateGeneralReport = async (base64imageString) => {
     try {
-      // Choose path to save documento
-      const filePath = await this.saveReportAsDialog(
-        "RelatorioCondominio_" + this.getTimestamp()
+      const filePath = await this.saveReportsDialog();
+      if (typeof filePath === "undefined") return false;
+      const generalReportBase64 = base64imageString.rg;
+      const apportionmentReportBase64 = base64imageString.rr;
+      const waterReportBase64 = base64imageString.ra;
+
+      const generalReport = await this.createSinglePagePdf(generalReportBase64);
+      fs.writeFileSync(
+        Path.resolve(
+          filePath,
+          "demonstrativo_financeiro_" + this.getTimestamp() + ".pdf"
+        ),
+        generalReport
       );
-      // Create PDF and embed PNG
-      const pdfBytes = await this.createSinglePagePdf(base64imageString);
-      // Save document
-      fs.writeFileSync(filePath, pdfBytes);
-      return true;
+
+      const apportionmentReport = await this.createLandscapeSinglePagePdf(
+        apportionmentReportBase64
+      );
+      fs.writeFileSync(
+        Path.resolve(
+          filePath,
+          "planilha_cobrancas_" + this.getTimestamp() + ".pdf"
+        ),
+        apportionmentReport
+      );
+
+      if (waterReportBase64) {
+        const waterReport = await this.createSinglePagePdf(waterReportBase64);
+        fs.writeFileSync(
+          Path.resolve(
+            filePath,
+            "relatorio_agua_" + this.getTimestamp() + ".pdf"
+          ),
+          waterReport
+        );
+      }
     } catch (error) {
       console.log(error);
       return false;
@@ -115,7 +163,7 @@ class FileController {
     try {
       // Choose path to save documento
       const filePath = await this.saveReportAsDialog(
-        "RelatorioIndividual_" + this.getTimestamp()
+        "relatorio_individual_" + this.getTimestamp()
       );
       // Create PDF and embed PNG
       const pdfBytes = await this.createSinglePagePdf(base64imageString);
@@ -145,13 +193,44 @@ class FileController {
         reports.push(report);
       }
 
+      const apportionmentReportBase64 = base64Reports.rr;
+      const apportionmentReport = await this.createLandscapeSinglePagePdf(
+        apportionmentReportBase64
+      );
+      const path = Path.resolve(
+        filePath,
+        "planilha_cobrancas_" + this.getTimestamp() + ".pdf"
+      );
+      await fs.writeFile(path, apportionmentReport, function (err) {
+        if (err) {
+          console.log("Error saving file '" + path + "'");
+          throw new Error(err);
+        }
+        console.log("The file '" + path + "' was saved!");
+      });
+
+      const waterReportBase64 = base64Reports.ra;
+      if (waterReportBase64) {
+        const waterReport = await this.createSinglePagePdf(waterReportBase64);
+        const path = Path.resolve(
+          filePath,
+          "relatorio_agua_" + this.getTimestamp() + ".pdf"
+        );
+        await fs.writeFile(path, waterReport, function (err) {
+          if (err) {
+            console.log("Error saving file '" + path + "'");
+            throw new Error(err);
+          }
+          console.log("The file '" + path + "' was saved!");
+        });
+      }
+
       // Save reports
       for (const index in reports) {
         const path = Path.resolve(
           filePath,
           "relatorio_" + infos[index] + "_" + this.getTimestamp() + ".pdf"
         );
-        // await fs.writeFileSync(path, reports[index]);
         await fs.writeFile(path, reports[index], function (err) {
           if (err) {
             console.log("Error saving file '" + path + "'");

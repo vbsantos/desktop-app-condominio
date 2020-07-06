@@ -5,20 +5,30 @@
 #relatorioIndividual .MuiTableContainer-root {
   overflow: hidden;
   text-align: center;
-  width: 900px !important;
   margin: 0 auto 10px auto;
   padding: 0;
 }
 
+#relatorioIndividual .MuiTableContainer-root.pdfStyle {
+  width: 900px !important;
+}
+
+/* #relatorioIndividual .MuiTableContainer-root.screenStyle {
+  padding-left: 1%;
+  padding-right: 1%;
+} */
+
 #relatorioIndividual .MuiTableRow-head * {
-  background-color: black;
-  color: white;
+  background-color: var(--report-color);
+  color: white !important;
+  font-weight: 600 !important;
 }
 
 #relatorioIndividual .MuiTableRow-root * {
   padding: 1px 8px 1px 8px;
-  font-weight: 600;
-  font-size: 18px !important;
+  font-weight: 400;
+  font-size: 15px !important;
+  color: var(--report-color);
 }
 
 #relatorioIndividual .MuiTableRow-root #nome {
@@ -38,17 +48,17 @@
 
 #relatorioIndividual #table1 {
   background-color: white;
-  border: 2px solid black;
+  border: 2px solid var(--report-color);
 }
 
 #relatorioIndividual #table2 {
   margin-left: -2px;
   background-color: white;
-  border: 2px solid black;
+  border: 2px solid var(--report-color);
 }
 
 #relatorioIndividual #table3 {
   background-color: white;
-  border: 2px solid black;
+  border: 2px solid var(--report-color);
   margin-top: 10px;
 }

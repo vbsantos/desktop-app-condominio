@@ -1,7 +1,12 @@
 import React, { useRef } from "react";
 
 // MATERIAL UI COMPONENTS
-import { FormControl, InputLabel, Input } from "@material-ui/core";
+import {
+  DialogContentText,
+  FormControl,
+  InputLabel,
+  Input,
+} from "@material-ui/core";
 
 export default function FormDespesaFundoReserva(props) {
   // true when all the fields of the form are filled
@@ -20,43 +25,68 @@ export default function FormDespesaFundoReserva(props) {
   function formOnChange() {
     const formList = [...formRef.current.elements];
 
-    const porcentagemString = formList[0].value;
+    const test = (input) => input !== "" && Number(input) >= 0;
+
+    const porcentagemString = formList[1].value
+      .replace(",", ".")
+      .replace("%", "")
+      .replace(" ", "");
+
+    const goodInput = test(porcentagemString);
 
     setDespesa({
       id: despesa.id,
-      nome: "",
+      nome: goodInput
+        ? `Fundo Reserva - ${porcentagemString}%`
+        : "Fundo Reserva",
       categoria: "",
-      rateioAutomatico: true,
-      permanente: false,
+      agua: null,
       aguaIndividual: false,
+      rateioAutomatico: true,
+      permanente: true,
       fundoReserva: true,
-      valor: porcentagemString
-        .replace(",", ".")
-        .replace("%", "")
-        .replace(" ", ""),
-      parcelaAtual: "",
-      numParcelas: "",
+      valor: porcentagemString,
+      parcelaAtual: null,
+      numParcelas: null,
+      informacao: false,
       Valores: [],
       condominioId: condominio.id,
     });
 
-    setFormCompleted(
-      formList.filter((field) => !field.disabled && field.value === "")[0] ===
-        undefined
-    );
+    setFormCompleted(goodInput);
   }
 
   return (
     <div>
       <form ref={formRef} onChange={formOnChange}>
-        <FormControl>
-          <InputLabel htmlFor="porcentagem">Porcentagem (%)</InputLabel>
-          <Input
-            autoFocus
-            defaultValue={despesa.valor}
-            id="porcentagem"
-          ></Input>
-        </FormControl>
+        {/* INFORMAÇÕES DA DESPESA */}
+        <section>
+          <DialogContentText key={"despesaTitle"} color="inherit">
+            Informações da Despesa
+          </DialogContentText>
+          <FormControl>
+            <InputLabel htmlFor="nome">Nome</InputLabel>
+            <Input
+              defaultValue={"Fundo Reserva"}
+              disabled={true}
+              id="nome"
+            ></Input>
+          </FormControl>
+        </section>
+
+        <section>
+          <DialogContentText key={"despesaTitle"} color="inherit">
+            Valor
+          </DialogContentText>
+          <FormControl>
+            <InputLabel htmlFor="porcentagem">Porcentagem (%) *</InputLabel>
+            <Input
+              autoFocus
+              defaultValue={despesa.valor}
+              id="porcentagem"
+            ></Input>
+          </FormControl>
+        </section>
       </form>
     </div>
   );

@@ -36,22 +36,31 @@ export default function DraggableDialog(props) {
   // despesa must belong to a condominio
   const { condominio } = props;
 
+  // Made to avoid duplicate
+  const findDespesaFundoReserva = (despesas) => {
+    const despesa = despesas.find((despesa) => despesa.fundoReserva);
+    return despesa;
+  };
+
   // Opens or Create a Despesa
   const [despesa, setDespesa] = useState(
-    props.despesa || {
-      id: "",
-      nome: "",
-      categoria: "",
-      valor: "",
-      parcelaAtual: "",
-      numParcelas: "",
-      rateioAutomatico: false,
-      permanente: false,
-      aguaIndividual: false,
-      fundoReserva: false,
-      condominioId: condominio.id,
-      Valores: [],
-    }
+    props.despesa ||
+      findDespesaFundoReserva(condominio["Despesas"]) || {
+        id: "",
+        nome: "",
+        categoria: "",
+        valor: "",
+        parcelaAtual: "",
+        numParcelas: "",
+        agua: "",
+        aguaIndividual: false,
+        rateioAutomatico: true,
+        permanente: true,
+        fundoReserva: true,
+        condominioId: condominio.id,
+        informacao: false,
+        Valores: [],
+      }
   );
 
   const [valores, setValores] = useState(
@@ -77,9 +86,9 @@ export default function DraggableDialog(props) {
     if (despesa.id === "") {
       let response;
       if (despesa.fundoReserva) {
-        const fundoReservaId = condominio["Despesas"].filter(
+        const fundoReservaId = condominio["Despesas"].find(
           (despesa) => despesa.fundoReserva
-        )[0];
+        );
         if (fundoReservaId) {
           //if it already exists update
           despesa.id = fundoReservaId.id;
@@ -164,7 +173,7 @@ export default function DraggableDialog(props) {
           color="inherit"
         >
           {despesa.id === ""
-            ? "Cadastrar Fundo Reserva"
+            ? "Registrar Fundo Reserva"
             : "Editar Fundo Reserva"}
         </DialogTitle>
         <DialogContent>
@@ -174,6 +183,7 @@ export default function DraggableDialog(props) {
             completed={[formCompleted, setFormCompleted]}
           />
         </DialogContent>
+
         <DialogActions>
           <Button onClick={handleClose} variant="outlined" color="secondary">
             Cancelar

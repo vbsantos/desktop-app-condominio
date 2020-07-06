@@ -3,9 +3,15 @@ import React, { useRef, useState } from "react";
 // MATERIAL UI COMPONENTS
 import {
   DialogContentText,
+  DialogContent,
   FormControl,
   InputLabel,
   Input,
+  FormGroup,
+  FormControlLabel,
+  Switch,
+  Typography,
+  Grid,
 } from "@material-ui/core";
 
 export default function FormPagante(props) {
@@ -23,21 +29,29 @@ export default function FormPagante(props) {
 
   function formOnChange() {
     const formList = [...formRef.current.elements];
+    const fracao = formList[4].value.replace(",", ".");
+    const leituraAgua = formList[6].value.replace(",", ".");
+    const unidadeComercial = formList[7].checked;
     setPagante({
       id: pagante.id,
       nome: formList[0].value,
-      complemento: formList[1].value,
-      fracao: formList[2].value.replace(",", "."),
-      leituraAgua: formList[3].value.replace(",", "."),
+      email: formList[1].value,
+      telefone: formList[2].value,
+      complemento: formList[3].value,
+      fracao,
+      box: formList[5].value,
+      leituraAgua,
+      unidadeComercial,
       condominioId: condominio.id,
     });
-    // não permite fração que não seja entre 0 e 1
-    // não permite registro de água menor que 0
     setFormCompleted(
-      formList.filter((f) => f.value === "")[0] === undefined &&
-        formList[2].value.replace(",", ".") > 0 &&
-        formList[2].value.replace(",", ".") <= 1 &&
-        formList[3].value.replace(",", ".") >= 0
+      formList[0].value !== "" &&
+        formList[3].value !== "" &&
+        fracao !== "" &&
+        leituraAgua !== "" &&
+        Number(fracao) > 0 &&
+        Number(fracao) <= 1 &&
+        Number(leituraAgua) >= 0
     );
   }
 
@@ -45,15 +59,31 @@ export default function FormPagante(props) {
     <form ref={formRef} onChange={formOnChange}>
       <section>
         <DialogContentText color="inherit">
-          Informações do Morador Atual
+          Informações do Condômino
         </DialogContentText>
         <FormControl>
-          <InputLabel htmlFor="nome">Nome</InputLabel>
+          <InputLabel htmlFor="nome">Nome *</InputLabel>
           <Input
             title="Nome do atual dono do Apartamento"
             autoFocus
             defaultValue={pagante.nome}
             id="nome"
+          ></Input>
+        </FormControl>
+        <FormControl>
+          <InputLabel htmlFor="email">E-mail</InputLabel>
+          <Input
+            title="E-mail do atual dono do Apartamento"
+            defaultValue={pagante.email}
+            id="email"
+          ></Input>
+        </FormControl>
+        <FormControl>
+          <InputLabel htmlFor="telefone">Telefone</InputLabel>
+          <Input
+            title="Telefone do atual dono do Apartamento"
+            defaultValue={pagante.telefone}
+            id="telefone"
           ></Input>
         </FormControl>
       </section>
@@ -62,7 +92,7 @@ export default function FormPagante(props) {
           Informações do Apartamento
         </DialogContentText>
         <FormControl>
-          <InputLabel htmlFor="complemento">Número do apartamento</InputLabel>
+          <InputLabel htmlFor="complemento">Número do apartamento *</InputLabel>
           <Input
             title="Número identificador do Apartamento"
             defaultValue={pagante.complemento}
@@ -70,7 +100,7 @@ export default function FormPagante(props) {
           ></Input>
         </FormControl>
         <FormControl>
-          <InputLabel htmlFor="fracao">Fração</InputLabel>
+          <InputLabel htmlFor="fracao">Fração *</InputLabel>
           <Input
             title="Entre 0 e 1"
             defaultValue={pagante.fracao}
@@ -78,7 +108,20 @@ export default function FormPagante(props) {
           ></Input>
         </FormControl>
         <FormControl>
-          <InputLabel htmlFor="leituraAgua">Leitura da Água</InputLabel>
+          <InputLabel htmlFor="box">Box</InputLabel>
+          <Input
+            title="Box que pertencem ao apartamento"
+            defaultValue={pagante.box}
+            id="box"
+          ></Input>
+        </FormControl>
+      </section>
+      <section>
+        <DialogContentText color="inherit">
+          Última Leitura de água
+        </DialogContentText>
+        <FormControl>
+          <InputLabel htmlFor="leituraAgua">Leitura da Água *</InputLabel>
           <Input
             title="Valor no medidor de água (m³)"
             defaultValue={pagante.leituraAgua}
@@ -86,6 +129,48 @@ export default function FormPagante(props) {
           ></Input>
         </FormControl>
       </section>
+      <section>
+        <DialogContentText color="inherit">Tipo de Unidade</DialogContentText>
+        <FormGroup>
+          <Typography component="div">
+            <Grid
+              container
+              component="label"
+              justify="center"
+              alignItems="center"
+              spacing={1}
+            >
+              <Grid item xs>
+                Residencial
+              </Grid>
+              <Grid item xs>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      // onChange={(e) => setComercial(e.target.checked)}
+                      value="cb1"
+                      checked={pagante.unidadeComercial}
+                      color="primary"
+                    />
+                  }
+                />
+              </Grid>
+              <Grid item xs>
+                Comercial
+              </Grid>
+            </Grid>
+          </Typography>
+        </FormGroup>
+      </section>
+
+      {/* FEEDBACK */}
+      {!formCompleted && (
+        <DialogContent>
+          {pagante.id === ""
+            ? "É necessário preencher os campos obrigatórios (*) para cadastrar"
+            : "É necessário modificar algum campo para salvar"}
+        </DialogContent>
+      )}
     </form>
   );
 }

@@ -4,9 +4,10 @@
   margin: 0 auto 0 auto;
   padding: 0;
 }
+
 #relatorioCondominioRegistrar .MuiTable-root {
   background-color: white !important;
-  border: 2px solid black;
+  border: 2px solid var(--report-color);
 }
 
 #relatorioCondominioRegistrar .MuiTable-root * {
@@ -19,7 +20,7 @@
 }
 
 #relatorioCondominioRegistrar .Black .MuiTableCell-root {
-  background-color: black !important;
+  background-color: var(--report-color) !important;
   color: white !important;
   font-weight: 600 !important;
   padding-top: 1px !important;
@@ -34,26 +35,35 @@
   margin: 0;
   padding: 0;
   cursor: pointer;
+  color: var(--report-color);
 }
+
 #relatorioCondominioRegistrar .MuiTableCell-root.col1 {
   padding-left: 10px !important;
-  width: 650px !important;
-}
-#relatorioCondominioRegistrar .MuiTableCell-root.col2 {
-  width: 100px !important;
-}
-#relatorioCondominioRegistrar .MuiTableCell-root.col3 {
-  width: 150px !important;
+  width: 550px !important;
 }
 
 #relatorioCondominioRegistrar .MuiTableCell-root.col2 {
+  width: 100px !important;
   text-align: center;
 }
 
 #relatorioCondominioRegistrar .MuiTableCell-root.col3 {
+  width: 100px !important;
+  text-align: center;
+}
+
+#relatorioCondominioRegistrar .MuiTableCell-root.col4 {
+  width: 150px !important;
   text-align: center;
 }
 
 #relatorioCondominioRegistrar #fundoReservaRow {
+  cursor: pointer;
+}
+
+#relatorioCondominioRegistrar .MuiTableCell-root.uniqueCol {
+  text-align: left;
+  padding: 1px 1px 1px 10px;
   cursor: pointer;
 }

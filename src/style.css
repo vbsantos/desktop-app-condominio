@@ -6,6 +6,10 @@
     Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 
+:root {
+  --report-color: #434148;
+}
+
 #App {
   text-align: center;
   background-color: #333;

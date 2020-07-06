@@ -16,10 +16,15 @@ import IndividualReportHeader from "../../components/headerIndividualReport";
 // CSS
 import "./style.css";
 
+const pad = (num, size) => {
+  return String(num).padStart(size, "0");
+};
+
 export default function RelatorioIndividual(props) {
   const { reportRef } = props;
   const { reportClass } = props;
   const { report } = props;
+  const { view } = props;
 
   const info =
     report[report.length - 1].name === "info" ? report.pop().data : null;
@@ -29,11 +34,22 @@ export default function RelatorioIndividual(props) {
   const reportData = report
     .map((categoria) =>
       categoria.table
-        ? categoria.data.map((despesa) => [despesa.nome, despesa.valor])
+        ? categoria.data.map((despesa) => [
+            despesa.id,
+            despesa.nome,
+            despesa.valor,
+            true,
+          ])
         : [
             [
-              categoria.name === "total" ? "Total" : "Fundo Reserva",
-              categoria.data,
+              categoria.data.id,
+              categoria.name === "total" ? "Total" : categoria.name,
+              categoria.data.value === undefined
+                ? categoria.data
+                : categoria.data.value,
+              categoria.data.id === undefined || categoria.name === "total"
+                ? false
+                : true,
             ],
           ]
     )
@@ -46,16 +62,18 @@ export default function RelatorioIndividual(props) {
 
   return (
     <div id="relatorioIndividual">
-      <TableContainer className={reportClass} ref={reportRef}>
+      <TableContainer className={`${reportClass} ${view}`} ref={reportRef}>
         <IndividualReportHeader
           complementoPagante={info.complementoPagante}
           nomePagante={info.nomePagante}
           fracaoPagante={info.fracaoPagante}
+          date={info.reportDate}
         />
+
         <div id="duasTabelas">
           <Table id="table1">
             <TableHead>
-              <TableRow>
+              <TableRow className="Black">
                 <TableCell id="nome">Despesa</TableCell>
                 <TableCell id="valor">{"Valor "}</TableCell>
               </TableRow>
@@ -63,15 +81,21 @@ export default function RelatorioIndividual(props) {
             <TableBody>
               {table1.map((despesa, index) => (
                 <TableRow key={"table1row" + index}>
-                  <TableCell id="nome">{despesa[0]}</TableCell>
-                  <TableCell id="valor">{"R$ " + despesa[1]}</TableCell>
+                  <TableCell id="nome">
+                    {despesa[3]
+                      ? `${pad(despesa[0], 4)} - ${despesa[1]}`
+                      : `${despesa[1]}`}
+                  </TableCell>
+                  <TableCell id="valor">
+                    {"R$ " + Number(despesa[2]).toFixed(2)}
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
           <Table id="table2">
             <TableHead>
-              <TableRow>
+              <TableRow className="Black">
                 <TableCell id="nome">Despesa</TableCell>
                 <TableCell id="valor">{"Valor "}</TableCell>
               </TableRow>
@@ -79,8 +103,14 @@ export default function RelatorioIndividual(props) {
             <TableBody>
               {table2.map((despesa, index) => (
                 <TableRow key={"table2row" + index}>
-                  <TableCell id="nome">{despesa[0]}</TableCell>
-                  <TableCell id="valor">{"R$ " + despesa[1]}</TableCell>
+                  <TableCell id="nome">
+                    {despesa[3]
+                      ? `${pad(despesa[0], 4)} - ${despesa[1]}`
+                      : `${despesa[1]}`}
+                  </TableCell>
+                  <TableCell id="valor">
+                    {"R$ " + Number(despesa[2]).toFixed(2)}
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>

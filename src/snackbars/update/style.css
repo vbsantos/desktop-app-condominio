@@ -1,0 +1,21 @@
+#snackbarSystemUpdate .MuiSnackbarContent-message {
+  display: flex;
+  align-items: center;
+  line-height: 60px;
+}
+
+#snackbarSystemUpdate .MuiSnackbarContent-message p {
+  color: white;
+  font-weight: 600;
+  margin: 0px 0px 0px 15px;
+  line-height: 25px !important;
+  width: 200px;
+}
+
+#snackbarSystemUpdate .MuiSnackbarContent-root {
+  background: rgba(68, 85, 102, 0.8) !important;
+  border-radius: 50px;
+  margin: 0px;
+  height: 80px !important;
+  width: 100px !important;
+}

@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState } from "react";
 
 // MATERIAL UI COMPONENTS
 import {
@@ -59,7 +59,7 @@ export default function FormDespesa(props) {
         despesaAgua
           ? (function () {
               const valorM3Agua = valoresList
-                .filter((field) => field.id === "valorAguaCondominio")[0]
+                .find((field) => field.id === "valorAguaCondominio")
                 .value.replace(",", ".");
               const valoresAgua = valoresList.filter((field) =>
                 field.id.includes("aguaIndividual")
@@ -72,9 +72,9 @@ export default function FormDespesa(props) {
                   valoraguafield.value.replace(",", ".")
                 );
                 const pagante_id = Number(valoraguafield.id.slice(14));
-                const pagante_leituraAguaAntiga = condominio["Pagantes"].filter(
+                const pagante_leituraAguaAntiga = condominio["Pagantes"].find(
                   (pagante) => pagante.id === pagante_id
-                )[0].leituraAgua;
+                ).leituraAgua;
                 const leituraAguaNova =
                   leituraAguaFormated - Number(pagante_leituraAguaAntiga);
                 const valor = Number(leituraAguaNova) * Number(valorM3Agua);
@@ -83,11 +83,11 @@ export default function FormDespesa(props) {
                 return {
                   id:
                     valores.length > 0 && valores[0].id !== ""
-                      ? valores.filter(
+                      ? valores.find(
                           (valor) =>
                             valor.paganteId === pagante_id &&
                             valor.despesaId === despesa.id
-                        )[0].id
+                        ).id
                       : "",
                   precoAgua: valorM3Agua,
                   agua: leituraAguaFormated.toString(),
@@ -104,11 +104,11 @@ export default function FormDespesa(props) {
               return {
                 id:
                   valores.length > 0 && valores[0].id !== ""
-                    ? valores.filter(
+                    ? valores.find(
                         (valor) =>
                           valor.paganteId === pagante_id &&
                           valor.despesaId === despesa.id
-                      )[0].id
+                      ).id
                     : "",
                 precoAgua: null,
                 agua: null,
@@ -125,9 +125,10 @@ export default function FormDespesa(props) {
       id: despesa.id,
       nome: formList[0].value,
       categoria: formList[1].value,
+      agua: null,
+      aguaIndividual: false,
       rateioAutomatico: formList[2].checked,
       permanente: true,
-      aguaIndividual: false,
       fundoReserva: false,
       valor: rateioAuto
         ? formList[3].value.replace(",", ".")
@@ -138,13 +139,19 @@ export default function FormDespesa(props) {
             .toFixed(2),
       parcelaAtual: null,
       numParcelas: null,
+      informacao: false,
       Valores: valores,
       condominioId: condominio.id,
     });
 
     setFormCompleted(
-      formList.filter((field) => !field.disabled && field.value === "")[0] ===
-        undefined
+      formList.find((field) => !field.disabled && field.value === "") ===
+        undefined &&
+        valoresList.find(
+          (field) =>
+            isNaN(Number(field.value.replace(",", "."))) ||
+            Number(field.value.replace(",", ".")) < 0
+        ) === undefined
     );
   }
 
@@ -157,7 +164,7 @@ export default function FormDespesa(props) {
             Informações da Despesa
           </DialogContentText>
           <FormControl>
-            <InputLabel htmlFor="nome">Nome</InputLabel>
+            <InputLabel htmlFor="nome">Nome *</InputLabel>
             <Input
               autoFocus
               disabled={despesaFundoReserva}
@@ -166,7 +173,7 @@ export default function FormDespesa(props) {
             ></Input>
           </FormControl>
           <FormControl>
-            <InputLabel htmlFor="categoria">Categoria</InputLabel>
+            <InputLabel htmlFor="categoria">Categoria *</InputLabel>
             <Input
               disabled={despesaFundoReserva}
               defaultValue={despesa.categoria}
@@ -223,16 +230,16 @@ export default function FormDespesa(props) {
             {condominio["Pagantes"].map((pagante) => (
               <FormControl key={"valorIndividualForm" + pagante.id}>
                 <InputLabel htmlFor={"valorIndividual" + pagante.id}>
-                  Custo para {pagante.complemento}
+                  Custo para {pagante.complemento} *
                 </InputLabel>
                 <Input
                   id={"valorIndividual" + pagante.id}
                   defaultValue={
                     valores.length > 0 && valores[0].id !== ""
                       ? Number(
-                          valores.filter(
+                          valores.find(
                             (valor) => valor["paganteId"] === pagante.id
-                          )[0].valor
+                          ).valor
                         ).toFixed(2)
                       : ""
                   }
@@ -246,7 +253,7 @@ export default function FormDespesa(props) {
               Custo da Despesa
             </DialogContentText>
             <FormControl>
-              <InputLabel htmlFor="valor">Valor (R$)</InputLabel>
+              <InputLabel htmlFor="valor">Valor (R$) *</InputLabel>
               <Input
                 defaultValue={despesa.valor}
                 id="valor"

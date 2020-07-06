@@ -75,7 +75,10 @@ export default function EscolherCondominio(props) {
   const [dialogDeletePagante, setDialogDeletePagante] = useState(false);
 
   // Boolean for Alert Dialog
-  const [dialogAlert, setDialogAlert] = useState(false);
+  const [dialogAlertDespesas, setDialogAlertDespesas] = useState(false);
+  const [dialogAlertNoReports, setDialogAlertNoReports] = useState(false);
+  const [dialogAlertPagante, setDialogAlertPagante] = useState(false);
+  const [dialogAlertFracao, setDialogAlertFracao] = useState(false);
 
   console.groupCollapsed("EscolherCondominio: System data");
   console.log("Footbar:", footbar);
@@ -123,9 +126,20 @@ export default function EscolherCondominio(props) {
         break;
       case 2:
         console.log("EscolherCondominio - Botão da direita");
+        const hasPagantes = data.allNestedCondominio["Pagantes"].length > 0;
+        const sumFracao = data.allNestedCondominio["Pagantes"]
+          .reduce((a, b) => a + Number(b.fracao), 0)
+          .toFixed(5);
+        const validFracao = sumFracao === "1.00000";
         setFootbar({ ...footbar, action: -1 });
-        navigate("/RegistrarDespesas"); // vai pra tela de rateamento de contas
-        break;
+
+        if (validFracao && hasPagantes) {
+          navigate("/RegistrarDespesas");
+        } else if (!hasPagantes) {
+          setDialogAlertPagante(true);
+        } else {
+          setDialogAlertFracao(true);
+        }
     }
   }, [footbar.action]);
 
@@ -195,9 +209,9 @@ export default function EscolherCondominio(props) {
           : setData({
               ...data,
               allNestedBeneficiario: response,
-              allNestedCondominio: response["Condominios"].filter(
+              allNestedCondominio: response["Condominios"].find(
                 (condominio) => condominio.id == selectedCondominio.id
-              )[0],
+              ),
             });
         console.timeEnd("Get all data from database");
       }
@@ -218,7 +232,7 @@ export default function EscolherCondominio(props) {
       setExpanded(panel);
       const allNestedCondominio = data.allNestedBeneficiario[
         "Condominios"
-      ].filter((condominio) => condominio.id === panel)[0];
+      ].find((condominio) => condominio.id === panel);
       setData({ ...data, allNestedCondominio });
     } else {
       setSelectedCondominio({ id: -1 });
@@ -230,17 +244,33 @@ export default function EscolherCondominio(props) {
     if (!e) var e = window.event;
     e.cancelBubble = true;
     if (e.stopPropagation) e.stopPropagation();
-    const response = await window.ipcRenderer.invoke("generalReports", {
+    const generalReports = await window.ipcRenderer.invoke("generalReports", {
       method: "indexByOwnerId",
       content: { id: data.allNestedCondominio.id },
     });
-    if (response[0]) {
+    // Mostrar todos relatórios gerais (demonstrativo, rateio e água) na mesma página
+    const waterReports = await window.ipcRenderer.invoke("waterReports", {
+      method: "indexByOwnerId",
+      content: { id: data.allNestedCondominio.id },
+    });
+    const apportionmentReports = await window.ipcRenderer.invoke(
+      "apportionmentReports",
+      {
+        method: "indexByOwnerId",
+        content: { id: data.allNestedCondominio.id },
+      }
+    );
+    if (generalReports[0] && waterReports[0] && apportionmentReports[0]) {
       const reports = {
         generalReport: true,
-        data: response,
+        data: generalReports, // general reports
+        data2: apportionmentReports, // apportionment reports
+        data3: waterReports, // water reports
       };
       setData({ ...data, reports });
       navigate("/VisualizarRelatorios");
+    } else {
+      setDialogAlertNoReports(true);
     }
   }
 
@@ -263,17 +293,22 @@ export default function EscolherCondominio(props) {
   }
 
   async function handlePaganteReport(id) {
-    const response = await window.ipcRenderer.invoke("individualReports", {
-      method: "indexByOwnerId",
-      content: { id },
-    });
-    if (response[0]) {
+    const individualReports = await window.ipcRenderer.invoke(
+      "individualReports",
+      {
+        method: "indexByOwnerId",
+        content: { id },
+      }
+    );
+    if (individualReports[0]) {
       const reports = {
         generalReport: false,
-        data: response,
+        data: individualReports, // individual reports
       };
       setData({ ...data, reports });
       navigate("/VisualizarRelatorios");
+    } else {
+      setDialogAlertNoReports(true);
     }
   }
 
@@ -295,17 +330,35 @@ export default function EscolherCondominio(props) {
     if (registerPagante) {
       setDialogRegisterPaganteForm(true);
     } else {
-      setDialogAlert(true);
+      setDialogAlertDespesas(true);
     }
   }
 
   return (
     <div id="EscolherCondominio">
       {/* ALERTA */}
-      {dialogAlert && (
+      {dialogAlertDespesas && (
         <DialogAlerta
-          open={[dialogAlert, setDialogAlert]}
-          content="Para cadastrar novos Moradores é necessário deletar as despesas (com rateio manual) já cadastradas."
+          open={[dialogAlertDespesas, setDialogAlertDespesas]}
+          content="Para cadastrar Condôminos é necessário deletar as Despesas (com rateio manual) já registradas"
+        />
+      )}
+      {dialogAlertNoReports && (
+        <DialogAlerta
+          open={[dialogAlertNoReports, setDialogAlertNoReports]}
+          title="Não há Relatórios para visualizar"
+        />
+      )}
+      {dialogAlertPagante && (
+        <DialogAlerta
+          open={[dialogAlertPagante, setDialogAlertPagante]}
+          content="Não é possível continuar sem Condôminos cadastrados no Condomínio selecionado"
+        />
+      )}
+      {dialogAlertFracao && (
+        <DialogAlerta
+          open={[dialogAlertFracao, setDialogAlertFracao]}
+          content="A soma das frações dos Condôminos não é '1.00000', isso quer dizer que é possível que a divisão de valores das Despesas dê erro"
         />
       )}
       {/* CONDOMINIO DIALOGS */}
@@ -343,24 +396,20 @@ export default function EscolherCondominio(props) {
           open={[dialogEditPaganteForm, setDialogEditPaganteForm]}
           delete={[dialogDeletePagante, setDialogDeletePagante]}
           condominio={selectedCondominio}
-          pagante={
-            data.allNestedCondominio["Pagantes"].filter(
-              (pagante) => pagante.id === selectedPagante.id
-            )[0]
-          }
+          pagante={data.allNestedCondominio["Pagantes"].find(
+            (pagante) => pagante.id === selectedPagante.id
+          )}
         />
       )}
       {dialogDeletePagante && (
         <DialogExcluirPagante
           open={[dialogDeletePagante, setDialogDeletePagante]}
-          pagante={
-            data.allNestedCondominio["Pagantes"].filter(
-              (pagante) => pagante.id === selectedPagante.id
-            )[0]
-          }
+          pagante={data.allNestedCondominio["Pagantes"].find(
+            (pagante) => pagante.id === selectedPagante.id
+          )}
         />
       )}
-      <h1 className="PageTitle">Selecione o Condominio</h1>
+      <h1 className="PageTitle">Selecione o Condomínio</h1>
       {/* TODOS OS CONDOMINIOS */}
       <Container maxWidth="xl">
         {/*CADA CONDOMINIO*/}
@@ -444,7 +493,7 @@ export default function EscolherCondominio(props) {
                       <PlusOne />
                     </ListItemAvatar>
                     <p>
-                      <strong>Adicionar Novo Morador</strong>
+                      <strong>Adicionar Condômino</strong>
                     </p>
                   </ListItem>
                 </List>
@@ -461,7 +510,7 @@ export default function EscolherCondominio(props) {
           <ExpansionPanelSummary onClick={hadleCondominioRegister}>
             <div className="leftCondominioItens">
               <PlusOne />
-              <h3>Adicionar Novo Condomínio</h3>
+              <h3>Adicionar Condomínio</h3>
             </div>
           </ExpansionPanelSummary>
         </ExpansionPanel>
