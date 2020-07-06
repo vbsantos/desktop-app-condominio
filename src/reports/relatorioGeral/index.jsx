@@ -34,7 +34,8 @@ export default function RelatorioGeral(props) {
   fundoReserva.data = isNaN(fundoReserva.data.value)
     ? { value: fundoReserva.data }
     : fundoReserva.data;
-  console.warn("fundoReserva", fundoReserva);
+  // console.warn("fundoReserva", fundoReserva);
+
   const total = report.find((data) => !data.table && data.name === "total");
   const informacoes = report.find(
     (data) => !data.table && data.name === "informacoes"
