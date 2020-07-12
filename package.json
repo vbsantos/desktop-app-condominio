@@ -37,7 +37,7 @@
     "react-start": "react-scripts start",
     "react-build": "react-scripts build",
     "react-test": "react-scripts test",
-    "dist-windows": "yarn && yarn react-build && electron-builder -w --ia32 exe",
+    "dist-windows": "yarn && yarn react-build && electron-builder --win --ia32",
     "dist-macos": "yarn && yarn react-build && electron-builder -m tar.gz",
     "dist-linux": "yarn && yarn react-build && electron-builder -l deb",
     "publish": "yarn && yarn react-build && electron-builder --win --ia32 -p always"
@@ -53,8 +53,8 @@
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-draggable": "^4.2.0",
-    "react-router": "^6.0.0-alpha.1",
-    "react-router-dom": "^6.0.0-alpha.1",
+    "react-router": "6.0.0-alpha.1",
+    "react-router-dom": "6.0.0-alpha.1",
     "react-scripts": "3.2.0",
     "sequelize": "^5.21.3",
     "sqlite3": "^4.1.1",
@@ -63,7 +63,7 @@
   },
   "devDependencies": {
     "concurrently": "^5.1.0",
-    "electron": "^7.0.0",
+    "electron": "7.0.0",
     "electron-builder": "^22.3.2",
     "sequelize-cli": "^5.5.1",
     "wait-on": "^4.0.0"
