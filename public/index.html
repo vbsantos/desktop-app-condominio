@@ -3,7 +3,10 @@
   <head>
     <meta charset="utf-8" />
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+    />
     <meta name="theme-color" content="#000000" />
     <meta
       name="description"
@@ -44,5 +47,18 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
+
+    <script>
+      // REVIEW DISABLE ZOOM
+      window.onkeydown = function (evt) {
+        // disable zooming
+        if (
+          (evt.code == "Minus" || evt.code == "Equal") &&
+          (evt.ctrlKey || evt.metaKey)
+        ) {
+          evt.preventDefault();
+        }
+      };
+    </script>
   </body>
 </html>
