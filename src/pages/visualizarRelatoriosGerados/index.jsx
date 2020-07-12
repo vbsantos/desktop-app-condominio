@@ -56,45 +56,22 @@ export default function VisualizarRelatoriosGerados(props) {
         {
           id: 1,
           position: "center",
-          visible: false,
-          enabled: false,
-          value: "",
+          visible: true,
+          enabled: true,
+          value: "VER PDFs SEM SALVAR",
         },
         {
           id: 2,
           position: "right",
           visible: true,
           enabled: true,
-          value: "SALVAR",
+          value: "SALVAR RELATÓRIOS",
         },
       ],
       action: -1,
     });
     return () => console.log("VisualizarRelatoriosGerados - Encerrou");
   }, []);
-
-  // This function runs only when there is an interaction with the footbar buttons
-  useEffect(() => {
-    switch (footbar.action) {
-      case 0:
-        console.log("VisualizarRelatoriosGerados - Botão da esquerda");
-        setFootbar({ ...footbar, action: -1 });
-        navigate("/RegistrarDespesas");
-        break;
-      case 2:
-        console.log("VisualizarRelatoriosGerados - Botão da direita");
-        setFootbar({ ...footbar, action: -1 });
-
-        (async () => {
-          setLoading(true);
-          await getReportsBase64();
-          setLoading(false);
-          setDialogSaveReports(true);
-        })();
-
-        break;
-    }
-  }, [footbar.action]);
 
   // This function turns HTML Objects in PNG (base64)
   const htmlObjectToPng = async (htmlObject) => {
@@ -125,7 +102,70 @@ export default function VisualizarRelatoriosGerados(props) {
       base64Reports,
     });
     setReportView("screenStyle");
+    return base64Reports;
   };
+
+  const getPagantesInfo = (lastReports) => {
+    const complementos = [];
+    for (let reportString of lastReports.ris) {
+      const reportObj = JSON.parse(reportString.report);
+      complementos.push(
+        reportObj[reportObj.length - 1].data.complementoPagante
+      );
+    }
+    return complementos;
+  };
+
+  // this function saves the reports as PDFs
+  const saveAllReportsDisk = async (base64Reports, infos) => {
+    const status = await window.ipcRenderer.invoke("files", {
+      method: "generateAllReports",
+      content: {
+        base64Reports,
+        infos,
+      },
+    });
+    return status;
+  };
+
+  // This function runs only when there is an interaction with the footbar buttons
+  useEffect(() => {
+    switch (footbar.action) {
+      case 0:
+        console.log("VisualizarRelatoriosGerados - Botão da esquerda");
+        setFootbar({ ...footbar, action: -1 });
+        navigate("/RegistrarDespesas");
+
+        break;
+
+      case 1:
+        console.log("VisualizarRelatoriosGerados - Botão do meio");
+        setFootbar({ ...footbar, action: -1 });
+
+        (async () => {
+          setLoading(true);
+          const reportsBase64 = await getReportsBase64();
+          const infos = getPagantesInfo(data.lastReports);
+          setLoading(false);
+          const reportsSaved = await saveAllReportsDisk(reportsBase64, infos);
+        })();
+
+        break;
+
+      case 2:
+        console.log("VisualizarRelatoriosGerados - Botão da direita");
+        setFootbar({ ...footbar, action: -1 });
+
+        (async () => {
+          setLoading(true);
+          await getReportsBase64();
+          setLoading(false);
+          setDialogSaveReports(true);
+        })();
+
+        break;
+    }
+  }, [footbar.action]);
 
   return (
     <div id="VisualizarRelatoriosGerados">

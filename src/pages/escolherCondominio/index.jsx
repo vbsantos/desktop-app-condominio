@@ -196,7 +196,7 @@ export default function EscolherCondominio(props) {
     );
     if (allDialogsClosed) {
       async function getEverything() {
-        console.time("Get all data from database");
+        // console.time("Get all data from database");
         const response = await window.ipcRenderer.invoke("beneficiarios", {
           method: "showNested",
           content: { id: data.beneficiario.id },
@@ -213,7 +213,7 @@ export default function EscolherCondominio(props) {
                 (condominio) => condominio.id == selectedCondominio.id
               ),
             });
-        console.timeEnd("Get all data from database");
+        // console.timeEnd("Get all data from database");
       }
       getEverything();
     }

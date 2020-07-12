@@ -41,7 +41,7 @@ export default function DraggableDialog(props) {
 
   const [loading, setLoading] = useState(false);
 
-  const getPagantesInfo = async () => {
+  const getPagantesInfo = async (lastReports) => {
     const complementos = [];
     for (let reportString of lastReports.ris) {
       const reportObj = JSON.parse(reportString.report);
@@ -53,8 +53,7 @@ export default function DraggableDialog(props) {
   };
 
   // this function saves the reports as PDFs
-  const saveAllReportsDisk = async () => {
-    const infos = await getPagantesInfo();
+  const saveAllReportsDisk = async (base64Reports, infos) => {
     const status = await window.ipcRenderer.invoke("files", {
       method: "generateAllReports",
       content: {
@@ -172,7 +171,8 @@ export default function DraggableDialog(props) {
   // function that runs when you click the right button
   async function handleRightButton() {
     setLoading(true);
-    const reportsSaved = await saveAllReportsDisk();
+    const infos = await getPagantesInfo(lastReports);
+    const reportsSaved = await saveAllReportsDisk(base64Reports, infos);
     if (reportsSaved) {
       await saveAllReportsDatabase();
       await updateAllDespesas(despesas);
