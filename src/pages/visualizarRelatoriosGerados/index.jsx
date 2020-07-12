@@ -146,8 +146,8 @@ export default function VisualizarRelatoriosGerados(props) {
           setLoading(true);
           const reportsBase64 = await getReportsBase64();
           const infos = getPagantesInfo(data.lastReports);
+          await saveAllReportsDisk(reportsBase64, infos);
           setLoading(false);
-          const reportsSaved = await saveAllReportsDisk(reportsBase64, infos);
         })();
 
         break;
