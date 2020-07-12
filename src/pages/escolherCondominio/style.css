@@ -1,4 +1,4 @@
-.MuiExpansionPanel-root:before {
+.MuiAccordion-root:before {
   background-color: rgba(0, 0, 0, 0) !important;
 }
 
@@ -11,13 +11,13 @@ li:nth-child(odd) {
   margin-right: -22px;
 }
 
-.MuiExpansionPanelSummary-expandIcon.Mui-expanded {
+.MuiAccordionSummary-expandIcon.Mui-expanded {
   transform: rotate(135deg) !important;
   font-size: 200% !important;
   margin-right: -25px;
 }
 
-.MuiExpansionPanelSummary-content {
+.MuiAccordionSummary-content {
   display: inline-flex !important;
   justify-content: space-between !important;
 }

@@ -4,9 +4,9 @@ import { useNavigate } from "react-router-dom";
 // MATERIAL UI COMPONENTS
 import {
   Container,
-  ExpansionPanel,
-  ExpansionPanelSummary,
-  ExpansionPanelDetails,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
   List,
   ListItem,
   ListItemAvatar,
@@ -415,13 +415,13 @@ export default function EscolherCondominio(props) {
         {/*CADA CONDOMINIO*/}
         {typeof data.allNestedBeneficiario["Condominios"] !== "undefined" &&
           data.allNestedBeneficiario["Condominios"].map((condominio) => (
-            <ExpansionPanel
+            <Accordion
               elevation={condominio.id === selectedCondominio.id ? 10 : 3}
               key={condominio.id}
               expanded={expanded === condominio.id}
               onChange={handleCondominioClick(condominio.id)}
             >
-              <ExpansionPanelSummary expandIcon={"+"}>
+              <AccordionSummary expandIcon={"+"}>
                 <div className="leftCondominioItens">
                   <HomeWork />
                   <h3>{condominio.nome}</h3>
@@ -442,8 +442,8 @@ export default function EscolherCondominio(props) {
                     </p>
                   </div>
                 )}
-              </ExpansionPanelSummary>
-              <ExpansionPanelDetails>
+              </AccordionSummary>
+              <AccordionDetails>
                 {/* TODOS OS PAGANTES */}
                 <List dense>
                   {/* CADA PAGANTE */}
@@ -497,23 +497,23 @@ export default function EscolherCondominio(props) {
                     </p>
                   </ListItem>
                 </List>
-              </ExpansionPanelDetails>
-            </ExpansionPanel>
+              </AccordionDetails>
+            </Accordion>
           ))}
         {/* BOTÃO DE ADICIONAR CONDOMINIO */}
-        <ExpansionPanel
+        <Accordion
           id="CondominioRegisterLink"
           elevation={0}
           key={-1}
           expanded={false}
         >
-          <ExpansionPanelSummary onClick={hadleCondominioRegister}>
+          <AccordionSummary onClick={hadleCondominioRegister}>
             <div className="leftCondominioItens">
               <PlusOne />
               <h3>Adicionar Condomínio</h3>
             </div>
-          </ExpansionPanelSummary>
-        </ExpansionPanel>
+          </AccordionSummary>
+        </Accordion>
       </Container>
     </div>
   );
