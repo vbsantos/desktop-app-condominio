@@ -21,7 +21,7 @@
   /* min-width: 150vw;
   max-width: 150vw;*/
   overflow-y: auto;
-  overflow-x: auto;
+  overflow-x: hidden;
   background: rgb(219, 231, 250);
   background: linear-gradient(
     0deg,
