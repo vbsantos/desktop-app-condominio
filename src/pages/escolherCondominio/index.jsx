@@ -532,7 +532,7 @@ export default function EscolherCondominio(props) {
                 variant="outlined"
                 color="primary"
               >
-                <People className="Ajusted2" /> Adicionar Condômino
+                <People className="Ajusted2" /> Incluir Condômino
               </Button>
             </Accordion>
           ))}
@@ -544,7 +544,7 @@ export default function EscolherCondominio(props) {
           variant="outlined"
           color="primary"
         >
-          <HomeWork className="Ajusted2" /> Adicionar Condomínio
+          <HomeWork className="Ajusted2" /> Incluir Condomínio
         </Button>
       </Container>
 
