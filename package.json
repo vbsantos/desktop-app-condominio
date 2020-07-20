@@ -34,6 +34,7 @@
   "scripts": {
     "start": "concurrently \"BROWSER=none yarn react-start\" \"wait-on http://localhost:3000 && electron .\"",
     "postinstall": "electron-builder install-app-deps",
+    "preinstall": "rm -rfv dist/* build/*",
     "pack": "electron-builder --dir",
     "react-start": "react-scripts start",
     "react-build": "react-scripts build",
