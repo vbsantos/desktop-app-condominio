@@ -2,16 +2,15 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 // MATERIAL UI COMPONENTS
+import { Container, CircularProgress, Button } from "@material-ui/core";
+
 import {
-  Container,
   Accordion,
   AccordionSummary,
   AccordionDetails,
-  List,
-  ListItem,
-  ListItemAvatar,
-  ListItemSecondaryAction,
 } from "@material-ui/core";
+
+import { Table, TableBody, TableCell, TableRow } from "@material-ui/core";
 
 // MATERIAL UI ICONS
 import {
@@ -20,7 +19,6 @@ import {
   AssessmentTwoTone as Assessment,
   HomeWorkTwoTone as HomeWork,
   PeopleTwoTone as People,
-  PlusOneTwoTone as PlusOne,
 } from "@material-ui/icons";
 
 // CSS
@@ -36,6 +34,8 @@ import DialogAlerta from "../../dialogs/alerta";
 export default function EscolherCondominio(props) {
   const [footbar, setFootbar] = props.buttons;
   const [data, setData] = props.data;
+
+  const [loading, setLoading] = useState(false);
 
   // React Router Hook for navigation between pages
   const navigate = useNavigate();
@@ -196,6 +196,7 @@ export default function EscolherCondominio(props) {
     );
     if (allDialogsClosed) {
       async function getEverything() {
+        setLoading(true);
         // console.time("Get all data from database");
         const response = await window.ipcRenderer.invoke("beneficiarios", {
           method: "showNested",
@@ -214,6 +215,7 @@ export default function EscolherCondominio(props) {
               ),
             });
         // console.timeEnd("Get all data from database");
+        setLoading(false);
       }
       getEverything();
     }
@@ -409,8 +411,9 @@ export default function EscolherCondominio(props) {
           )}
         />
       )}
+
       <h1 className="PageTitle">Selecione o Condomínio</h1>
-      {/* TODOS OS CONDOMINIOS */}
+
       <Container maxWidth="xl">
         {/*CADA CONDOMINIO*/}
         {typeof data.allNestedBeneficiario["Condominios"] !== "undefined" &&
@@ -422,99 +425,130 @@ export default function EscolherCondominio(props) {
               onChange={handleCondominioClick(condominio.id)}
             >
               <AccordionSummary expandIcon={"+"}>
-                <div className="leftCondominioItens">
-                  <HomeWork />
-                  <h3>{condominio.nome}</h3>
-                </div>
-                {condominio.id === selectedCondominio.id && (
-                  <div className="rightCondominioItens">
-                    <p className="ReportIcon" onClick={handleCondominioReport}>
-                      <Assessment />
-                      Relatórios
-                    </p>
-                    <p className="EditIcon" onClick={handleCondominioEdit}>
-                      <Create />
-                      Editar
-                    </p>
-                    <p className="DeleteIcon" onClick={handleCondominioDelete}>
-                      <Delete />
-                      Deletar
-                    </p>
-                  </div>
-                )}
+                <Table size="small">
+                  <TableBody>
+                    <TableRow>
+                      <TableCell>
+                        <p>
+                          <HomeWork className="Ajusted Ajusted2" />
+                          <span className="Name">{condominio.nome}</span>
+                        </p>
+                      </TableCell>
+                      <TableCell
+                        align="center"
+                        className="ReportButtonCell ButtonCell"
+                      >
+                        <p
+                          className="ReportIcon"
+                          onClick={handleCondominioReport}
+                        >
+                          <Assessment className="Ajusted" /> Relatórios
+                        </p>
+                      </TableCell>
+                      <TableCell
+                        align="center"
+                        className="EditButtonCell ButtonCell"
+                      >
+                        <p className="EditIcon" onClick={handleCondominioEdit}>
+                          <Create className="Ajusted" /> Editar
+                        </p>
+                      </TableCell>
+                      <TableCell
+                        align="center"
+                        className="DeleteButtonCell ButtonCell"
+                      >
+                        <p
+                          className="DeleteIcon"
+                          onClick={handleCondominioDelete}
+                        >
+                          <Delete className="Ajusted" /> Deletar
+                        </p>
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
               </AccordionSummary>
               <AccordionDetails>
                 {/* TODOS OS PAGANTES */}
-                <List dense>
-                  {/* CADA PAGANTE */}
-                  {condominio["Pagantes"].map((pagante) => (
-                    <ListItem key={pagante.id}>
-                      <ListItemAvatar>
-                        <People />
-                      </ListItemAvatar>
-                      <p>
-                        <strong>{pagante.complemento}</strong>
-                        {" " + pagante.nome}
-                      </p>
-                      <ListItemSecondaryAction>
-                        <div className="rightCondominioItens">
+                <Table className="BottomTable" size="small">
+                  <TableBody>
+                    {condominio["Pagantes"].map((pagante) => (
+                      <TableRow key={"user_row" + pagante.id}>
+                        <TableCell className="FirstCell">
+                          <p>
+                            <People className="Ajusted" /> {pagante.complemento}
+                          </p>
+                        </TableCell>
+                        <TableCell>
+                          <p>{pagante.box}</p>
+                        </TableCell>
+                        <TableCell>
+                          <p>{pagante.nome}</p>
+                        </TableCell>
+                        <TableCell
+                          align="center"
+                          className="ReportButtonCell ButtonCell"
+                        >
                           <p
                             className="ReportIcon"
                             onClick={() => handlePaganteReport(pagante.id)}
                           >
-                            <Assessment />
-                            Relatórios
+                            <Assessment className="Ajusted" /> Relatórios
                           </p>
+                        </TableCell>
+                        <TableCell
+                          align="center"
+                          className="EditButtonCell ButtonCell"
+                        >
                           <p
                             className="EditIcon"
                             onClick={() => handlePaganteEdit(pagante.id)}
                           >
-                            <Create />
-                            Editar
+                            <Create className="Ajusted" /> Editar
                           </p>
+                        </TableCell>
+                        <TableCell
+                          align="center"
+                          className="DeleteButtonCell ButtonCell LastCell"
+                        >
                           <p
                             className="DeleteIcon"
                             onClick={() => handlePaganteDelete(pagante.id)}
                           >
-                            <Delete />
-                            Deletar
+                            <Delete className="Ajusted" /> Deletar
                           </p>
-                        </div>
-                      </ListItemSecondaryAction>
-                    </ListItem>
-                  ))}
-                  {/* BOTÃO DE ADICIONAR PAGANTE */}
-                  <ListItem
-                    key={-1}
-                    id="PaganteRegisterLink"
-                    onClick={hadlePaganteRegister}
-                  >
-                    <ListItemAvatar>
-                      <PlusOne />
-                    </ListItemAvatar>
-                    <p>
-                      <strong>Adicionar Condômino</strong>
-                    </p>
-                  </ListItem>
-                </List>
+                        </TableCell>
+                        <TableCell className="FixAlignCell"></TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
               </AccordionDetails>
+
+              {/* BOTÃO DE ADICIONAR CONDÔMINO */}
+              <Button
+                className="MarginButton1"
+                onClick={hadlePaganteRegister}
+                variant="outlined"
+                color="primary"
+              >
+                <People className="Ajusted2" /> Adicionar Condômino
+              </Button>
             </Accordion>
           ))}
-        {/* BOTÃO DE ADICIONAR CONDOMINIO */}
-        <Accordion
-          id="CondominioRegisterLink"
-          elevation={0}
-          key={-1}
-          expanded={false}
+
+        {/* BOTÃO DE ADICIONAR CONDOMÍNIO */}
+        <Button
+          className="MarginButton2"
+          onClick={hadleCondominioRegister}
+          variant="outlined"
+          color="primary"
         >
-          <AccordionSummary onClick={hadleCondominioRegister}>
-            <div className="leftCondominioItens">
-              <PlusOne />
-              <h3>Adicionar Condomínio</h3>
-            </div>
-          </AccordionSummary>
-        </Accordion>
+          <HomeWork className="Ajusted2" /> Adicionar Condomínio
+        </Button>
       </Container>
+
+      {loading && <CircularProgress color="secondary" />}
     </div>
   );
 }

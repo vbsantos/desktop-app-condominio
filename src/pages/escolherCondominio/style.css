@@ -1,107 +1,109 @@
-.MuiAccordion-root:before {
-  background-color: rgba(0, 0, 0, 0) !important;
+/* SET THE COLOR OF THE PLUS BUTTON */
+#EscolherCondominio .MuiAccordionSummary-expandIcon {
+  color: var(--primary-color);
 }
-
-li:nth-child(odd) {
-  background-color: #eee;
-  border-radius: 5px;
-}
-
-.MuiIconButton-edgeEnd {
-  margin-right: -22px;
-}
-
-.MuiAccordionSummary-expandIcon.Mui-expanded {
+/* TURNS PLUS BUTTUN INTO X WHEN EXPANDED */
+#EscolherCondominio .MuiAccordionSummary-expandIcon.Mui-expanded {
   transform: rotate(135deg) !important;
   font-size: 200% !important;
-  margin-right: -25px;
+  margin-right: -17px;
+  color: var(--secondary-color);
 }
 
-.MuiAccordionSummary-content {
-  display: inline-flex !important;
-  justify-content: space-between !important;
+/* DIFFER THE ROWS ON THE TABLE */
+#EscolherCondominio tr:nth-of-type(even) {
+  background-color: rgba(190, 190, 190, 0.5);
 }
 
-.leftCondominioItens {
-  display: inline-flex;
-}
-
-.leftCondominioItens h3,
-h4 {
-  text-align: left;
-  padding: 0px 5px 0px 20px;
-}
-
-.MuiList-root.MuiList-dense.MuiList-padding {
-  padding: 0;
-}
-
-.MuiList-root {
-  width: 100%;
-}
-
-.MuiListItem-root strong {
-  margin-right: 30px;
-}
-
-.rightCondominioItens {
-  display: inline-flex;
-  justify-content: space-between;
-}
-
-.rightCondominioItens p {
-  padding: 1px 5px 1px 5px;
-  margin: 0px 10px 0px 10px;
-  cursor: pointer;
-  display: inline-flex;
-  justify-content: space-between;
+/* SET THE TABLE FONT SIZE REVIEW*/
+#EscolherCondominio td {
   font-size: 17px;
 }
 
-.MuiListItemSecondaryAction-root {
-  padding-top: 2px;
+/* REMOVES ALL THE MARGIN AND PADDING IN THE TABLE CELLS */
+#EscolherCondominio td.MuiTableCell-root.MuiTableCell-body {
+  margin: auto;
+  padding: 0px;
+  border: 0;
+  height: 35px;
 }
 
-.rightCondominioItens *.EditIcon:hover {
-  color: #3f51b5;
-  border: 1px solid #3f51b5;
-  border-radius: 4px;
-  padding: 0 4px 0 4px;
+/* SET A FIX WIDTH TO THE BUTTONS IN THE TABLE CELLS */
+#EscolherCondominio td.MuiTableCell-root.MuiTableCell-body.ReportButtonCell {
+  width: 125px;
+  min-width: 95px;
+}
+#EscolherCondominio td.MuiTableCell-root.MuiTableCell-body.EditButtonCell {
+  width: 90px;
+  min-width: 60px;
+}
+#EscolherCondominio td.MuiTableCell-root.MuiTableCell-body.DeleteButtonCell {
+  width: 95px;
+  min-width: 65px;
 }
 
-.rightCondominioItens *.DeleteIcon:hover {
-  color: #f50057;
-  border: 1px solid #f50057;
-  border-radius: 4px;
-  padding: 0 4px 0 4px;
+/* PULL THE TABLE CLOSER TO THE TITLE */
+#EscolherCondominio .BottomTable {
+  margin-top: -13px;
 }
 
-.rightCondominioItens *.ReportIcon:hover {
-  color: #1d7e1d;
-  border: 1px solid #1d7e1d;
-  border-radius: 4px;
-  padding: 0 4px 0 4px;
-}
-
-#PaganteRegisterLink {
+/* SET THE TABLE BUTTONS BEHAVE */
+#EscolherCondominio td.MuiTableCell-root.MuiTableCell-body.ButtonCell p {
+  padding: 2px 2px 4px 2px;
+  margin: 0px;
   cursor: pointer;
-  background-color: transparent;
-  border-radius: 5px;
-  margin-top: 25px;
-  width: 310px;
+  line-height: 100%;
 }
 
-#CondominioRegisterLink {
-  background-color: transparent;
-  border-radius: 5px;
-  margin-top: 25px;
-  width: 350px;
+/* HOVER EFFECT ON THE BUTTONS IN THE TABLE CELLS */
+#EscolherCondominio p.EditIcon:hover {
+  color: var(--primary-color);
+  border: 1px solid var(--primary-color);
+  border-radius: 4px;
+  padding: 0px 1px;
+}
+#EscolherCondominio p.DeleteIcon:hover {
+  color: var(--secondary-color);
+  border: 1px solid var(--secondary-color);
+  border-radius: 4px;
+  padding: 0px 1px;
+}
+#EscolherCondominio p.ReportIcon:hover {
+  color: var(--tertiary-color);
+  border: 1px solid var(--tertiary-color);
+  border-radius: 4px;
+  padding: 0px 1px;
 }
 
-#PaganteRegisterLink:hover {
-  background-color: #bbb;
+/* FIX TABLE-HEAD AND TABLE-BODY UNALIGNMENT */
+#EscolherCondominio td.MuiTableCell-root.MuiTableCell-body.FixAlignCell {
+  width: 29px;
 }
 
-#CondominioRegisterLink:hover {
-  background-color: #bbb;
+/* PUT A PADDING IN THE FIRST CELL */
+#EscolherCondominio td.MuiTableCell-root.MuiTableCell-body.FirstCell {
+  padding-left: 10px !important;
+}
+
+/* SET THE TITLE OF THE TABLE FONT SIZE */
+#EscolherCondominio td.MuiTableCell-root.MuiTableCell-body span.Name {
+  font-size: 18px;
+}
+
+/* FIX SVG ICONS POSITION */
+#EscolherCondominio .MuiSvgIcon-root.Ajusted {
+  margin-bottom: -5px;
+}
+#EscolherCondominio .MuiSvgIcon-root.Ajusted2 {
+  margin-right: 5px;
+}
+
+/* GIVES A GOOD MARGIN TO SCREEN BUTTONS */
+#EscolherCondominio *.MarginButton1 {
+  margin-top: 10px;
+  margin-bottom: 30px;
+}
+#EscolherCondominio *.MarginButton2 {
+  margin-top: 20px;
+  margin-bottom: 10px;
 }
