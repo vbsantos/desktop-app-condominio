@@ -88,8 +88,8 @@ ipcMain.handle("update", async (event, arg) => {
 
 const createDefaultWindow = () => {
   win = new BrowserWindow({
-    width: 900,
-    height: 680,
+    width: 1150,
+    height: 600,
     webPreferences: {
       nodeIntegration: true,
       preload: Path.join(__dirname, "preload.js"),
