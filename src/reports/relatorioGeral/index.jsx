@@ -31,10 +31,12 @@ export default function RelatorioGeral(props) {
   const fundoReserva = report.find(
     (data) => !data.table && data.name.includes("Fundo Reserva")
   );
-  fundoReserva.data = isNaN(fundoReserva.data.value)
-    ? { value: fundoReserva.data }
-    : fundoReserva.data;
-  // console.warn("fundoReserva", fundoReserva);
+  if (fundoReserva) {
+    fundoReserva.data = isNaN(fundoReserva.data.value)
+      ? { value: fundoReserva.data }
+      : fundoReserva.data;
+    // console.warn("fundoReserva", fundoReserva);
+  }
 
   const total = report.find((data) => !data.table && data.name === "total");
   const informacoes = report.find(
