@@ -123,6 +123,7 @@ class FileController {
       const generalReportBase64 = base64imageString.rg;
       const apportionmentReportBase64 = base64imageString.rr;
       const waterReportBase64 = base64imageString.ra;
+      const reserveFundReportBase64 = base64imageString.rfr;
 
       const generalReport = await this.createSinglePagePdf(generalReportBase64);
       fs.writeFileSync(
@@ -142,6 +143,17 @@ class FileController {
           "planilha_cobrancas_" + this.getTimestamp() + ".pdf"
         ),
         apportionmentReport
+      );
+
+      const reserveFundReport = await this.createSinglePagePdf(
+        reserveFundReportBase64
+      );
+      fs.writeFileSync(
+        Path.resolve(
+          filePath,
+          "relatorio_fundo_reserva_" + this.getTimestamp() + ".pdf"
+        ),
+        reserveFundReport
       );
 
       if (waterReportBase64) {
@@ -217,6 +229,24 @@ class FileController {
           "relatorio_agua_" + this.getTimestamp() + ".pdf"
         );
         await fs.writeFile(path, waterReport, function (err) {
+          if (err) {
+            console.log("Error saving file '" + path + "'");
+            throw new Error(err);
+          }
+          console.log("The file '" + path + "' was saved!");
+        });
+      }
+
+      const reserveFundReportBase64 = base64Reports.rfr;
+      if (reserveFundReportBase64) {
+        const reserveFundReport = await this.createSinglePagePdf(
+          reserveFundReportBase64
+        );
+        const path = Path.resolve(
+          filePath,
+          "relatorio_fundo_reserva_" + this.getTimestamp() + ".pdf"
+        );
+        await fs.writeFile(path, reserveFundReport, function (err) {
           if (err) {
             console.log("Error saving file '" + path + "'");
             throw new Error(err);

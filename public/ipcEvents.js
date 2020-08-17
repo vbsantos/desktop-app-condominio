@@ -482,3 +482,50 @@ ipcMain.handle("apportionmentReports", async (event, arg) => {
     return { error };
   }
 });
+
+const reserveFundReportController = require("../controllers/ReserveFundReportController.js");
+const ReserveFundReport = new reserveFundReportController();
+ipcMain.handle("reserveFundReports", async (event, arg) => {
+  const { method, content } = arg;
+  let status;
+  try {
+    switch (method) {
+      case "create":
+        console.log("entrada:", arg);
+        status = await ReserveFundReport.create(content);
+        console.log("saida:", status);
+        break;
+      case "index":
+        console.log("entrada:", arg);
+        status = await ReserveFundReport.index();
+        console.log("saida:", status);
+        break;
+      case "indexByOwnerId":
+        console.log("entrada:", arg);
+        status = await ReserveFundReport.indexByOwnerId(content.id);
+        console.log("saida:", status);
+        break;
+      case "show":
+        console.log("entrada:", arg);
+        status = await ReserveFundReport.show(content.id);
+        console.log("saida:", status);
+        break;
+      case "update":
+        console.log("entrada:", arg);
+        status = await ReserveFundReport.update(content);
+        console.log("saida:", status);
+        break;
+      case "delete":
+        console.log("entrada:", arg);
+        status = await ReserveFundReport.delete(content.id);
+        console.log("saida:", status);
+        break;
+      default:
+        console.log({ error: "This method do not exist." });
+    }
+    return status;
+  } catch (error) {
+    console.log("Erro no ipcEvents:", error);
+    return { error };
+  }
+});

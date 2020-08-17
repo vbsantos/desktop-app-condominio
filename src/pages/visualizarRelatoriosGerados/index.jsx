@@ -11,6 +11,7 @@ import RelatorioRateio from "../../reports/relatorioRateio";
 import RelatorioAgua from "../../reports/relatorioAgua";
 import RelatorioGeral from "../../reports/relatorioGeral";
 import RelatorioIndividual from "../../reports/relatorioIndividual";
+import RelatorioFundoReserva from "../../reports/relatorioFundoReserva";
 
 // COMPONENT TO PNG
 import html2canvas from "html2canvas";
@@ -83,20 +84,37 @@ export default function VisualizarRelatoriosGerados(props) {
   // This function turns the html tables in an object with them base64 string
   const getReportsBase64 = async () => {
     setReportView("pdfStyle");
-    const tablesHTML = Array.from(
-      document.getElementsByClassName("reportbase64")
+
+    const relatoriosIndividuaisHTML = Array.from(
+      document.getElementsByClassName("reportbase64 RelatorioIndividual")
     );
-    const tablesPng = [];
-    for (const tableHTML of tablesHTML) {
-      const stringBase64 = await htmlObjectToPng(tableHTML);
-      tablesPng.push(stringBase64);
+    const ris = [];
+    for (const ri of relatoriosIndividuaisHTML) {
+      ris.push(await htmlObjectToPng(ri));
     }
+
     const base64Reports = {
-      rg: tablesPng.shift(),
-      rr: tablesPng.shift(),
-      ra: data.lastReports.ra ? tablesPng.shift() : null,
-      ris: tablesPng,
+      rg: await htmlObjectToPng(
+        document.getElementsByClassName("reportbase64 RelatorioGeral")[0]
+      ),
+      rr: await htmlObjectToPng(
+        document.getElementsByClassName("reportbase64 RelatorioRateio")[0]
+      ),
+      ra: data.lastReports.ra
+        ? await htmlObjectToPng(
+            document.getElementsByClassName("reportbase64 RelatorioAgua")[0]
+          )
+        : null,
+      rfr: data.lastReports.rfr
+        ? await htmlObjectToPng(
+            document.getElementsByClassName(
+              "reportbase64 RelatorioFundoReserva"
+            )[0]
+          )
+        : null,
+      ris,
     };
+
     setData({
       ...data,
       base64Reports,
@@ -191,7 +209,7 @@ export default function VisualizarRelatoriosGerados(props) {
 
       <div>
         <RelatorioGeral
-          reportClass="reportbase64"
+          reportClass="reportbase64 RelatorioGeral"
           reportRef={null}
           report={JSON.parse(data.lastReports.rg)}
           view={"pdfStyle"}
@@ -200,7 +218,7 @@ export default function VisualizarRelatoriosGerados(props) {
       <hr />
       <div>
         <RelatorioRateio
-          reportClass="reportbase64"
+          reportClass="reportbase64 RelatorioRateio"
           reportRef={null}
           report={JSON.parse(data.lastReports.rr)}
           view={reportView} // só aqui muda a aparência
@@ -211,9 +229,22 @@ export default function VisualizarRelatoriosGerados(props) {
           <hr />
           <div>
             <RelatorioAgua
-              reportClass="reportbase64"
+              reportClass="reportbase64 RelatorioAgua"
               reportRef={null}
               report={JSON.parse(data.lastReports.ra)}
+              view={"pdfStyle"}
+            />
+          </div>
+        </>
+      )}
+      {data.lastReports.rfr && (
+        <>
+          <hr />
+          <div>
+            <RelatorioFundoReserva
+              reportClass="reportbase64 RelatorioFundoReserva"
+              reportRef={null}
+              report={JSON.parse(data.lastReports.rfr)}
               view={"pdfStyle"}
             />
           </div>
@@ -224,7 +255,7 @@ export default function VisualizarRelatoriosGerados(props) {
         {data.lastReports.ris.map((ri) => (
           <div key={"ri" + ri.paganteId}>
             <RelatorioIndividual
-              reportClass="reportbase64"
+              reportClass="reportbase64 RelatorioIndividual"
               reportRef={null}
               report={JSON.parse(ri.report)}
               view={"pdfStyle"}

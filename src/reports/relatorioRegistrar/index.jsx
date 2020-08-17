@@ -75,10 +75,15 @@ export default function RelatorioCondominioRegistrar(props) {
     }
   };
 
+  let despesaFundoReserva = null;
+  if (despesas) {
+    despesaFundoReserva = despesas.find((despesa) => despesa.fundoReserva);
+  }
+
   return (
     <div id="relatorioCondominioRegistrar">
       <TableContainer ref={reportRef}>
-        {percentage[0] !== 0 && (
+        {despesaFundoReserva && percentage[0] !== 0 && (
           <Table>
             <TableHead>
               <TableRow className="Black">
@@ -92,17 +97,13 @@ export default function RelatorioCondominioRegistrar(props) {
               <TableRow
                 className="Linha"
                 onClick={() =>
-                  selectAndOpenDialog(
-                    despesas.find((despesa) => despesa.fundoReserva).id || ""
-                  )
+                  selectAndOpenDialog(despesaFundoReserva.id || "")
                 }
               >
                 <TableCell className="col1">
                   Fundo Reserva - {percentage[0]} %
                 </TableCell>
-                <TableCell className="col2">
-                  {despesas.find((despesa) => despesa.fundoReserva).id}
-                </TableCell>
+                <TableCell className="col2">{despesaFundoReserva.id}</TableCell>
                 <TableCell className="col3">{"Fixa"}</TableCell>
                 <TableCell className="col4">
                   {"R$ " + percentage[1].toFixed(2)}

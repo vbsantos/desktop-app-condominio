@@ -1,0 +1,54 @@
+#relatorioFundoReserva .MuiTableContainer-root {
+  text-align: center;
+  margin: 0 auto 0 auto;
+  padding: 0;
+}
+
+#relatorioFundoReserva .MuiTableContainer-root.pdfStyle {
+  width: 900px !important;
+}
+
+#relatorioFundoReserva .MuiTable-root {
+  background-color: white !important;
+  border: 2px solid var(--report-color);
+}
+
+#relatorioFundoReserva .MuiTable-root * {
+  font-size: 15px !important;
+}
+
+#relatorioFundoReserva .MuiTable-root {
+  margin-bottom: 10px;
+}
+
+#relatorioFundoReserva .Black .MuiTableCell-root {
+  background-color: var(--report-color) !important;
+  color: white !important;
+  font-weight: 600 !important;
+  padding-top: 1px !important;
+}
+
+#relatorioFundoReserva .Black .MuiTableCell-root {
+  margin: 0;
+  padding: 0;
+}
+
+#relatorioFundoReserva .Linha .MuiTableCell-root {
+  margin: 0;
+  padding: 0;
+  color: var(--report-color);
+}
+
+#relatorioFundoReserva .MuiTableCell-root.col1 {
+  padding-left: 10px !important;
+}
+
+#relatorioFundoReserva .MuiTableCell-root.col5 {
+  padding-right: 10px !important;
+  text-align: right;
+}
+
+#relatorioFundoReserva .MuiTableCell-root.uniqueCol {
+  text-align: left;
+  padding: 1px 1px 1px 10px;
+}

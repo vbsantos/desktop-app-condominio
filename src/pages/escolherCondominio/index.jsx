@@ -246,6 +246,7 @@ export default function EscolherCondominio(props) {
     if (!e) var e = window.event;
     e.cancelBubble = true;
     if (e.stopPropagation) e.stopPropagation();
+
     const generalReports = await window.ipcRenderer.invoke("generalReports", {
       method: "indexByOwnerId",
       content: { id: data.allNestedCondominio.id },
@@ -262,12 +263,26 @@ export default function EscolherCondominio(props) {
         content: { id: data.allNestedCondominio.id },
       }
     );
-    if (generalReports[0] && waterReports[0] && apportionmentReports[0]) {
+    const reserveFundReports = await window.ipcRenderer.invoke(
+      "reserveFundReports",
+      {
+        method: "indexByOwnerId",
+        content: { id: data.allNestedCondominio.id },
+      }
+    );
+
+    if (
+      generalReports[0] &&
+      waterReports[0] &&
+      apportionmentReports[0] &&
+      reserveFundReports[0]
+    ) {
       const reports = {
         generalReport: true,
         data: generalReports, // general reports
         data2: apportionmentReports, // apportionment reports
         data3: waterReports, // water reports
+        data4: reserveFundReports, // reserve fund reports
       };
       setData({ ...data, reports });
       navigate("/VisualizarRelatorios");
@@ -434,36 +449,43 @@ export default function EscolherCondominio(props) {
                           <span className="Name">{condominio.nome}</span>
                         </p>
                       </TableCell>
-                      <TableCell
-                        align="center"
-                        className="ReportButtonCell ButtonCell"
-                      >
-                        <p
-                          className="ReportIcon"
-                          onClick={handleCondominioReport}
-                        >
-                          <Assessment className="Ajusted" /> Relatórios
-                        </p>
-                      </TableCell>
-                      <TableCell
-                        align="center"
-                        className="EditButtonCell ButtonCell"
-                      >
-                        <p className="EditIcon" onClick={handleCondominioEdit}>
-                          <Create className="Ajusted" /> Editar
-                        </p>
-                      </TableCell>
-                      <TableCell
-                        align="center"
-                        className="DeleteButtonCell ButtonCell"
-                      >
-                        <p
-                          className="DeleteIcon"
-                          onClick={handleCondominioDelete}
-                        >
-                          <Delete className="Ajusted" /> Deletar
-                        </p>
-                      </TableCell>
+                      {condominio.id === selectedCondominio.id && (
+                        <>
+                          <TableCell
+                            align="center"
+                            className="ReportButtonCell ButtonCell"
+                          >
+                            <p
+                              className="ReportIcon"
+                              onClick={handleCondominioReport}
+                            >
+                              <Assessment className="Ajusted" /> Relatórios
+                            </p>
+                          </TableCell>
+                          <TableCell
+                            align="center"
+                            className="EditButtonCell ButtonCell"
+                          >
+                            <p
+                              className="EditIcon"
+                              onClick={handleCondominioEdit}
+                            >
+                              <Create className="Ajusted" /> Editar
+                            </p>
+                          </TableCell>
+                          <TableCell
+                            align="center"
+                            className="DeleteButtonCell ButtonCell"
+                          >
+                            <p
+                              className="DeleteIcon"
+                              onClick={handleCondominioDelete}
+                            >
+                              <Delete className="Ajusted" /> Deletar
+                            </p>
+                          </TableCell>
+                        </>
+                      )}
                     </TableRow>
                   </TableBody>
                 </Table>

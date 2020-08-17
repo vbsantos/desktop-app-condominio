@@ -566,6 +566,44 @@ export default function RegistrarDespesas(props) {
     return apportionmentReportJSON;
   };
 
+  // REVIEW rfr
+  const makeReserveFundReportJSON = (pagantes) => {
+    const reserveFundReport = [];
+
+    let totalFundoReserva = 0;
+
+    const tabelaPrincipal = pagantes.map((pagante) => {
+      const fundoReservaIndividual = percentage[1] * pagante.fracao;
+      totalFundoReserva += fundoReservaIndividual;
+      return {
+        unidade: pagante.complemento,
+        box: pagante.box,
+        nome: pagante.nome,
+        fracao: pagante.fracao,
+        valor: fundoReservaIndividual,
+      };
+    });
+
+    reserveFundReport.push({
+      table: true,
+      name: `Fundo Reserva - ${percentage[0]}%`,
+      data: tabelaPrincipal,
+    });
+
+    reserveFundReport.push({
+      table: false,
+      name: "info",
+      data: {
+        totalFundoReserva, // (R$) fundo reserva do condomínimo desse mês
+        nomeCondominio: data.allNestedCondominio.nome,
+        enderecoCondominio: data.allNestedCondominio.endereco,
+      },
+    });
+
+    const reserveFundReportJSON = JSON.stringify(reserveFundReport);
+    return reserveFundReportJSON;
+  };
+
   async function putReportsOnLastReports(categorias, condominio) {
     const existDepesaAgua = !!condominio["Despesas"].find(
       (despesa) => despesa.aguaIndividual
@@ -580,6 +618,20 @@ export default function RegistrarDespesas(props) {
       console.groupCollapsed("RA");
       console.log(relatorioAgua);
       console.groupEnd("RA");
+    }
+
+    // get reserve fund report json
+    const existFundoReserva = !!condominio["Despesas"].find(
+      (despesa) => despesa.fundoReserva
+    );
+    let relatorioFundoReserva = null;
+    if (existFundoReserva) {
+      relatorioFundoReserva = await makeReserveFundReportJSON(
+        condominio["Pagantes"]
+      );
+      console.groupCollapsed("RFR");
+      console.log(relatorioFundoReserva);
+      console.groupEnd("RFR");
     }
 
     // get apportionment report json
@@ -612,6 +664,7 @@ export default function RegistrarDespesas(props) {
     const lastReports = {
       rr: relatorioRateio,
       ra: relatorioAgua,
+      rfr: relatorioFundoReserva,
       rg: relatorioGeral,
       ris: relatoriosIndividuais,
     };

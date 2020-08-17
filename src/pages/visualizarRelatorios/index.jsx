@@ -12,6 +12,7 @@ import RelatorioRateio from "../../reports/relatorioRateio";
 import RelatorioAgua from "../../reports/relatorioAgua";
 import RelatorioGeral from "../../reports/relatorioGeral";
 import RelatorioIndividual from "../../reports/relatorioIndividual";
+import RelatorioFundoReserva from "../../reports/relatorioFundoReserva";
 
 // COMPONENTS
 import TabPanel from "../../components/tabPanel";
@@ -34,6 +35,7 @@ export default function VisualizarRelatorios(props) {
   const reportRef = useRef(null);
   const waterReportRef = useRef(null);
   const apportionmentReportRef = useRef(null);
+  const reserveFundReportRef = useRef(null);
 
   console.groupCollapsed("VisualizarRelatorios: System data");
   console.log("Footbar:", footbar);
@@ -77,7 +79,8 @@ export default function VisualizarRelatorios(props) {
   const getComponentPrint = async (
     refGeneralReport,
     refApportionmentReport,
-    refWaterReport
+    refWaterReport,
+    reserveFundReportRef
   ) => {
     setReportView("pdfStyle");
     if (refGeneralReport.current) {
@@ -85,6 +88,7 @@ export default function VisualizarRelatorios(props) {
         let imgData1;
         let imgData2;
         let imgData3;
+        let imgData4;
         const canvas1 = await html2canvas(refGeneralReport.current);
         imgData1 = await canvas1.toDataURL("image/png");
         const canvas2 = await html2canvas(refApportionmentReport.current);
@@ -93,12 +97,17 @@ export default function VisualizarRelatorios(props) {
           const canvas3 = await html2canvas(refWaterReport.current);
           imgData3 = await canvas3.toDataURL("image/png");
         }
+        if (reserveFundReportRef.current) {
+          const canvas4 = await html2canvas(reserveFundReportRef.current);
+          imgData4 = await canvas4.toDataURL("image/png");
+        }
         window.ipcRenderer.invoke("files", {
           method: "generateGeneralReport",
           content: {
             rg: imgData1,
             rr: imgData2,
             ra: refWaterReport.current ? imgData3 : null,
+            rfr: reserveFundReportRef.current ? imgData4 : null,
           },
         });
       } else {
@@ -131,7 +140,12 @@ export default function VisualizarRelatorios(props) {
       case 2:
         console.log("VisualizarRelatorios - Botão da direita");
         setFootbar({ ...footbar, action: -1 });
-        getComponentPrint(reportRef, apportionmentReportRef, waterReportRef);
+        getComponentPrint(
+          reportRef,
+          apportionmentReportRef,
+          waterReportRef,
+          reserveFundReportRef
+        );
         break;
     }
   }, [footbar.action]);
@@ -152,6 +166,9 @@ export default function VisualizarRelatorios(props) {
       return `${digits[1]}/${digits[0]}`;
     }
   };
+
+  const debug = data.reports;
+  console.error({ debug });
 
   return (
     <div id="visualizarRelatorios">
@@ -189,12 +206,22 @@ export default function VisualizarRelatorios(props) {
                 report={JSON.parse(data.reports.data2[index].report)}
                 view={reportView} // só aqui muda a aparência
               />
-              {data.reports.data2[index].report && (
+              {data.reports.data3[index].report && (
                 <>
                   <hr />
                   <RelatorioAgua
                     reportRef={waterReportRef}
                     report={JSON.parse(data.reports.data3[index].report)}
+                    view={"pdfStyle"}
+                  />
+                </>
+              )}
+              {data.reports.data4[index].report && (
+                <>
+                  <hr />
+                  <RelatorioFundoReserva
+                    reportRef={reserveFundReportRef}
+                    report={JSON.parse(data.reports.data4[index].report)}
                     view={"pdfStyle"}
                   />
                 </>

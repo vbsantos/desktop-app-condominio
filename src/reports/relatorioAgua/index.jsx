@@ -22,6 +22,8 @@ export default function RelatorioAgua(props) {
   const { reportClass } = props;
   const { view } = props;
 
+  if (!report) return null;
+
   const headerInfo = report[2];
   // console.warn(headerInfo);
   // console.warn(report);
