@@ -145,16 +145,18 @@ class FileController {
         apportionmentReport
       );
 
-      const reserveFundReport = await this.createSinglePagePdf(
-        reserveFundReportBase64
-      );
-      fs.writeFileSync(
-        Path.resolve(
-          filePath,
-          "relatorio_fundo_reserva_" + this.getTimestamp() + ".pdf"
-        ),
-        reserveFundReport
-      );
+      if (reserveFundReportBase64) {
+        const reserveFundReport = await this.createSinglePagePdf(
+          reserveFundReportBase64
+        );
+        fs.writeFileSync(
+          Path.resolve(
+            filePath,
+            "relatorio_fundo_reserva_" + this.getTimestamp() + ".pdf"
+          ),
+          reserveFundReport
+        );
+      }
 
       if (waterReportBase64) {
         const waterReport = await this.createSinglePagePdf(waterReportBase64);
@@ -166,6 +168,7 @@ class FileController {
           waterReport
         );
       }
+      return true;
     } catch (error) {
       console.log(error);
       return false;
