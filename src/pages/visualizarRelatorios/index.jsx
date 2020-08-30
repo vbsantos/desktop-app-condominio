@@ -167,9 +167,6 @@ export default function VisualizarRelatorios(props) {
     }
   };
 
-  const debug = data.reports;
-  console.error({ debug });
-
   return (
     <div id="visualizarRelatorios">
       <Tabs
