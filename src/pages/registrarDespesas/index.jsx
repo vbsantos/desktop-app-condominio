@@ -597,6 +597,7 @@ export default function RegistrarDespesas(props) {
         totalFundoReserva, // (R$) fundo reserva do condomínimo desse mês
         nomeCondominio: data.allNestedCondominio.nome,
         enderecoCondominio: data.allNestedCondominio.endereco,
+        reportDate: data.reportDate,
       },
     });
 

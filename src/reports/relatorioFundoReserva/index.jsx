@@ -32,6 +32,7 @@ export default function RelatorioFundoReserva(props) {
         <ReserveFundReportHeader
           nomeCondominio={headerInfo.data.nomeCondominio}
           enderecoCondominio={headerInfo.data.enderecoCondominio}
+          date={headerInfo.data.reportDate}
         />
         <Table key={report[0].name + "table"}>
           <TableHead>

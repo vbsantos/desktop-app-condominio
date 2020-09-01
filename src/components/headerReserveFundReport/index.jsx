@@ -9,13 +9,14 @@ import "./style.css";
 export default function ReserveFundReportHeader(props) {
   const { nomeCondominio } = props;
   const { enderecoCondominio } = props;
+  const { date } = props;
 
   return (
     <div id="ReserveFundReportHeader">
       <img id="header-left" src={logo} alt="Logo" />
       <div id="header-right">
         <div className="bold" id="header-line1">
-          Extrato Fundo Reserva
+          {`Extrato Fundo Reserva ${date.mes} de ${date.ano}`}
         </div>
         <div id="header-line2">
           <span className="bold">{nomeCondominio}</span>
