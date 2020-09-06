@@ -24,7 +24,7 @@ function PaperComponent(props) {
 export default function DraggableDialog(props) {
   const [dialog, setDialog] = props.open;
   return (
-    <div id="dialogSalvarRelatorios">
+    <div id="dialogCarregando">
       <Dialog
         open={dialog}
         PaperComponent={PaperComponent}

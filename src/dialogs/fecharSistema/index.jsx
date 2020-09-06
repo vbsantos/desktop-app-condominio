@@ -14,9 +14,6 @@ import {
 // MATERIAL UI ICONS
 import { ExitToAppOutlined } from "@material-ui/icons";
 
-// CSS
-import "./style.css";
-
 function PaperComponent(props) {
   return (
     <Draggable
@@ -46,7 +43,7 @@ export default function DraggableDialog(props) {
   }
 
   return (
-    <div id="dialogSalvarRelatorios">
+    <div id="dialogFecharSistema">
       <Dialog
         open={dialog}
         onClose={handleClose}

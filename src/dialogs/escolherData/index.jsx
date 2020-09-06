@@ -75,7 +75,7 @@ export default function DraggableDialog(props) {
   }
 
   return (
-    <div id="dialogRegistrarDespesaFixa">
+    <div id="dialogEscolherData">
       <Dialog
         open={dialog}
         onClose={handleClose}

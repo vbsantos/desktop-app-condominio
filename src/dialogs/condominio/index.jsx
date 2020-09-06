@@ -14,9 +14,6 @@ import {
 // FORM COMPONENTS
 import FormCondominio from "../../forms/condominio";
 
-// CSS
-import "./style.css";
-
 // MATERIAL UI ICONS
 import { DeleteOutlined } from "@material-ui/icons";
 import { CreateOutlined } from "@material-ui/icons";
@@ -81,7 +78,7 @@ export default function DraggableDialog(props) {
   }
 
   return (
-    <div id="dialogRegistrarBeneficiario">
+    <div id="dialogRegistrarCondominio">
       <Dialog
         open={dialog}
         onClose={handleClose}
