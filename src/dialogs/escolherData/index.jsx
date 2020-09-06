@@ -104,7 +104,7 @@ export default function DraggableDialog(props) {
             disabled={!formCompleted}
           >
             <CreateOutlined />
-            Gerar Relatórios
+            <p className="btn-text-ajusted">Gerar Relatórios</p>
           </Button>
         </DialogActions>
       </Dialog>

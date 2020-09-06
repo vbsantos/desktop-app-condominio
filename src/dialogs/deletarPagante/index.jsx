@@ -82,7 +82,7 @@ export default function DraggableDialog(props) {
             color="secondary"
           >
             <DeleteOutlined />
-            Excluir
+            <p className="btn-text-ajusted">EXCLUIR</p>
           </Button>
         </DialogActions>
       </Dialog>

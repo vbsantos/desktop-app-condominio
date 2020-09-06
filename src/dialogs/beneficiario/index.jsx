@@ -110,7 +110,7 @@ export default function DraggableDialog(props) {
               color="secondary"
             >
               <DeleteOutlined />
-              Excluir
+              <p className="btn-text-ajusted">EXCLUIR</p>
             </Button>
           )}
           <Button
@@ -120,7 +120,9 @@ export default function DraggableDialog(props) {
             disabled={!formCompleted}
           >
             <CreateOutlined />
-            {beneficiario.id === "" ? "Cadastrar" : "Salvar"}
+            <p className="btn-text-ajusted">
+              {beneficiario.id === "" ? "CADASTRAR" : "SALVAR"}
+            </p>
           </Button>
         </DialogActions>
       </Dialog>

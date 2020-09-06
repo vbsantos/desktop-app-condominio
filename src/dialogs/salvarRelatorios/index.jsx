@@ -237,7 +237,7 @@ export default function DraggableDialog(props) {
             color="primary"
           >
             <AssessmentOutlined />
-            Salvar
+            <p className="btn-text-ajusted">SALVAR</p>
           </Button>
         </DialogActions>
       </Dialog>

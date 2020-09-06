@@ -72,7 +72,7 @@ export default function DraggableDialog(props) {
             color="secondary"
           >
             <ExitToAppOutlined />
-            SAIR
+            <p className="btn-text-ajusted">SAIR</p>
           </Button>
         </DialogActions>
       </Dialog>
