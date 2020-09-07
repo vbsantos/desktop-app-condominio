@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 // DIALOGS
 import DialogSaveReports from "../../dialogs/salvarRelatorios";
 import DialogCloseSystem from "../../dialogs/fecharSistema";
 import Loading from "../../dialogs/carregando";
+import DialogEscolherRelatorios from "../../dialogs/escolherRelatorios";
 
 // REPORTS
 import RelatorioRateio from "../../reports/relatorioRateio";
@@ -19,12 +20,21 @@ import html2canvas from "html2canvas";
 // CSS
 import "./style.css";
 
+// FUNCTIONS
+// This function turns HTML Objects in PNG (base64)
+const htmlObjectToPng = async (htmlObject) => {
+  const canvas = await html2canvas(htmlObject);
+  const png = await canvas.toDataURL("image/png");
+  return png;
+};
+
 export default function VisualizarRelatoriosGerados(props) {
   const [footbar, setFootbar] = props.buttons;
   const [data, setData] = props.data;
 
   const [reportView, setReportView] = useState("screenStyle");
 
+  // Loading Dialog
   const [loading, setLoading] = useState(false);
 
   // React Router Hook for navigation between pages
@@ -37,6 +47,14 @@ export default function VisualizarRelatoriosGerados(props) {
 
   // Boolean for Close System Dialog
   const [dialogCloseSystem, setDialogCloseSystem] = useState(false);
+
+  // Boolean for Escolher Relatorios Dialog
+  const [dialogEscolherRelatorios, setDialogEscolherRelatorios] = useState(
+    false
+  );
+
+  // Stores a Reports PNGs object ref
+  const PngReportsObject = useRef({ reports: null, infos: null });
 
   console.groupCollapsed("VisualizarRelatoriosGerados: System data");
   console.log("Footbar:", footbar);
@@ -74,14 +92,7 @@ export default function VisualizarRelatoriosGerados(props) {
     return () => console.log("VisualizarRelatoriosGerados - Encerrou");
   }, []);
 
-  // This function turns HTML Objects in PNG (base64)
-  const htmlObjectToPng = async (htmlObject) => {
-    const canvas = await html2canvas(htmlObject);
-    const png = await canvas.toDataURL("image/png");
-    return png;
-  };
-
-  // This function turns the html tables in an object with them base64 string
+  // This function turns the html tables in PNGs
   const getReportsBase64 = async () => {
     setReportView("pdfStyle");
 
@@ -120,6 +131,8 @@ export default function VisualizarRelatoriosGerados(props) {
       base64Reports,
     });
     setReportView("screenStyle");
+    PngReportsObject.current.reports = base64Reports;
+    PngReportsObject.current.infos = getPagantesInfo(data.lastReports);
     return base64Reports;
   };
 
@@ -132,18 +145,6 @@ export default function VisualizarRelatoriosGerados(props) {
       );
     }
     return complementos;
-  };
-
-  // this function saves the reports as PDFs
-  const saveAllReportsDisk = async (base64Reports, infos) => {
-    const status = await window.ipcRenderer.invoke("files", {
-      method: "generateAllReports",
-      content: {
-        base64Reports,
-        infos,
-      },
-    });
-    return status;
   };
 
   // This function runs only when there is an interaction with the footbar buttons
@@ -162,10 +163,9 @@ export default function VisualizarRelatoriosGerados(props) {
 
         (async () => {
           setLoading(true);
-          const reportsBase64 = await getReportsBase64();
-          const infos = getPagantesInfo(data.lastReports);
-          await saveAllReportsDisk(reportsBase64, infos);
+          await getReportsBase64();
           setLoading(false);
+          setDialogEscolherRelatorios(true);
         })();
 
         break;
@@ -178,6 +178,7 @@ export default function VisualizarRelatoriosGerados(props) {
           setLoading(true);
           await getReportsBase64();
           setLoading(false);
+          // FIXME ver como da pra fazer aqui pra escolher os relatós que quer imprimir mas salvar todos no banco de dados
           setDialogSaveReports(true);
         })();
 
@@ -187,10 +188,19 @@ export default function VisualizarRelatoriosGerados(props) {
 
   return (
     <div id="VisualizarRelatoriosGerados">
+      {/* LOADING */}
       {loading && (
         <Loading
           title={"Por favor aguarde enquanto os Relatórios são processados"}
           open={[loading, setLoading]}
+        />
+      )}
+      {/* ESCOLHER RELATORIOS PARA GERAR */}
+      {dialogEscolherRelatorios && (
+        <DialogEscolherRelatorios
+          open={[dialogEscolherRelatorios, setDialogEscolherRelatorios]}
+          reportsObjRef={PngReportsObject.current.reports}
+          infosRef={PngReportsObject.current.infos}
         />
       )}
       {dialogSaveReports && (

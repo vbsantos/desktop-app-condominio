@@ -7,6 +7,10 @@ import { Tabs, Tab } from "@material-ui/core";
 // CSS
 import "./style.css";
 
+// DIALOGS
+import Loading from "../../dialogs/carregando";
+import DialogEscolherRelatorios from "../../dialogs/escolherRelatorios";
+
 // REPORTS
 import RelatorioRateio from "../../reports/relatorioRateio";
 import RelatorioAgua from "../../reports/relatorioAgua";
@@ -20,6 +24,27 @@ import TabPanel from "../../components/tabPanel";
 // COMPONENT TO PNG
 import html2canvas from "html2canvas";
 
+// FUNCTIONS
+// This function turns HTML Objects in PNG (base64)
+const htmlObjectToPng = async (htmlObject) => {
+  if (!htmlObject) return null;
+  const canvas = await html2canvas(htmlObject);
+  const png = await canvas.toDataURL("image/png");
+  return png;
+};
+// This functions returns de report date
+const getDate = (report) => {
+  try {
+    const reportJSON = JSON.parse(report.report);
+    const reportDate = reportJSON.find((table) => table.name === "info").data
+      .reportDate;
+    return `${reportDate.mes}/${reportDate.ano}`;
+  } catch (error) {
+    const digits = report.createdAt.split("T")[0].split("-");
+    return `${digits[1]}/${digits[0]}`;
+  }
+};
+
 export default function VisualizarRelatorios(props) {
   const [footbar, setFootbar] = props.buttons;
   const [data, setData] = props.data;
@@ -31,11 +56,20 @@ export default function VisualizarRelatorios(props) {
   const [value, setValue] = useState(0);
   const [reportView, setReportView] = useState("screenStyle");
 
+  // Loading Dialog
+  const [loading, setLoading] = useState(false);
+
+  // Boolean for Escolher Relatorios Dialog
+  const [dialogEscolherRelatorios, setDialogEscolherRelatorios] = useState(
+    false
+  );
+
   // Stores the general report reference
   const reportRef = useRef(null);
   const waterReportRef = useRef(null);
   const apportionmentReportRef = useRef(null);
   const reserveFundReportRef = useRef(null);
+  const PngReportsObject = useRef({ reports: null });
 
   console.groupCollapsed("VisualizarRelatorios: System data");
   console.log("Footbar:", footbar);
@@ -75,48 +109,27 @@ export default function VisualizarRelatorios(props) {
     return () => console.log("VisualizarRelatorios - Encerrou");
   }, []);
 
+  // REVIEW Cria PDFs de relatórios antigos
   // This funcions turns a React Component into a PDF
   const getComponentPrint = async (
     refGeneralReport,
     refApportionmentReport,
     refWaterReport,
-    reserveFundReportRef
+    refReserveFundReport
   ) => {
     setReportView("pdfStyle");
     if (refGeneralReport.current) {
       if (data.reports.generalReport) {
-        let imgData1;
-        let imgData2;
-        let imgData3;
-        let imgData4;
-        const canvas1 = await html2canvas(refGeneralReport.current);
-        imgData1 = await canvas1.toDataURL("image/png");
-        const canvas2 = await html2canvas(refApportionmentReport.current);
-        imgData2 = await canvas2.toDataURL("image/png");
-        if (refWaterReport.current) {
-          const canvas3 = await html2canvas(refWaterReport.current);
-          imgData3 = await canvas3.toDataURL("image/png");
-        }
-        if (reserveFundReportRef.current) {
-          const canvas4 = await html2canvas(reserveFundReportRef.current);
-          imgData4 = await canvas4.toDataURL("image/png");
-        }
-        window.ipcRenderer.invoke("files", {
-          method: "generateGeneralReport",
-          content: {
-            rg: imgData1,
-            rr: imgData2,
-            ra: refWaterReport.current ? imgData3 : null,
-            rfr: reserveFundReportRef.current ? imgData4 : null,
-          },
-        });
+        PngReportsObject.current.reports = {
+          rg: await htmlObjectToPng(refGeneralReport.current),
+          rr: await htmlObjectToPng(refApportionmentReport.current),
+          ra: await htmlObjectToPng(refWaterReport.current),
+          rfr: await htmlObjectToPng(refReserveFundReport.current),
+        };
       } else {
-        const canvas = await html2canvas(refGeneralReport.current);
-        const imgData = await canvas.toDataURL("image/png");
-        window.ipcRenderer.invoke("files", {
-          method: "generateIndividualReport",
-          content: imgData,
-        });
+        PngReportsObject.current.reports = {
+          ris: await htmlObjectToPng(refGeneralReport.current),
+        };
       }
       setReportView("screenStyle");
       return true;
@@ -140,12 +153,22 @@ export default function VisualizarRelatorios(props) {
       case 2:
         console.log("VisualizarRelatorios - Botão da direita");
         setFootbar({ ...footbar, action: -1 });
-        getComponentPrint(
-          reportRef,
-          apportionmentReportRef,
-          waterReportRef,
-          reserveFundReportRef
-        );
+
+        (async () => {
+          setLoading(true);
+          const processedReports = await getComponentPrint(
+            reportRef,
+            apportionmentReportRef,
+            waterReportRef,
+            reserveFundReportRef
+          );
+          setLoading(false);
+          if (processedReports) {
+            // Abre o dialog de escolha de relatórios para gerar
+            setDialogEscolherRelatorios(true);
+          }
+        })();
+
         break;
     }
   }, [footbar.action]);
@@ -155,20 +178,22 @@ export default function VisualizarRelatorios(props) {
     setValue(newValue);
   };
 
-  const getDate2 = (report) => {
-    try {
-      const reportJSON = JSON.parse(report.report);
-      const reportDate = reportJSON.find((table) => table.name === "info").data
-        .reportDate;
-      return `${reportDate.mes}/${reportDate.ano}`;
-    } catch (error) {
-      const digits = report.createdAt.split("T")[0].split("-");
-      return `${digits[1]}/${digits[0]}`;
-    }
-  };
-
   return (
     <div id="visualizarRelatorios">
+      {/* LOADING */}
+      {loading && (
+        <Loading
+          title={"Por favor aguarde enquanto os Relatórios são processados"}
+          open={[loading, setLoading]}
+        />
+      )}
+      {/* ESCOLHER RELATORIOS PARA GERAR */}
+      {dialogEscolherRelatorios && (
+        <DialogEscolherRelatorios
+          open={[dialogEscolherRelatorios, setDialogEscolherRelatorios]}
+          reportsObjRef={PngReportsObject.current.reports}
+        />
+      )}
       <Tabs
         id="sidebar"
         orientation="vertical"
@@ -180,7 +205,7 @@ export default function VisualizarRelatorios(props) {
         {data.reports.data.map((report, index) => (
           <Tab
             key={"panelTab" + index}
-            label={getDate2(report)}
+            label={getDate(report)}
             title={"Data em que o relatório foi gerado"}
             id={`vertical-tab-${index}`}
             aria-controls={`vertical-tabpanel-${index}`}

@@ -118,6 +118,16 @@ class FileController {
   };
   generateGeneralReport = async (base64imageString) => {
     try {
+      // generate: tells with reports to generate
+      const { generate } = base64imageString;
+      if (
+        generate &&
+        !generate.rg &&
+        !generate.rr &&
+        !generate.rfr &&
+        !generate.ra
+      )
+        return false;
       const filePath = await this.saveReportsDialog();
       if (typeof filePath === "undefined") return false;
       const generalReportBase64 = base64imageString.rg;
@@ -125,48 +135,58 @@ class FileController {
       const waterReportBase64 = base64imageString.ra;
       const reserveFundReportBase64 = base64imageString.rfr;
 
-      const generalReport = await this.createSinglePagePdf(generalReportBase64);
-      fs.writeFileSync(
-        Path.resolve(
-          filePath,
-          "demonstrativo_financeiro_" + this.getTimestamp() + ".pdf"
-        ),
-        generalReport
-      );
-
-      const apportionmentReport = await this.createLandscapeSinglePagePdf(
-        apportionmentReportBase64
-      );
-      fs.writeFileSync(
-        Path.resolve(
-          filePath,
-          "planilha_cobrancas_" + this.getTimestamp() + ".pdf"
-        ),
-        apportionmentReport
-      );
-
-      if (reserveFundReportBase64) {
-        const reserveFundReport = await this.createSinglePagePdf(
-          reserveFundReportBase64
+      if (generate.rg) {
+        const generalReport = await this.createSinglePagePdf(
+          generalReportBase64
         );
         fs.writeFileSync(
           Path.resolve(
             filePath,
-            "relatorio_fundo_reserva_" + this.getTimestamp() + ".pdf"
+            "demonstrativo_financeiro_" + this.getTimestamp() + ".pdf"
           ),
-          reserveFundReport
+          generalReport
         );
       }
 
-      if (waterReportBase64) {
-        const waterReport = await this.createSinglePagePdf(waterReportBase64);
+      if (generate.rr) {
+        const apportionmentReport = await this.createLandscapeSinglePagePdf(
+          apportionmentReportBase64
+        );
         fs.writeFileSync(
           Path.resolve(
             filePath,
-            "relatorio_agua_" + this.getTimestamp() + ".pdf"
+            "planilha_cobrancas_" + this.getTimestamp() + ".pdf"
           ),
-          waterReport
+          apportionmentReport
         );
+      }
+
+      if (reserveFundReportBase64) {
+        if (generate.rfr) {
+          const reserveFundReport = await this.createSinglePagePdf(
+            reserveFundReportBase64
+          );
+          fs.writeFileSync(
+            Path.resolve(
+              filePath,
+              "relatorio_fundo_reserva_" + this.getTimestamp() + ".pdf"
+            ),
+            reserveFundReport
+          );
+        }
+      }
+
+      if (waterReportBase64) {
+        if (generate.ra) {
+          const waterReport = await this.createSinglePagePdf(waterReportBase64);
+          fs.writeFileSync(
+            Path.resolve(
+              filePath,
+              "relatorio_agua_" + this.getTimestamp() + ".pdf"
+            ),
+            waterReport
+          );
+        }
       }
       return true;
     } catch (error) {
@@ -176,12 +196,15 @@ class FileController {
   };
   generateIndividualReport = async (base64imageString) => {
     try {
+      // generate: tells with reports to generate
+      const { generate } = base64imageString;
+      if (!generate.ris) return false;
       // Choose path to save documento
       const filePath = await this.saveReportAsDialog(
         "relatorio_individual_" + this.getTimestamp()
       );
       // Create PDF and embed PNG
-      const pdfBytes = await this.createSinglePagePdf(base64imageString);
+      const pdfBytes = await this.createSinglePagePdf(base64imageString.ris);
       // Save document
       fs.writeFileSync(filePath, pdfBytes);
       return true;
@@ -192,6 +215,18 @@ class FileController {
   };
   generateAllReports = async (reportDatas) => {
     try {
+      // generate: tells with reports to generate
+      const { generate } = reportDatas;
+      if (
+        generate &&
+        !generate.rg &&
+        !generate.rr &&
+        !generate.rfr &&
+        !generate.ra &&
+        !generate.ris
+      )
+        return false;
+
       const { base64Reports } = reportDatas;
       const { infos } = reportDatas;
       const reports = [];
@@ -199,39 +234,46 @@ class FileController {
       const filePath = await this.saveReportsDialog();
       if (typeof filePath === "undefined") return false;
       // Create PDF and embed PNGs
-      const generalReportBase64 = base64Reports.rg;
-      for (const individualReportBase64 of base64Reports.ris) {
-        const report = await this.createTwoPagePdf(
-          generalReportBase64,
-          individualReportBase64
+
+      if (generate.rg) {
+        const generalReportBase64 = base64Reports.rg;
+        const generalReport = await this.createSinglePagePdf(
+          generalReportBase64
         );
-        reports.push(report);
+        const path = Path.resolve(
+          filePath,
+          "demonstrativo_financeiro_" + this.getTimestamp() + ".pdf"
+        );
+        await fs.writeFile(path, generalReport, function (err) {
+          if (err) {
+            console.log("Error saving file '" + path + "'");
+            throw new Error(err);
+          }
+          console.log("The file '" + path + "' was saved!");
+        });
       }
 
-      const apportionmentReportBase64 = base64Reports.rr;
-      const apportionmentReport = await this.createLandscapeSinglePagePdf(
-        apportionmentReportBase64
-      );
-      const path = Path.resolve(
-        filePath,
-        "planilha_cobrancas_" + this.getTimestamp() + ".pdf"
-      );
-      await fs.writeFile(path, apportionmentReport, function (err) {
-        if (err) {
-          console.log("Error saving file '" + path + "'");
-          throw new Error(err);
+      if (!generate || generate.ris) {
+        const generalReportBase64 = base64Reports.rg;
+        for (const individualReportBase64 of base64Reports.ris) {
+          const report = await this.createTwoPagePdf(
+            generalReportBase64,
+            individualReportBase64
+          );
+          reports.push(report);
         }
-        console.log("The file '" + path + "' was saved!");
-      });
+      }
 
-      const waterReportBase64 = base64Reports.ra;
-      if (waterReportBase64) {
-        const waterReport = await this.createSinglePagePdf(waterReportBase64);
+      if (!generate || generate.rr) {
+        const apportionmentReportBase64 = base64Reports.rr;
+        const apportionmentReport = await this.createLandscapeSinglePagePdf(
+          apportionmentReportBase64
+        );
         const path = Path.resolve(
           filePath,
-          "relatorio_agua_" + this.getTimestamp() + ".pdf"
+          "planilha_cobrancas_" + this.getTimestamp() + ".pdf"
         );
-        await fs.writeFile(path, waterReport, function (err) {
+        await fs.writeFile(path, apportionmentReport, function (err) {
           if (err) {
             console.log("Error saving file '" + path + "'");
             throw new Error(err);
@@ -240,38 +282,61 @@ class FileController {
         });
       }
 
-      const reserveFundReportBase64 = base64Reports.rfr;
-      if (reserveFundReportBase64) {
-        const reserveFundReport = await this.createSinglePagePdf(
-          reserveFundReportBase64
-        );
-        const path = Path.resolve(
-          filePath,
-          "relatorio_fundo_reserva_" + this.getTimestamp() + ".pdf"
-        );
-        await fs.writeFile(path, reserveFundReport, function (err) {
-          if (err) {
-            console.log("Error saving file '" + path + "'");
-            throw new Error(err);
-          }
-          console.log("The file '" + path + "' was saved!");
-        });
+      if (!generate || generate.ra) {
+        const waterReportBase64 = base64Reports.ra;
+        if (waterReportBase64) {
+          const waterReport = await this.createSinglePagePdf(waterReportBase64);
+          const path = Path.resolve(
+            filePath,
+            "relatorio_agua_" + this.getTimestamp() + ".pdf"
+          );
+          await fs.writeFile(path, waterReport, function (err) {
+            if (err) {
+              console.log("Error saving file '" + path + "'");
+              throw new Error(err);
+            }
+            console.log("The file '" + path + "' was saved!");
+          });
+        }
       }
 
-      // Save reports
-      for (const index in reports) {
-        const path = Path.resolve(
-          filePath,
-          "relatorio_" + infos[index] + "_" + this.getTimestamp() + ".pdf"
-        );
-        await fs.writeFile(path, reports[index], function (err) {
-          if (err) {
-            console.log("Error saving file '" + path + "'");
-            throw new Error(err);
-          }
-          console.log("The file '" + path + "' was saved!");
-        });
+      if (!generate || generate.rfr) {
+        const reserveFundReportBase64 = base64Reports.rfr;
+        if (reserveFundReportBase64) {
+          const reserveFundReport = await this.createSinglePagePdf(
+            reserveFundReportBase64
+          );
+          const path = Path.resolve(
+            filePath,
+            "relatorio_fundo_reserva_" + this.getTimestamp() + ".pdf"
+          );
+          await fs.writeFile(path, reserveFundReport, function (err) {
+            if (err) {
+              console.log("Error saving file '" + path + "'");
+              throw new Error(err);
+            }
+            console.log("The file '" + path + "' was saved!");
+          });
+        }
       }
+
+      if (!generate || generate.ris) {
+        // Save reports
+        for (const index in reports) {
+          const path = Path.resolve(
+            filePath,
+            "relatorio_" + infos[index] + "_" + this.getTimestamp() + ".pdf"
+          );
+          await fs.writeFile(path, reports[index], function (err) {
+            if (err) {
+              console.log("Error saving file '" + path + "'");
+              throw new Error(err);
+            }
+            console.log("The file '" + path + "' was saved!");
+          });
+        }
+      }
+
       return true;
     } catch (error) {
       console.log(error);
