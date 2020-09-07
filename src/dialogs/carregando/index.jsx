@@ -30,13 +30,7 @@ export default function DraggableDialog(props) {
         PaperComponent={PaperComponent}
         aria-labelledby="draggable-dialog-title"
       >
-        <DialogTitle
-          style={{ cursor: "move" }}
-          id="draggable-dialog-title"
-          color="inherit"
-        >
-          {props.title}
-        </DialogTitle>
+        <DialogContent>{props.title}</DialogContent>
         <DialogContent>
           <CircularProgress color="secondary" />
         </DialogContent>
