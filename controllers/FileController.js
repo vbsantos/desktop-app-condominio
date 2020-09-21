@@ -235,7 +235,7 @@ class FileController {
       if (typeof filePath === "undefined") return false;
       // Create PDF and embed PNGs
 
-      if (generate.rg) {
+      if (!generate || generate.rg) {
         const generalReportBase64 = base64Reports.rg;
         const generalReport = await this.createSinglePagePdf(
           generalReportBase64
