@@ -10,6 +10,7 @@ import "./style.css";
 // DIALOGS
 import Loading from "../../dialogs/carregando";
 import DialogEscolherRelatorios from "../../dialogs/escolherRelatorios";
+import DialogGerarRelatorioAnual from "../../dialogs/gerarRelatorioAnual";
 
 // REPORTS
 import RelatorioRateio from "../../reports/relatorioRateio";
@@ -61,6 +62,11 @@ export default function VisualizarRelatorios(props) {
 
   // Boolean for Escolher Relatorios Dialog
   const [dialogEscolherRelatorios, setDialogEscolherRelatorios] = useState(
+    false
+  );
+
+  // Boolean for Relatorio Anual Dialog
+  const [dialogGerarRelatorioAnual, setDialogGerarRelatorioAnual] = useState(
     false
   );
 
@@ -148,6 +154,7 @@ export default function VisualizarRelatorios(props) {
         break;
       case 1:
         console.log("VisualizarRelatorios - Botão do Centro");
+        setDialogGerarRelatorioAnual(true);
         setFootbar({ ...footbar, action: -1 });
         break;
       case 2:
@@ -185,6 +192,13 @@ export default function VisualizarRelatorios(props) {
         <Loading
           title={"Por favor aguarde enquanto os Relatórios são processados"}
           open={[loading, setLoading]}
+        />
+      )}
+      {/* ESCOLHER RELATORIOS PARA GERAR */}
+      {dialogGerarRelatorioAnual && (
+        <DialogGerarRelatorioAnual
+          open={[dialogGerarRelatorioAnual, setDialogGerarRelatorioAnual]}
+          condominioId={data.allNestedCondominio.id}
         />
       )}
       {/* ESCOLHER RELATORIOS PARA GERAR */}
