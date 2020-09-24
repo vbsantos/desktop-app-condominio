@@ -100,14 +100,14 @@ export default function VisualizarRelatorios(props) {
           position: "center",
           visible: true,
           enabled: true,
-          value: "GERAR RELATÓRIO ANUAL",
+          value: "SALVAR PDF",
         },
         {
           id: 2,
           position: "right",
           visible: true,
           enabled: true,
-          value: "SALVAR PDF",
+          value: "RELATÓRIO ANUAL",
         },
       ],
       action: -1,
@@ -153,11 +153,6 @@ export default function VisualizarRelatorios(props) {
         navigate("/EscolherCondominio");
         break;
       case 1:
-        console.log("VisualizarRelatorios - Botão do Centro");
-        setDialogGerarRelatorioAnual(true);
-        setFootbar({ ...footbar, action: -1 });
-        break;
-      case 2:
         console.log("VisualizarRelatorios - Botão da direita");
         setFootbar({ ...footbar, action: -1 });
 
@@ -176,6 +171,11 @@ export default function VisualizarRelatorios(props) {
           }
         })();
 
+        break;
+      case 2:
+        console.log("VisualizarRelatorios - Botão do Centro");
+        setDialogGerarRelatorioAnual(true);
+        setFootbar({ ...footbar, action: -1 });
         break;
     }
   }, [footbar.action]);
@@ -198,7 +198,7 @@ export default function VisualizarRelatorios(props) {
       {dialogGerarRelatorioAnual && (
         <DialogGerarRelatorioAnual
           open={[dialogGerarRelatorioAnual, setDialogGerarRelatorioAnual]}
-          condominioId={data.allNestedCondominio.id}
+          data={data}
         />
       )}
       {/* ESCOLHER RELATORIOS PARA GERAR */}
