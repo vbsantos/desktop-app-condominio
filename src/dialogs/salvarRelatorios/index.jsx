@@ -67,8 +67,6 @@ export default function DraggableDialog(props) {
   // REVIEW cria os registros de cada relatório
   // this function saves de reports (data.lastReports) on the database
   const saveAllReportsDatabase = async () => {
-    console.log({ lastReports }); // FIXME remover
-
     const apportionmentReport = await window.ipcRenderer.invoke(
       "apportionmentReports",
       {
@@ -104,11 +102,6 @@ export default function DraggableDialog(props) {
       }
     );
 
-    console.log({ apportionmentReport }); // FIXME remover
-    console.log({ generalReport }); // FIXME remover
-    console.log({ waterReport }); // FIXME remover
-    console.log({ reserveFundReport }); // FIXME remover
-
     const report = await window.ipcRenderer.invoke("reports", {
       method: "create",
       content: {
@@ -124,8 +117,6 @@ export default function DraggableDialog(props) {
         raValue: lastReports.raValue.toFixed(2),
       },
     });
-
-    console.log({ report }); // FIXME remover
 
     for (const individualReport of lastReports.ris) {
       await window.ipcRenderer.invoke("individualReports", {

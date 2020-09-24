@@ -92,9 +92,9 @@ export default function VisualizarRelatorios(props) {
         {
           id: 1,
           position: "center",
-          visible: false,
-          enabled: false,
-          value: "",
+          visible: true,
+          enabled: true,
+          value: "GERAR RELATÓRIO ANUAL",
         },
         {
           id: 2,
