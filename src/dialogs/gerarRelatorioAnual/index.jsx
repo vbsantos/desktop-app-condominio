@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Draggable from "react-draggable";
 
 // MATERIAL UI COMPONENTS
@@ -33,7 +34,12 @@ function PaperComponent(props) {
 
 export default function DraggableDialog(props) {
   const [dialog, setDialog] = props.open;
-  const { condominioId } = props;
+  const { data } = props;
+
+  const condominioId = data.allNestedCondominio.id;
+
+  // React Router Hook for navigation between pages
+  const navigate = useNavigate();
 
   // true when the year is selected
   const [formCompleted, setFormCompleted] = useState(true);
@@ -65,6 +71,16 @@ export default function DraggableDialog(props) {
     }
   };
 
+  const getReportData = async (year) => {
+    return await window.ipcRenderer.invoke("reports", {
+      method: "getByYear",
+      content: {
+        id: condominioId,
+        year,
+      },
+    });
+  };
+
   // function that runs when the dialog is suposed to close
   function handleClose() {
     setDialog(false);
@@ -73,9 +89,13 @@ export default function DraggableDialog(props) {
   // function that runs when you click the right button
   async function handleButton() {
     setLoading(true);
-    //TODO
-    console.log("GERA RELATORIO ANUAL DO PRÉDIO", condominioId, "ANO", year); // FIXME remover
-    // setDialog(false);
+
+    const reportData = await getReportData(year);
+    data.anualReport = reportData;
+
+    setLoading(false);
+    navigate("/VisualizarRelatorioAnual");
+    setDialog(false);
   }
 
   return loading ? (

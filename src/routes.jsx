@@ -7,6 +7,7 @@ import EscolherCondominio from "./pages/escolherCondominio";
 import RegistrarDespesas from "./pages/registrarDespesas";
 import VisualizarRelatorios from "./pages/visualizarRelatorios";
 import VisualizarRelatoriosGerados from "./pages/visualizarRelatoriosGerados";
+import VisualizarRelatorioAnual from "./pages/visualizarRelatorioAnual";
 
 // COMPONENTS
 import Footbar from "./components/footbar";
@@ -23,6 +24,7 @@ export default function MainRoutes(props) {
     allNestedBeneficiario: {},
     allNestedCondominio: {},
     reports: { generalReport: false, data: [] },
+    anualReport: [],
     lastReports: {},
     base64Reports: {},
     reportDate: { mes: "", ano: "" },
@@ -41,8 +43,8 @@ export default function MainRoutes(props) {
       {
         id: 1,
         position: "center",
-        visible: false,
-        enabled: false,
+        visible: true,
+        enabled: true,
         value: "CENTER",
       },
       {
@@ -105,6 +107,16 @@ export default function MainRoutes(props) {
             path="/VisualizarRelatoriosGerados"
             element={
               <VisualizarRelatoriosGerados
+                buttons={[footbarButtons, setFootbarButtons]}
+                data={[data, setData]}
+              />
+            }
+          />
+
+          <Route
+            path="/VisualizarRelatorioAnual"
+            element={
+              <VisualizarRelatorioAnual
                 buttons={[footbarButtons, setFootbarButtons]}
                 data={[data, setData]}
               />
