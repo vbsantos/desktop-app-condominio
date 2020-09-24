@@ -198,7 +198,7 @@ export default function VisualizarRelatorios(props) {
       {dialogGerarRelatorioAnual && (
         <DialogGerarRelatorioAnual
           open={[dialogGerarRelatorioAnual, setDialogGerarRelatorioAnual]}
-          data={data}
+          data={[data, setData]}
         />
       )}
       {/* ESCOLHER RELATORIOS PARA GERAR */}

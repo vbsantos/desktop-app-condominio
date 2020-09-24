@@ -11,7 +11,7 @@ export default function VisualizarRelatorioAnual(props) {
   // React Router Hook for navigation between pages
   const navigate = useNavigate();
 
-  data.anualReport.length > 0 || navigate("/");
+  data.beneficiario.id || navigate("/");
 
   console.groupCollapsed("VisualizarRelatorioAnual: System data");
   console.log("Footbar:", footbar);
@@ -67,14 +67,12 @@ export default function VisualizarRelatorioAnual(props) {
 
   return (
     <div id="VisualizarRelatorioAnual">
-      <div>
-        <RelatorioAnual
-          reportClass="reportbase64 RelatorioAnual"
-          reportRef={null}
-          report={JSON.parse(data.anualReport)}
-          view={"pdfStyle"}
-        />
-      </div>
+      <RelatorioAnual
+        reportClass="reportbase64 RelatorioAnual"
+        reportRef={null}
+        report={data.anualReport}
+        view={"pdfStyle"}
+      />
     </div>
   );
 }

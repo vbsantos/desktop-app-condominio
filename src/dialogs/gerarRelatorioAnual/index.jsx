@@ -34,7 +34,7 @@ function PaperComponent(props) {
 
 export default function DraggableDialog(props) {
   const [dialog, setDialog] = props.open;
-  const { data } = props;
+  const [data, setData] = props.data;
 
   const condominioId = data.allNestedCondominio.id;
 
@@ -94,8 +94,8 @@ export default function DraggableDialog(props) {
     data.anualReport = reportData;
 
     setLoading(false);
-    navigate("/VisualizarRelatorioAnual");
     setDialog(false);
+    navigate("/VisualizarRelatorioAnual");
   }
 
   return loading ? (
