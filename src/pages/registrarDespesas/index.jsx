@@ -87,6 +87,14 @@ export default function RegistrarDespesas(props) {
   // Boolean if date is picked
   const [datePicked, setDatePicked] = useState(false);
 
+  // REVIEW Stores values for the anual report
+  const reportsTotais = {
+    rgValue: 0,
+    rrValue: 0,
+    rfrValue: 0,
+    raValue: 0,
+  };
+
   console.groupCollapsed("RegistrarDespesas: System data");
   console.log("Footbar:", footbar);
   console.log("Data:", data);
@@ -265,7 +273,7 @@ export default function RegistrarDespesas(props) {
         name: `Fundo Reserva - ${percentage[0]}%`,
         data: {
           id: despesas.find((despesa) => despesa.fundoReserva).id,
-          value: percentage[1].toFixed(2),
+          value: percentage[1],
         },
       });
     }
@@ -276,10 +284,12 @@ export default function RegistrarDespesas(props) {
         data: informacoes,
       });
     }
+    const total_total = total + percentage[1];
+    reportsTotais.rgValue = total_total;
     generalReport.push({
       table: false,
       name: "total",
-      data: (total + percentage[1]).toFixed(2),
+      data: total_total,
     });
     generalReport.push({
       table: false,
@@ -389,6 +399,7 @@ export default function RegistrarDespesas(props) {
     const totalIndividual = Number(despesaAguaPrimaria.valor); // soma de todos os pagantes (R$)
     const totalComum = Number(despesaAguaSecundaria.valor); // diferença entre geral e pagantes (R$)
     const total = Number(totalIndividual) + Number(totalComum); // geral (R$)
+    reportsTotais.raValue = total;
     const valoresIndividuais = despesaAguaPrimaria["Valores"]; // valores individuais da despesa de água primária
     const precoAgua = valoresIndividuais[0].precoAgua; // valor do metro cubico da agua
 
@@ -547,12 +558,15 @@ export default function RegistrarDespesas(props) {
       totais.push(percentage[1]);
     }
 
+    const total_total = total + percentage[1];
+    reportsTotais.rrValue = total_total;
+
     apportionmentReport.push({
       table: false,
       name: "info",
       data: {
         totais,
-        total: total + percentage[1],
+        total: total_total,
         nomeCondominio: condominio.nome,
         enderecoCondominio: condominio.endereco,
         nomeAdministrador: data.allNestedBeneficiario.nome,
@@ -600,6 +614,8 @@ export default function RegistrarDespesas(props) {
         reportDate: data.reportDate,
       },
     });
+
+    reportsTotais.rfrValue = totalFundoReserva;
 
     const reserveFundReportJSON = JSON.stringify(reserveFundReport);
     return reserveFundReportJSON;
@@ -668,6 +684,8 @@ export default function RegistrarDespesas(props) {
       rfr: relatorioFundoReserva,
       rg: relatorioGeral,
       ris: relatoriosIndividuais,
+      month: data.reportDate.competencia,
+      ...reportsTotais,
     };
 
     setData({ ...data, lastReports });

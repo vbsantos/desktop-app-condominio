@@ -64,36 +64,69 @@ export default function DraggableDialog(props) {
     return status;
   };
 
+  // REVIEW cria os registros de cada relatório
   // this function saves de reports (data.lastReports) on the database
   const saveAllReportsDatabase = async () => {
-    await window.ipcRenderer.invoke("apportionmentReports", {
-      method: "create",
-      content: {
-        report: lastReports.rr,
-        condominioId,
-      },
-    });
-    await window.ipcRenderer.invoke("generalReports", {
+    console.log({ lastReports }); // FIXME remover
+
+    const apportionmentReport = await window.ipcRenderer.invoke(
+      "apportionmentReports",
+      {
+        method: "create",
+        content: {
+          report: lastReports.rr,
+          condominioId,
+        },
+      }
+    );
+    const generalReport = await window.ipcRenderer.invoke("generalReports", {
       method: "create",
       content: {
         report: lastReports.rg,
         condominioId,
       },
     });
-    await window.ipcRenderer.invoke("waterReports", {
+    const waterReport = await window.ipcRenderer.invoke("waterReports", {
       method: "create",
       content: {
         report: lastReports.ra,
         condominioId,
       },
     });
-    await window.ipcRenderer.invoke("reserveFundReports", {
+    const reserveFundReport = await window.ipcRenderer.invoke(
+      "reserveFundReports",
+      {
+        method: "create",
+        content: {
+          report: lastReports.rfr,
+          condominioId,
+        },
+      }
+    );
+
+    console.log({ apportionmentReport }); // FIXME remover
+    console.log({ generalReport }); // FIXME remover
+    console.log({ waterReport }); // FIXME remover
+    console.log({ reserveFundReport }); // FIXME remover
+
+    const report = await window.ipcRenderer.invoke("reports", {
       method: "create",
       content: {
-        report: lastReports.rfr,
         condominioId,
+        month: lastReports.month,
+        rgId: generalReport.id,
+        rgValue: lastReports.rgValue.toFixed(2),
+        rrId: apportionmentReport.id,
+        rrValue: lastReports.rrValue.toFixed(2),
+        rfrId: reserveFundReport.id,
+        rfrValue: lastReports.rfrValue.toFixed(2),
+        raId: waterReport.id,
+        raValue: lastReports.raValue.toFixed(2),
       },
     });
+
+    console.log({ report }); // FIXME remover
+
     for (const individualReport of lastReports.ris) {
       await window.ipcRenderer.invoke("individualReports", {
         method: "create",

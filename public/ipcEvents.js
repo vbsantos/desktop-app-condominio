@@ -2,9 +2,9 @@
 
 const { ipcMain } = require("electron");
 
+// DatabaseController
 const databaseController = require("../controllers/DatabaseController.js");
 const Database = new databaseController();
-
 ipcMain.handle("database", async (event, arg) => {
   const { method } = arg;
   let status;
@@ -24,9 +24,9 @@ ipcMain.handle("database", async (event, arg) => {
   }
 });
 
+// BeneficiarioController
 const beneficiarioController = require("../controllers/BeneficiarioController.js");
 const Beneficiario = new beneficiarioController();
-
 ipcMain.handle("beneficiarios", async (event, arg) => {
   const { method, content } = arg;
   let status;
@@ -72,9 +72,9 @@ ipcMain.handle("beneficiarios", async (event, arg) => {
   }
 });
 
+// CondominioController
 const condominioController = require("../controllers/CondominioController.js");
 const Condominio = new condominioController();
-
 ipcMain.handle("condominios", async (event, arg) => {
   const { method, content } = arg;
   let status;
@@ -120,9 +120,9 @@ ipcMain.handle("condominios", async (event, arg) => {
   }
 });
 
+// PaganteController
 const paganteController = require("../controllers/PaganteController.js");
 const Pagante = new paganteController();
-
 ipcMain.handle("pagantes", async (event, arg) => {
   const { method, content } = arg;
   let status;
@@ -163,9 +163,9 @@ ipcMain.handle("pagantes", async (event, arg) => {
   }
 });
 
+// DespesaController
 const despesaController = require("../controllers/DespesaController.js");
 const Despesa = new despesaController();
-
 ipcMain.handle("despesas", async (event, arg) => {
   const { method, content } = arg;
   let status;
@@ -206,6 +206,7 @@ ipcMain.handle("despesas", async (event, arg) => {
   }
 });
 
+// ValorController
 const valorController = require("../controllers/ValorController.js");
 const Valor = new valorController();
 ipcMain.handle("valores", async (event, arg) => {
@@ -263,6 +264,7 @@ ipcMain.handle("valores", async (event, arg) => {
   }
 });
 
+// IndividualReportController
 const individualReportController = require("../controllers/IndividualReportController.js");
 const IndividualReport = new individualReportController();
 ipcMain.handle("individualReports", async (event, arg) => {
@@ -310,6 +312,7 @@ ipcMain.handle("individualReports", async (event, arg) => {
   }
 });
 
+// GeneralReportController
 const generalReportController = require("../controllers/GeneralReportController.js");
 const GeneralReport = new generalReportController();
 ipcMain.handle("generalReports", async (event, arg) => {
@@ -357,6 +360,7 @@ ipcMain.handle("generalReports", async (event, arg) => {
   }
 });
 
+// FileController
 const fileController = require("../controllers/FileController.js");
 const File = new fileController();
 ipcMain.handle("files", async (event, arg) => {
@@ -389,6 +393,7 @@ ipcMain.handle("files", async (event, arg) => {
   }
 });
 
+// WaterReportController
 const waterReportController = require("../controllers/WaterReportController.js");
 const WaterReport = new waterReportController();
 ipcMain.handle("waterReports", async (event, arg) => {
@@ -436,6 +441,7 @@ ipcMain.handle("waterReports", async (event, arg) => {
   }
 });
 
+// ApportionmentReportController
 const apportionmentReportController = require("../controllers/ApportionmentReportController.js");
 const ApportionmentReport = new apportionmentReportController();
 ipcMain.handle("apportionmentReports", async (event, arg) => {
@@ -483,6 +489,7 @@ ipcMain.handle("apportionmentReports", async (event, arg) => {
   }
 });
 
+// ReserveFundReportController
 const reserveFundReportController = require("../controllers/ReserveFundReportController.js");
 const ReserveFundReport = new reserveFundReportController();
 ipcMain.handle("reserveFundReports", async (event, arg) => {
@@ -518,6 +525,29 @@ ipcMain.handle("reserveFundReports", async (event, arg) => {
       case "delete":
         console.log("entrada:", arg);
         status = await ReserveFundReport.delete(content.id);
+        console.log("saida:", status);
+        break;
+      default:
+        console.log({ error: "This method do not exist." });
+    }
+    return status;
+  } catch (error) {
+    console.log("Erro no ipcEvents:", error);
+    return { error };
+  }
+});
+
+// ReportsController
+const reportsController = require("../controllers/ReportsController.js");
+const Reports = new reportsController();
+ipcMain.handle("reports", async (event, arg) => {
+  const { method, content } = arg;
+  let status;
+  try {
+    switch (method) {
+      case "create":
+        console.log("entrada:", arg);
+        status = await Reports.create(content);
         console.log("saida:", status);
         break;
       default:
