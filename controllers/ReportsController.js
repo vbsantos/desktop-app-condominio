@@ -19,6 +19,17 @@ class ReportsController {
     ];
     return response;
   };
+  getByYear = async (id, year) => {
+    const geracoes = await Reports.findAll({
+      where: {
+        id,
+      },
+    });
+    const response = geracoes
+      .map((geracao) => geracao.get())
+      .filter((geracao) => geracao.month.includes(year));
+    return response;
+  };
 }
 
 module.exports = ReportsController;

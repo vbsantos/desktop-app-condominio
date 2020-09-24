@@ -555,6 +555,11 @@ ipcMain.handle("reports", async (event, arg) => {
         status = await Reports.getYears(content.id);
         console.log("saida:", status);
         break;
+      case "getByYear":
+        console.log("entrada:", arg);
+        status = await Reports.getByYear(content.id, content.year);
+        console.log("saida:", status);
+        break;
       default:
         console.log({ error: "This method do not exist." });
     }
