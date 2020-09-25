@@ -383,6 +383,11 @@ ipcMain.handle("files", async (event, arg) => {
         status = await File.generateAllReports(content);
         console.log("saida:", status);
         break;
+      case "generateAnualReport":
+        console.log("entrada:", arg);
+        status = await File.generateAnualReport(content);
+        console.log("saida:", status);
+        break;
       default:
         console.log({ error: "This method do not exist." });
     }

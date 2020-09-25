@@ -1,8 +1,33 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 // REPORTS
 import RelatorioAnual from "../../reports/relatorioAnual";
+
+// DIALOGS
+import Loading from "../../dialogs/carregando";
+
+// COMPONENT TO PNG
+import html2canvas from "html2canvas";
+
+// FUNCTIONS
+// This function turns HTML Objects in PNG (base64)
+const htmlObjectToPng = async (htmlObject) => {
+  if (!htmlObject) return null;
+  const canvas = await html2canvas(htmlObject);
+  const png = await canvas.toDataURL("image/png");
+  return png;
+};
+
+const generateAnualReport = async (report, year) => {
+  return await window.ipcRenderer.invoke("files", {
+    method: "generateAnualReport",
+    content: {
+      report,
+      year,
+    },
+  });
+};
 
 export default function VisualizarRelatorioAnual(props) {
   const [footbar, setFootbar] = props.buttons;
@@ -10,6 +35,12 @@ export default function VisualizarRelatorioAnual(props) {
 
   // React Router Hook for navigation between pages
   const navigate = useNavigate();
+
+  // Loading Dialog
+  const [loading, setLoading] = useState(false);
+
+  // Stores the general report reference
+  const anualReportRef = useRef(null);
 
   data.beneficiario.id || navigate("/");
 
@@ -61,16 +92,40 @@ export default function VisualizarRelatorioAnual(props) {
       case 2:
         console.log("VisualizarRelatorioAnual - Botão da direita");
         setFootbar({ ...footbar, action: -1 });
+
+        (async () => {
+          setLoading(true);
+          const reportBase64 = await htmlObjectToPng(anualReportRef.current);
+          await generateAnualReport(
+            reportBase64,
+            data.anualReport[0].month.split("/")[1]
+          );
+          setLoading(false);
+        })();
+
         break;
     }
   }, [footbar.action]);
 
   return (
     <div id="VisualizarRelatorioAnual">
+      {/* LOADING */}
+      {loading && (
+        <Loading
+          title={"Por favor aguarde enquanto o Relatório é processado"}
+          open={[loading, setLoading]}
+        />
+      )}
       <RelatorioAnual
-        reportClass="reportbase64 RelatorioAnual"
-        reportRef={null}
-        report={data.anualReport}
+        reportClass=""
+        reportRef={anualReportRef}
+        report={{
+          data: data.anualReport,
+          headerInfo: {
+            nomeCondominio: data.allNestedCondominio.nome,
+            enderecoCondominio: data.allNestedCondominio.endereco,
+          },
+        }}
         view={"pdfStyle"}
       />
     </div>
