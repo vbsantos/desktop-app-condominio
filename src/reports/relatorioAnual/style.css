@@ -1,0 +1,49 @@
+#relatorioAnual .MuiTableContainer-root {
+  text-align: center;
+  margin: 0 auto 0 auto;
+  padding: 0;
+}
+
+#relatorioAnual .MuiTableContainer-root.pdfStyle {
+  width: 900px !important;
+}
+
+#relatorioAnual .MuiTable-root {
+  background-color: white !important;
+  border: 2px solid var(--report-color);
+}
+
+#relatorioAnual .MuiTable-root * {
+  font-size: 15px !important;
+}
+
+#relatorioAnual .MuiTable-root {
+  margin-bottom: 10px;
+}
+
+#relatorioAnual .Black .MuiTableCell-root {
+  background-color: var(--report-color) !important;
+  color: white !important;
+  font-weight: 600 !important;
+  padding-top: 1px !important;
+}
+
+#relatorioAnual .Black .MuiTableCell-root {
+  margin: 0;
+  padding: 0;
+}
+
+#relatorioAnual .Linha .MuiTableCell-root {
+  margin: 0;
+  padding: 0;
+  color: var(--report-color);
+}
+
+#relatorioAnual .MuiTableCell-root.col1 {
+  padding-left: 10px !important;
+}
+
+#relatorioAnual .MuiTableCell-root.col2 {
+  padding-right: 10px !important;
+  text-align: right;
+}
