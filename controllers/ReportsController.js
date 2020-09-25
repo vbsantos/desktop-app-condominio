@@ -8,10 +8,10 @@ class ReportsController {
     const geracao = await Reports.create(data);
     return geracao.get();
   };
-  getYears = async (id) => {
+  getYears = async (condominioId) => {
     const geracoes = await Reports.findAll({
       where: {
-        id,
+        condominioId,
       },
     });
     const response = [
@@ -19,10 +19,10 @@ class ReportsController {
     ];
     return response;
   };
-  getByYear = async (id, year) => {
+  getByYear = async (condominioId, year) => {
     const geracoes = await Reports.findAll({
       where: {
-        id,
+        condominioId,
       },
     });
     const response = geracoes

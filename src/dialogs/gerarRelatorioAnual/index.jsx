@@ -42,7 +42,7 @@ export default function DraggableDialog(props) {
   const navigate = useNavigate();
 
   // true when the year is selected
-  const [formCompleted, setFormCompleted] = useState(true);
+  const [formCompleted, setFormCompleted] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const [years, setYears] = useState([]);
@@ -51,23 +51,24 @@ export default function DraggableDialog(props) {
   useEffect(() => {
     setLoading(true);
     const getYears = async () => {
-      const years = await window.ipcRenderer.invoke("reports", {
+      const generations = await window.ipcRenderer.invoke("reports", {
         method: "getYears",
         content: {
           id: condominioId,
         },
       });
-      setYears(years);
+      setYears(generations);
     };
     getYears();
     setLoading(false);
   }, []);
 
   const yearSelected = (ano) => {
-    if (ano !== "") {
+    if (ano != 0) {
       setFormCompleted(true);
       setYear(Number(ano));
-      console.log("selected", ano);
+    } else {
+      setFormCompleted(false);
     }
   };
 
@@ -126,7 +127,7 @@ export default function DraggableDialog(props) {
               className="Selector"
               onChange={(e) => yearSelected(e.target.value)}
             >
-              <option key={-1} value={-1}>
+              <option key={0} value={0}>
                 {""}
               </option>
               {years.map((ano) => (

@@ -198,7 +198,7 @@ class FileController {
     try {
       // generate: tells with reports to generate
       const { generate } = base64imageString;
-      if (!generate.ris) return false;
+      if (generate && !generate.ris) return false;
       // Choose path to save documento
       const filePath = await this.saveReportAsDialog(
         "relatorio_individual_" + this.getTimestamp()
@@ -337,6 +337,23 @@ class FileController {
         }
       }
 
+      return true;
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
+  };
+  generateAnualReport = async (base64imageString) => {
+    try {
+      // generate: tells with reports to generate
+      // Choose path to save documento
+      const filePath = await this.saveReportAsDialog(
+        "relatorio_anual_" + base64imageString.year + "_" + this.getTimestamp()
+      );
+      // Create PDF and embed PNG
+      const pdfBytes = await this.createSinglePagePdf(base64imageString.report);
+      // Save document
+      fs.writeFileSync(filePath, pdfBytes);
       return true;
     } catch (error) {
       console.log(error);
