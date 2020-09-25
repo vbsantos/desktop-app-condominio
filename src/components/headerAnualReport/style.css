@@ -1,0 +1,44 @@
+#AnualReportHeader .bold {
+  font-weight: 400;
+}
+
+#AnualReportHeader {
+  background-color: white;
+  border: 2px solid var(--report-color);
+  color: var(--report-color);
+  display: flex;
+
+  margin-top: 10px;
+  margin-bottom: 10px;
+
+  height: 120px;
+  width: 100 vw;
+}
+
+#AnualReportHeader img {
+  width: 116px;
+  height: 116px;
+}
+
+#AnualReportHeader #header-right {
+  width: calc(100% - 2 * 116px);
+}
+
+#AnualReportHeader #header-line1 {
+  line-height: 40px;
+  font-size: 30px;
+}
+
+#AnualReportHeader #header-line2 {
+  line-height: 35px;
+  font-size: 20px;
+}
+
+#AnualReportHeader #header-line3 {
+  line-height: 35px;
+  font-size: 20px;
+}
+
+#AnualReportHeader {
+  border-radius: 10px 10px 0px 0px;
+}
