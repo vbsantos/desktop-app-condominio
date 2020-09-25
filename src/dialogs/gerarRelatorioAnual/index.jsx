@@ -21,6 +21,25 @@ import { CreateOutlined } from "@material-ui/icons";
 // DIALOGS
 import Loading from "../../dialogs/carregando";
 
+// FUNCTIONS
+const getReportData = async (year, condominioId) => {
+  return await window.ipcRenderer.invoke("reports", {
+    method: "getByYear",
+    content: {
+      id: condominioId,
+      year,
+    },
+  });
+};
+const getYears = async (condominioId) => {
+  return await window.ipcRenderer.invoke("reports", {
+    method: "getYears",
+    content: {
+      id: condominioId,
+    },
+  });
+};
+
 function PaperComponent(props) {
   return (
     <Draggable
@@ -49,18 +68,12 @@ export default function DraggableDialog(props) {
   const [year, setYear] = useState(0);
 
   useEffect(() => {
-    setLoading(true);
-    const getYears = async () => {
-      const generations = await window.ipcRenderer.invoke("reports", {
-        method: "getYears",
-        content: {
-          id: condominioId,
-        },
-      });
-      setYears(generations);
-    };
-    getYears();
-    setLoading(false);
+    (async () => {
+      setLoading(true);
+      const years = await getYears(condominioId);
+      setYears(years);
+      setLoading(false);
+    })();
   }, []);
 
   const yearSelected = (ano) => {
@@ -72,16 +85,6 @@ export default function DraggableDialog(props) {
     }
   };
 
-  const getReportData = async (year) => {
-    return await window.ipcRenderer.invoke("reports", {
-      method: "getByYear",
-      content: {
-        id: condominioId,
-        year,
-      },
-    });
-  };
-
   // function that runs when the dialog is suposed to close
   function handleClose() {
     setDialog(false);
@@ -91,7 +94,7 @@ export default function DraggableDialog(props) {
   async function handleButton() {
     setLoading(true);
 
-    const reportData = await getReportData(year);
+    const reportData = await getReportData(year, condominioId);
     data.anualReport = reportData;
 
     setLoading(false);

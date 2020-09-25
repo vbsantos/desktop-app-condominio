@@ -178,7 +178,6 @@ export default function VisualizarRelatoriosGerados(props) {
           setLoading(true);
           await getReportsBase64();
           setLoading(false);
-          // FIXME ver como da pra fazer aqui pra escolher os relatós que quer imprimir mas salvar todos no banco de dados
           setDialogSaveReports(true);
         })();
 

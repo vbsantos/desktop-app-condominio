@@ -16,7 +16,7 @@ export default function AnualReportHeader(props) {
       <img id="header-left" src={logo} alt="Logo" />
       <div id="header-right">
         <div className="bold" id="header-line1">
-          {`Relatório Anual de ${year}`}
+          {`Relatório Fundo Reserva Anual de ${year}`}
         </div>
         <div id="header-line2">
           <span className="bold">{nomeCondominio}</span>

@@ -93,6 +93,7 @@ export default function RegistrarDespesas(props) {
     rrValue: 0,
     rfrValue: 0,
     raValue: 0,
+    rfrValues: [],
   };
 
   console.groupCollapsed("RegistrarDespesas: System data");
@@ -617,6 +618,15 @@ export default function RegistrarDespesas(props) {
 
     reportsTotais.rfrValue = totalFundoReserva;
 
+    reportsTotais.rfrValues = pagantes.map((pagante) => {
+      return {
+        unidade: pagante.complemento,
+        box: pagante.box,
+        fracao: pagante.fracao,
+        valor: percentage[1] * pagante.fracao,
+      };
+    });
+
     const reserveFundReportJSON = JSON.stringify(reserveFundReport);
     return reserveFundReportJSON;
   };
@@ -678,6 +688,7 @@ export default function RegistrarDespesas(props) {
     console.log(relatoriosIndividuais);
     console.groupEnd("RIs");
 
+    // REVIEW lastReports
     const lastReports = {
       rr: relatorioRateio,
       ra: relatorioAgua,

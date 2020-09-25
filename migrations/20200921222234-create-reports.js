@@ -36,6 +36,9 @@ module.exports = {
       rfrValue: {
         type: Sequelize.STRING,
       },
+      rfrValues: {
+        type: Sequelize.STRING,
+      },
 
       raId: {
         type: Sequelize.INTEGER,

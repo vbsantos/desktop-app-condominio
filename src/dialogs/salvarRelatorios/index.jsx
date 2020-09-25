@@ -113,11 +113,13 @@ export default function DraggableDialog(props) {
         rrValue: lastReports.rrValue.toFixed(2),
         rfrId: reserveFundReport.id,
         rfrValue: lastReports.rfrValue.toFixed(2),
+        rfrValues: JSON.stringify(lastReports.rfrValues),
         raId: waterReport.id,
         raValue: lastReports.raValue.toFixed(2),
       },
     });
 
+    // TODO add generation ID for report delete
     for (const individualReport of lastReports.ris) {
       await window.ipcRenderer.invoke("individualReports", {
         method: "create",

@@ -16,6 +16,8 @@ module.exports = (sequelize, DataTypes) => {
       rfrId: DataTypes.INTEGER,
       rfrValue: DataTypes.STRING,
 
+      rfrValues: DataTypes.STRING,
+
       raId: DataTypes.INTEGER,
       raValue: DataTypes.STRING,
     },
