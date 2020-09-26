@@ -21,6 +21,7 @@ import RelatorioFundoReserva from "../../reports/relatorioFundoReserva";
 
 // COMPONENTS
 import TabPanel from "../../components/tabPanel";
+import FloatingDeleteButton from "../../others/fabDeleteReports";
 
 // COMPONENT TO PNG
 import html2canvas from "html2canvas";
@@ -100,7 +101,7 @@ export default function VisualizarRelatorios(props) {
           position: "center",
           visible: true,
           enabled: true,
-          value: "SALVAR PDF",
+          value: "SALVAR RELATÓRIOS",
         },
         {
           id: 2,
@@ -187,6 +188,8 @@ export default function VisualizarRelatorios(props) {
 
   return (
     <div id="visualizarRelatorios">
+      {/* DELETE REPORT BUTTON */}
+      <FloatingDeleteButton />
       {/* LOADING */}
       {loading && (
         <Loading

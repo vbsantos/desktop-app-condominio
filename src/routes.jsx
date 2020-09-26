@@ -13,7 +13,7 @@ import VisualizarRelatorioAnual from "./pages/visualizarRelatorioAnual";
 import Footbar from "./components/footbar";
 
 // SNACKBARS
-import SnackbarSystemUpdate from "./snackbars/update";
+import SnackbarSystemUpdate from "./others/snackbarUpdate";
 
 // CSS
 import "./style.css";
