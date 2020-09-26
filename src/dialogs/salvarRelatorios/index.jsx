@@ -102,7 +102,7 @@ export default function DraggableDialog(props) {
       }
     );
 
-    const report = await window.ipcRenderer.invoke("reports", {
+    await window.ipcRenderer.invoke("reports", {
       method: "create",
       content: {
         condominioId,

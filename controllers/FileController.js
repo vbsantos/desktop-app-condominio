@@ -244,7 +244,7 @@ class FileController {
           filePath,
           "demonstrativo_financeiro_" + this.getTimestamp() + ".pdf"
         );
-        await fs.writeFile(path, generalReport, function (err) {
+        fs.writeFile(path, generalReport, function (err) {
           if (err) {
             console.log("Error saving file '" + path + "'");
             throw new Error(err);
@@ -273,7 +273,7 @@ class FileController {
           filePath,
           "planilha_cobrancas_" + this.getTimestamp() + ".pdf"
         );
-        await fs.writeFile(path, apportionmentReport, function (err) {
+        fs.writeFile(path, apportionmentReport, function (err) {
           if (err) {
             console.log("Error saving file '" + path + "'");
             throw new Error(err);
@@ -290,7 +290,7 @@ class FileController {
             filePath,
             "relatorio_agua_" + this.getTimestamp() + ".pdf"
           );
-          await fs.writeFile(path, waterReport, function (err) {
+          fs.writeFile(path, waterReport, function (err) {
             if (err) {
               console.log("Error saving file '" + path + "'");
               throw new Error(err);
@@ -310,7 +310,7 @@ class FileController {
             filePath,
             "relatorio_fundo_reserva_" + this.getTimestamp() + ".pdf"
           );
-          await fs.writeFile(path, reserveFundReport, function (err) {
+          fs.writeFile(path, reserveFundReport, function (err) {
             if (err) {
               console.log("Error saving file '" + path + "'");
               throw new Error(err);
@@ -327,7 +327,7 @@ class FileController {
             filePath,
             "relatorio_" + infos[index] + "_" + this.getTimestamp() + ".pdf"
           );
-          await fs.writeFile(path, reports[index], function (err) {
+          fs.writeFile(path, reports[index], function (err) {
             if (err) {
               console.log("Error saving file '" + path + "'");
               throw new Error(err);
@@ -351,7 +351,9 @@ class FileController {
         "relatorio_anual_" + base64imageString.year + "_" + this.getTimestamp()
       );
       // Create PDF and embed PNG
-      const pdfBytes = await this.createSinglePagePdf(base64imageString.report);
+      const pdfBytes = await this.createLandscapeSinglePagePdf(
+        base64imageString.report
+      );
       // Save document
       fs.writeFileSync(filePath, pdfBytes);
       return true;

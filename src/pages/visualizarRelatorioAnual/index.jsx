@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 // REPORTS
@@ -38,9 +38,6 @@ export default function VisualizarRelatorioAnual(props) {
 
   // Loading Dialog
   const [loading, setLoading] = useState(false);
-
-  // Stores the general report reference
-  const anualReportRef = useRef(null);
 
   data.beneficiario.id || navigate("/");
 
@@ -95,7 +92,9 @@ export default function VisualizarRelatorioAnual(props) {
 
         (async () => {
           setLoading(true);
-          const reportBase64 = await htmlObjectToPng(anualReportRef.current);
+          const reportBase64 = await htmlObjectToPng(
+            document.getElementsByClassName("reportbase64 RelatorioRateio")[0]
+          );
           await generateAnualReport(
             reportBase64,
             data.anualReport[0].month.split("/")[1]
@@ -117,8 +116,8 @@ export default function VisualizarRelatorioAnual(props) {
         />
       )}
       <RelatorioAnual
-        reportClass=""
-        reportRef={anualReportRef}
+        reportClass="reportbase64 RelatorioRateio"
+        reportRef={null}
         report={{
           data: data.anualReport,
           headerInfo: {

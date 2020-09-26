@@ -27,15 +27,10 @@ export default function RelatorioGeral(props) {
       ? report[report.length - 1]
       : null;
 
-  // console.warn("RR.info:", headerInfo);
-
   const tabela1 = report[0];
 
-  // console.warn("RR.report:", tabela1.data);
-
-  const colunas = report[0].data[0].valores.map((coluna) => {
+  const colunas = tabela1.data[0].valores.map((coluna) => {
     return {
-      // codigo: coluna.id, // n to usando
       nome: coluna.nome,
     };
   });
@@ -48,18 +43,15 @@ export default function RelatorioGeral(props) {
           enderecoCondominio={headerInfo.data.enderecoCondominio}
           date={headerInfo.data.reportDate}
         />
-
-        <Table key={tabela1.nome + "table"}>
+        <Table>
           <TableHead>
-            <TableRow key={tabela1.nome + "header"} className="Black">
+            <TableRow className="Black">
               <TableCell className="col_start">{"Unidade"}</TableCell>
-
               {colunas.map((coluna) => (
                 <TableCell key={"header_" + coluna.nome} className="col">
                   {coluna.nome}
                 </TableCell>
               ))}
-
               <TableCell className="col_end">{"Total"}</TableCell>
             </TableRow>
           </TableHead>
@@ -67,17 +59,15 @@ export default function RelatorioGeral(props) {
             {tabela1.data.map((pagante) => (
               <TableRow key={"linha_" + pagante.unidade} className="Linha">
                 <TableCell className="col_start">{pagante.unidade}</TableCell>
-
                 {pagante.valores.map((valor, index) => (
                   <TableCell
                     key={"linha_" + pagante.unidade + index}
                     className="table_values col"
                   >{`R$ ${valor.valor.toFixed(2)}`}</TableCell>
                 ))}
-
-                <TableCell className="table_values col_end">{`R$ ${pagante.total.toFixed(
-                  2
-                )}`}</TableCell>
+                <TableCell className="table_values col_end">
+                  {`R$ ${pagante.total.toFixed(2)}`}
+                </TableCell>
               </TableRow>
             ))}
             <TableRow key={"total"} className="Black">
@@ -85,14 +75,13 @@ export default function RelatorioGeral(props) {
                 {"TOTAL:"}
               </TableCell>
               {headerInfo.data.totais.map((total, index) => (
-                <TableCell
-                  key={"total_" + index}
-                  className="table_footer col"
-                >{`R$ ${total.toFixed(2)}`}</TableCell>
+                <TableCell key={"total_" + index} className="table_footer col">
+                  {`R$ ${total.toFixed(2)}`}
+                </TableCell>
               ))}
-              <TableCell className="table_footer col_end">{`R$ ${headerInfo.data.total.toFixed(
-                2
-              )}`}</TableCell>
+              <TableCell className="table_footer col_end">
+                {`R$ ${headerInfo.data.total.toFixed(2)}`}
+              </TableCell>
             </TableRow>
           </TableBody>
         </Table>

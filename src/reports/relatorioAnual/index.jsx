@@ -16,35 +16,17 @@ import AnualReportHeader from "../../components/headerAnualReport";
 // CSS
 import "./style.css";
 
-const months = [
-  "Janeiro",
-  "Fevereiro",
-  "Março",
-  "Abril",
-  "Maio",
-  "Junho",
-  "Julho",
-  "Agosto",
-  "Setembro",
-  "Outubro",
-  "Novembro",
-  "Dezembro",
-];
-
 export default function RelatorioAnual(props) {
   const { report } = props;
   const { reportRef } = props;
   const { reportClass } = props;
   const { view } = props;
 
-  const ano = report.data[0].month.split("/")[1];
+  if (report.data.length === 0) return null;
 
-  const totalFundoReserva = report.data.reduce(
-    (a, b) => a + Number(b.rfrValue),
-    0
-  );
+  const totalByYear = report.data.reduce((a, b) => a + Number(b.rfrValue), 0);
 
-  const byMonth = {
+  const totalByMonth = {
     Janeiro: 0,
     Fevereiro: 0,
     Março: 0,
@@ -58,6 +40,8 @@ export default function RelatorioAnual(props) {
     Novembro: 0,
     Dezembro: 0,
   };
+
+  const months = Object.keys(totalByMonth);
 
   const byUnidade = JSON.parse(report.data[0].rfrValues).map((unidade) => {
     return {
@@ -88,7 +72,7 @@ export default function RelatorioAnual(props) {
       const valor = unidade.valor;
       byUnidade[index][str_mes] = valor;
       byUnidade[index]["total"] += Number(valor);
-      byMonth[str_mes] += Number(valor);
+      totalByMonth[str_mes] += Number(valor);
     });
   });
 
@@ -98,14 +82,14 @@ export default function RelatorioAnual(props) {
         <AnualReportHeader
           nomeCondominio={report.headerInfo.nomeCondominio}
           enderecoCondominio={report.headerInfo.enderecoCondominio}
-          year={ano}
+          year={report.data[0].month.split("/")[1]}
         />
         <Table>
           <TableHead>
             <TableRow className="Black">
               <TableCell className="colInicial">Unidade</TableCell>
-              <TableCell className="colInicial">Box</TableCell>
-              <TableCell className="colInicial">Fração</TableCell>
+              <TableCell className="colCentral">Box</TableCell>
+              <TableCell className="colCentral">Fração</TableCell>
               {months.map((mes) => (
                 <TableCell key={"header_" + mes} className="colCentral">
                   {mes}
@@ -118,8 +102,8 @@ export default function RelatorioAnual(props) {
             {byUnidade.map((unidade) => (
               <TableRow key={"body_" + unidade.unidade} className="Linha">
                 <TableCell className="colInicial">{unidade.unidade}</TableCell>
-                <TableCell className="colInicial">{unidade.box}</TableCell>
-                <TableCell className="colInicial">{unidade.fracao}</TableCell>
+                <TableCell className="colCentral">{unidade.box}</TableCell>
+                <TableCell className="colCentral">{unidade.fracao}</TableCell>
                 {months.map((mes) => (
                   <TableCell key={unidade.unidade + mes} className="colCentral">
                     R$ {unidade[mes].toFixed(2)}
@@ -137,11 +121,11 @@ export default function RelatorioAnual(props) {
               <TableCell className="colCentral"></TableCell>
               {months.map((mes) => (
                 <TableCell key={"footer_" + mes} className="colCentral">
-                  R$ {byMonth[mes].toFixed(2)}
+                  R$ {totalByMonth[mes].toFixed(2)}
                 </TableCell>
               ))}
               <TableCell className="colFinal">
-                {"R$ " + Number(totalFundoReserva).toFixed(2)}
+                {"R$ " + Number(totalByYear).toFixed(2)}
               </TableCell>
             </TableRow>
           </TableBody>
