@@ -102,7 +102,7 @@ export default function DraggableDialog(props) {
       }
     );
 
-    await window.ipcRenderer.invoke("reports", {
+    const reportsGeneration = await window.ipcRenderer.invoke("reports", {
       method: "create",
       content: {
         condominioId,
@@ -119,11 +119,13 @@ export default function DraggableDialog(props) {
       },
     });
 
-    // TODO add generation ID for report delete
     for (const individualReport of lastReports.ris) {
       await window.ipcRenderer.invoke("individualReports", {
         method: "create",
-        content: { ...individualReport },
+        content: {
+          geracaoId: reportsGeneration.id,
+          ...individualReport,
+        },
       });
     }
   };
@@ -241,6 +243,7 @@ export default function DraggableDialog(props) {
           Essa ação irá:
           <br />
           <br />- Salvar os relatórios no sistema;
+          {/* FIXME remover esse autoincremento */}
           <br />- Incrementar parcelas das despesas;
           <br />- Atualizar registros de água;
           {/* <br />- Zerar custos das despesas; */}

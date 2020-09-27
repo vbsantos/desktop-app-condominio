@@ -34,7 +34,7 @@ const htmlObjectToPng = async (htmlObject) => {
   const png = await canvas.toDataURL("image/png");
   return png;
 };
-// This functions returns de report date
+// This functions returns the report date
 const getDate = (report) => {
   try {
     const reportJSON = JSON.parse(report.report);
@@ -44,6 +44,22 @@ const getDate = (report) => {
   } catch (error) {
     const digits = report.createdAt.split("T")[0].split("-");
     return `${digits[1]}/${digits[0]}`;
+  }
+};
+// This functions returns the report generation
+const getGeracaoId = async (reports, index) => {
+  if (reports.generalReport) {
+    const generalReportId = reports.data[index].id;
+    const geracaoId = await window.ipcRenderer.invoke("generalReports", {
+      method: "getGenerationId",
+      content: {
+        id: generalReportId,
+      },
+    });
+    return geracaoId;
+  } else {
+    const geracaoId = reports.data[index].geracaoId;
+    return geracaoId;
   }
 };
 
@@ -77,6 +93,8 @@ export default function VisualizarRelatorios(props) {
   const apportionmentReportRef = useRef(null);
   const reserveFundReportRef = useRef(null);
   const PngReportsObject = useRef({ reports: null });
+
+  const [geracaoId, setGeracaoId] = useState(0);
 
   console.groupCollapsed("VisualizarRelatorios: System data");
   console.log("Footbar:", footbar);
@@ -115,6 +133,12 @@ export default function VisualizarRelatorios(props) {
     });
     return () => console.log("VisualizarRelatorios - Encerrou");
   }, []);
+
+  useEffect(() => {
+    (async () => {
+      setGeracaoId(await getGeracaoId(data.reports, value));
+    })();
+  }, [data.reports, value]);
 
   // REVIEW Cria PDFs de relatórios antigos
   // This funcions turns a React Component into a PDF
@@ -189,7 +213,7 @@ export default function VisualizarRelatorios(props) {
   return (
     <div id="visualizarRelatorios">
       {/* DELETE REPORT BUTTON */}
-      <FloatingDeleteButton />
+      <FloatingDeleteButton geracaoId={geracaoId} data={[data, setData]} />
       {/* LOADING */}
       {loading && (
         <Loading

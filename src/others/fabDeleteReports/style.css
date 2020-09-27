@@ -11,7 +11,7 @@
   font-size: large;
 }
 
-#FloatingActionDeleteButton:hover {
+#FloatingActionDeleteButton.hover {
   background-color: var(--secondary-color);
   width: 280px;
   opacity: 0.95;
