@@ -1,6 +1,7 @@
 "use strict";
 
 const { GeneralReport } = require("../models");
+const { Reports } = require("../models");
 
 class GeneralReportController {
   create = async (data) => {
@@ -46,6 +47,15 @@ class GeneralReportController {
       },
     });
     return generalreport;
+  };
+  getGenerationId = async (id) => {
+    const reportGeneration = await Reports.findOne({
+      where: {
+        rgId: id,
+      },
+    });
+    const report = reportGeneration.get();
+    return report.id;
   };
 }
 

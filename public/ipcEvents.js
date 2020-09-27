@@ -350,6 +350,11 @@ ipcMain.handle("generalReports", async (event, arg) => {
         status = await GeneralReport.delete(content.id);
         console.log("saida:", status);
         break;
+      case "getGenerationId":
+        console.log("entrada:", arg);
+        status = await GeneralReport.getGenerationId(content.id);
+        console.log("saida:", status);
+        break;
       default:
         console.log({ error: "This method do not exist." });
     }
@@ -563,6 +568,11 @@ ipcMain.handle("reports", async (event, arg) => {
       case "getByYear":
         console.log("entrada:", arg);
         status = await Reports.getByYear(content.id, content.year);
+        console.log("saida:", status);
+        break;
+      case "deleteGeneration":
+        console.log("entrada:", arg);
+        status = await Reports.deleteGeneration(content.id);
         console.log("saida:", status);
         break;
       default:
