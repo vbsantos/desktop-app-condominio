@@ -52,3 +52,26 @@
 .btn-text-ajusted {
   padding-left: 5px;
 }
+
+section {
+  border: 1px solid rgba(0, 0, 0, 0.4);
+  border-radius: 5px;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+/* TITULO E CONTEUDO DE TODOS OS DIALOGS */
+.MuiDialogTitle-root {
+  text-align: center;
+  min-width: 500px !important;
+}
+.MuiDialogContent-root {
+  text-align: center;
+  min-width: 500px !important;
+}
+
+/* BOTÕES DE TODOS OS DIALOGS IGUALMENTE ESPAÇADOS */
+.MuiDialogActions-root {
+  justify-content: space-around !important;
+}

@@ -14,9 +14,6 @@ import {
 // FORM COMPONENTS
 import FormBeneficiario from "../../forms/beneficiario";
 
-// CSS
-import "./style.css";
-
 // MATERIAL UI ICONS
 import { DeleteOutlined } from "@material-ui/icons";
 import { CreateOutlined } from "@material-ui/icons";
