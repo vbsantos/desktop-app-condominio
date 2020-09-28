@@ -213,7 +213,11 @@ export default function VisualizarRelatorios(props) {
   return (
     <div id="visualizarRelatorios">
       {/* DELETE REPORT BUTTON */}
-      <FloatingDeleteButton geracaoId={geracaoId} data={[data, setData]} />
+      <FloatingDeleteButton
+        tabs={[value, setValue]}
+        geracaoId={geracaoId}
+        data={[data, setData]}
+      />
       {/* LOADING */}
       {loading && (
         <Loading
