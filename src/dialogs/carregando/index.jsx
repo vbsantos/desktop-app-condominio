@@ -7,9 +7,6 @@ import { Dialog, DialogContent, DialogTitle, Paper } from "@material-ui/core";
 // MATERIAL UI COMPONENTS
 import CircularProgress from "@material-ui/core/CircularProgress";
 
-// CSS
-import "./style.css";
-
 function PaperComponent(props) {
   return (
     <Draggable

@@ -14,9 +14,6 @@ import {
 // MATERIAL UI ICONS
 import { DeleteOutlined } from "@material-ui/icons";
 
-// CSS
-import "./style.css";
-
 function PaperComponent(props) {
   return (
     <Draggable
