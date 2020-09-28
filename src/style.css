@@ -56,16 +56,17 @@
 section {
   border: 1px solid rgba(0, 0, 0, 0.4);
   border-radius: 5px;
-  padding-bottom: 10px;
+  padding: 20px;
   margin-bottom: 10px;
   text-align: center;
 }
 
-/* TITULO E CONTEUDO DE TODOS OS DIALOGS */
+/* TITULO DE TODOS OS DIALOGS */
 .MuiDialogTitle-root {
   text-align: center;
   min-width: 500px !important;
 }
+/* CONTEUDO DE TODOS OS DIALOGS */
 .MuiDialogContent-root {
   text-align: center;
   min-width: 500px !important;
@@ -74,4 +75,9 @@ section {
 /* BOTÕES DE TODOS OS DIALOGS IGUALMENTE ESPAÇADOS */
 .MuiDialogActions-root {
   justify-content: space-around !important;
+}
+
+/* BOTÕES COM LARGURA MÍNIMA */
+.MuiButtonBase-root.MuiButton-root {
+  min-width: 150px;
 }

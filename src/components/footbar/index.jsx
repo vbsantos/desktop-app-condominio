@@ -14,12 +14,13 @@ export default function footbar(props) {
   }
 
   return (
-    <footer className="footbar">
+    <footer id="footbar">
       {footbar.buttons
-        .filter(button => button.visible)
-        .map(btn => (
+        .filter((button) => button.visible)
+        .map((btn) => (
           <Button
             variant="contained"
+            className="footerButton"
             color={btn.position === "left" ? "secondary" : "primary"}
             key={btn.id}
             id={btn.position}

@@ -1,4 +1,4 @@
-.footbar {
+#footbar {
   height: 45px;
   padding: 5px 0px;
   background-color: #456;
@@ -7,14 +7,16 @@
   bottom: 0;
 }
 
-#left {
-  position: absolute;
-  left: 5px;
-  width: 180px;
+#footbar .footerButton {
+  min-width: 200px;
 }
 
-#right {
+#footbar #left {
+  position: absolute;
+  left: 5px;
+}
+
+#footbar #right {
   position: absolute;
   right: 5px;
-  width: 180px;
 }

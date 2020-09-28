@@ -19,11 +19,12 @@
   margin-left: 160px;
 }
 
-.MuiButtonBase-root.MuiTab-root.MuiTab-textColorInherit {
-  font-size: 18px;
+#visualizarRelatorios .MuiButtonBase-root.MuiTab-root.MuiTab-textColorInherit {
+  font-size: 16px;
 }
 
-.MuiButtonBase-root.MuiTab-root.MuiTab-textColorInherit.Mui-selected {
+#visualizarRelatorios
+  .MuiButtonBase-root.MuiTab-root.MuiTab-textColorInherit.Mui-selected {
   background-color: rgb(245, 0, 87, 0.5);
   color: white;
   font-weight: bold;
