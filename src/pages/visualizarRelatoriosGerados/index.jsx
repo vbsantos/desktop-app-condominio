@@ -77,7 +77,7 @@ export default function VisualizarRelatoriosGerados(props) {
           position: "center",
           visible: true,
           enabled: true,
-          value: "VER PDFs SEM SALVAR",
+          value: "SALVAR PDF",
         },
         {
           id: 2,

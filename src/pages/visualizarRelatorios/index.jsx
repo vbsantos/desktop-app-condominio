@@ -119,7 +119,7 @@ export default function VisualizarRelatorios(props) {
           position: "center",
           visible: true,
           enabled: true,
-          value: "SALVAR RELATÓRIOS",
+          value: "SALVAR PDF",
         },
         {
           id: 2,

@@ -240,16 +240,18 @@ export default function DraggableDialog(props) {
           Deseja salvar Relatórios?
         </DialogTitle>
         <DialogContent>
-          Essa ação irá:
-          <br />
-          <br />- Salvar os relatórios no sistema;
-          {/* FIXME remover esse autoincremento */}
-          <br />- Incrementar parcelas das despesas;
-          <br />- Atualizar registros de água;
-          {/* <br />- Zerar custos das despesas; */}
-          <br />
-          <br />
-          Caso prossiga, não poderá ser desfeita.
+          <section>
+            Essa ação irá:
+            <br />
+            <br />- Salvar os relatórios no sistema;
+            {/* FIXME remover esse autoincremento */}
+            <br />- Incrementar parcelas das despesas;
+            <br />- Atualizar registros de água;
+            {/* <br />- Zerar custos das despesas; */}
+            <br />
+            <br />
+            Caso prossiga, não poderá ser desfeita.
+          </section>
         </DialogContent>
         <DialogActions>
           <Button

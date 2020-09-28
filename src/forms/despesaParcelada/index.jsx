@@ -71,8 +71,8 @@ export default function FormDespesa(props) {
       setValorTotal(somaValorTotal.toFixed(2));
     }
 
-    const parcelaAtual = formList[3].value.split(".")[0];
-    const numParcelas = formList[4].value.split(".")[0];
+    const parcelaAtual = Number(formList[3].value.split(".")[0]);
+    const numParcelas = Number(formList[4].value.split(".")[0]);
     const valor = formList[5].value.replace(",", ".");
     setDespesa({
       id: despesa.id,
@@ -98,9 +98,9 @@ export default function FormDespesa(props) {
     });
 
     setFormCompleted(
-      Number(parcelaAtual) > 0 &&
-        Number(numParcelas) > 0 &&
-        Number(parcelaAtual) <= Number(numParcelas) &&
+      parcelaAtual > 0 &&
+        numParcelas > 0 &&
+        parcelaAtual <= numParcelas &&
         formList.find((field) => !field.disabled && field.value === "") ===
           undefined &&
         valoresList.find(

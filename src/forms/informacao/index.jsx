@@ -53,7 +53,7 @@ export default function FormDespesa(props) {
   }
 
   return (
-    <div>
+    <section>
       <form ref={formRef} onChange={formOnChange}>
         <FormControl>
           <TextField
@@ -66,6 +66,6 @@ export default function FormDespesa(props) {
           />
         </FormControl>
       </form>
-    </div>
+    </section>
   );
 }
