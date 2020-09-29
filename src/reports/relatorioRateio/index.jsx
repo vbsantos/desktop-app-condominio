@@ -47,8 +47,11 @@ export default function RelatorioGeral(props) {
           <TableHead>
             <TableRow className="Black">
               <TableCell className="col_start">{"Unidade"}</TableCell>
-              {colunas.map((coluna) => (
-                <TableCell key={"header_" + coluna.nome} className="col">
+              {colunas.map((coluna, index) => (
+                <TableCell
+                  key={"header_" + coluna.nome + index}
+                  className="col"
+                >
                   {coluna.nome}
                 </TableCell>
               ))}
