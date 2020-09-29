@@ -30,11 +30,13 @@ import DialogExcluirCondominio from "../../dialogs/deletarCondominio";
 import DialogPagante from "../../dialogs/pagante";
 import DialogExcluirPagante from "../../dialogs/deletarPagante";
 import DialogAlerta from "../../dialogs/alerta";
+import Loading from "../../dialogs/carregando";
 
 export default function EscolherCondominio(props) {
   const [footbar, setFootbar] = props.buttons;
   const [data, setData] = props.data;
 
+  const [loadingSignal, setLoadingSignal] = useState(false);
   const [loading, setLoading] = useState(false);
 
   // React Router Hook for navigation between pages
@@ -196,7 +198,7 @@ export default function EscolherCondominio(props) {
     );
     if (allDialogsClosed) {
       async function getEverything() {
-        setLoading(true);
+        setLoadingSignal(true);
         // console.time("Get all data from database");
         const response = await window.ipcRenderer.invoke("beneficiarios", {
           method: "showNested",
@@ -215,7 +217,7 @@ export default function EscolherCondominio(props) {
               ),
             });
         // console.timeEnd("Get all data from database");
-        setLoading(false);
+        setLoadingSignal(false);
       }
       getEverything();
     }
@@ -243,6 +245,7 @@ export default function EscolherCondominio(props) {
   };
 
   async function handleCondominioReport(e) {
+    setLoading(true);
     if (!e) var e = window.event;
     e.cancelBubble = true;
     if (e.stopPropagation) e.stopPropagation();
@@ -285,8 +288,10 @@ export default function EscolherCondominio(props) {
         data4: reserveFundReports, // reserve fund reports
       };
       setData({ ...data, reports });
+      setLoading(false);
       navigate("/VisualizarRelatorios");
     } else {
+      setLoading(false);
       setDialogAlertNoReports(true);
     }
   }
@@ -353,6 +358,13 @@ export default function EscolherCondominio(props) {
 
   return (
     <div id="EscolherCondominio">
+      {/* LOADING */}
+      {loading && (
+        <Loading
+          title={"Por favor aguarde enquanto os Relatórios são processados"}
+          open={[loading, setLoading]}
+        />
+      )}
       {/* ALERTA */}
       {dialogAlertDespesas && (
         <DialogAlerta
@@ -570,7 +582,7 @@ export default function EscolherCondominio(props) {
         </Button>
       </Container>
 
-      {loading && <CircularProgress color="secondary" />}
+      {loadingSignal && <CircularProgress color="secondary" />}
     </div>
   );
 }

@@ -107,3 +107,9 @@
   margin-top: 20px;
   margin-bottom: 10px;
 }
+
+#EscolherCondominio .space25 {
+  height: 25px;
+  min-height: 25px;
+  max-height: 25px;
+}
