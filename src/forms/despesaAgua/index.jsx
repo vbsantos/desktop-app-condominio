@@ -85,10 +85,14 @@ export default function FormDespesa(props) {
         const precoUnitario = unidadeComercial
           ? precoAguaComercial
           : precoAguaResidencial;
+        // REVIEW removi os 10m³ de consumo mínimo
+          // const valor = unidadeComercial
+          // ? consumo < 10
+          //   ? 10 * precoAguaComercial
+          //   : consumo * precoAguaComercial
+          // : consumo * precoAguaResidencial;
         const valor = unidadeComercial
-          ? consumo < 10
-            ? 10 * precoAguaComercial
-            : consumo * precoAguaComercial
+          ? consumo * precoAguaComercial
           : consumo * precoAguaResidencial;
         valoresIndividuaisFields.find(
           (field) => field.id === `valorAguaIndividual${paganteId}`
