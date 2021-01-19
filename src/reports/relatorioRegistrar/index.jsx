@@ -47,6 +47,7 @@ export default function RelatorioCondominioRegistrar(props) {
 
   // Store the Contas by Categoria
   const [categorias, setCategorias] = props.categorias;
+  const categorias_sorted = [...categorias].sort();
 
   // Store the total value
   const [total, setTotal] = props.valorTotal;
@@ -121,10 +122,12 @@ export default function RelatorioCondominioRegistrar(props) {
           </Table>
         )}
 
-        {categorias.map((categoria) => {
-          const categoriaContas = despesas.filter(
-            (despesa) => despesa.categoria === categoria
-          );
+        {categorias_sorted.map((categoria) => {
+          const categoriaContas = despesas
+            .filter((despesa) => despesa.categoria === categoria)
+            .sort((despesa_a, despesa_b) =>
+              despesa_a.nome.localeCompare(despesa_b.nome)
+            );
           const subtotal = categoriaContas.reduce((acc, despesa) => {
             return acc + Number(despesa.valor);
           }, 0);

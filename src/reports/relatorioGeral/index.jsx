@@ -83,56 +83,69 @@ export default function RelatorioGeral(props) {
           </Table>
         )}
 
-        {report.map((categoria) => {
-          // cada categoria
-          let subtotal = 0;
-          return (
-            categoria.table && (
-              <Table key={categoria.name + "table"}>
-                <TableHead>
-                  <TableRow key={categoria.name + "header"} className="Black">
-                    <TableCell className="col1">{categoria.name}</TableCell>
-                    <TableCell className="col2">Cód.</TableCell>
-                    <TableCell className="col3">Parcela</TableCell>
-                    <TableCell className="col4">Valor</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {categoria.data.map((despesa) => {
-                    // cada conta dessa categoria
-                    subtotal += Number(despesa.valor);
-                    return (
-                      <TableRow key={categoria + despesa.id} className="Linha">
-                        <TableCell className="col1">{despesa.nome}</TableCell>
-                        <TableCell className="col2">{despesa.id}</TableCell>
-                        <TableCell className="col3">
-                          {despesa.permanente
-                            ? "Fixa"
-                            : `${
-                                despesa.parcelaAtual +
-                                " de " +
-                                despesa.numParcelas
-                              }`}
-                        </TableCell>
-                        <TableCell className="col4">
-                          {"R$ " + Number(despesa.valor).toFixed(2)}
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })}
-                  <TableRow key={categoria + "subtotal"} className="Black">
-                    <TableCell className="col1">SUB-TOTAL:</TableCell>
-                    <TableCell className="col2"></TableCell>
-                    <TableCell className="col3"></TableCell>
-                    <TableCell className="col4">
-                      {"R$ " + Number(subtotal).toFixed(2)}
-                    </TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-            )
-          );
-        })}
+        {report
+          .sort((categoria_a, categoria_b) =>
+            categoria_a.name.localeCompare(categoria_b.name)
+          )
+          .map((categoria) => {
+            // cada categoria
+            let subtotal = 0;
+            return (
+              categoria.table && (
+                <Table key={categoria.name + "table"}>
+                  <TableHead>
+                    <TableRow key={categoria.name + "header"} className="Black">
+                      <TableCell className="col1">{categoria.name}</TableCell>
+                      <TableCell className="col2">Cód.</TableCell>
+                      <TableCell className="col3">Parcela</TableCell>
+                      <TableCell className="col4">Valor</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {categoria.data
+                      .sort((despesa_a, despesa_b) =>
+                        despesa_a.nome.localeCompare(despesa_b.nome)
+                      )
+                      .map((despesa) => {
+                        // cada conta dessa categoria
+                        subtotal += Number(despesa.valor);
+                        return (
+                          <TableRow
+                            key={categoria + despesa.id}
+                            className="Linha"
+                          >
+                            <TableCell className="col1">
+                              {despesa.nome}
+                            </TableCell>
+                            <TableCell className="col2">{despesa.id}</TableCell>
+                            <TableCell className="col3">
+                              {despesa.permanente
+                                ? "Fixa"
+                                : `${
+                                    despesa.parcelaAtual +
+                                    " de " +
+                                    despesa.numParcelas
+                                  }`}
+                            </TableCell>
+                            <TableCell className="col4">
+                              {"R$ " + Number(despesa.valor).toFixed(2)}
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
+                    <TableRow key={categoria + "subtotal"} className="Black">
+                      <TableCell className="col1">SUB-TOTAL:</TableCell>
+                      <TableCell className="col2"></TableCell>
+                      <TableCell className="col3"></TableCell>
+                      <TableCell className="col4">
+                        {"R$ " + Number(subtotal).toFixed(2)}
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              )
+            );
+          })}
 
         <Table key={"total"}>
           <TableHead>
