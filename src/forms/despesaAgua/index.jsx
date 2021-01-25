@@ -1,11 +1,13 @@
 import React, { useRef, useState } from "react";
 
 // MATERIAL UI COMPONENTS
+import { Autocomplete } from "@material-ui/lab";
 import {
   DialogContentText,
   FormControl,
   InputLabel,
   Input,
+  TextField,
 } from "@material-ui/core";
 
 // CSS
@@ -45,12 +47,24 @@ export default function FormDespesa(props) {
   // form reference
   const formRef = useRef(null);
 
+  // todas as categorias
+  const options = [
+    ...new Set(
+      condominio["Despesas"]
+        .filter(({ categoria }) => categoria !== "")
+        .map(({ categoria }) => categoria)
+        .sort()
+    ),
+  ];
+
+  let [validForm, setValidForm] = useState(false);
+
   // function that runs each time there is a change in the form
-  function formOnChange() {
+  function formOnChange(event, nome_categoria = null) {
     console.groupCollapsed("Dados da despesa de água");
 
     const formList = [...formRef.current.elements];
-
+    formList.splice(2, 1);
     const valoresList = formList.slice(5);
 
     const precoAguaResidencial = Number(formList[2].value.replace(",", "."));
@@ -86,11 +100,11 @@ export default function FormDespesa(props) {
           ? precoAguaComercial
           : precoAguaResidencial;
         // REVIEW removi os 10m³ de consumo mínimo
-          // const valor = unidadeComercial
-          // ? consumo < 10
-          //   ? 10 * precoAguaComercial
-          //   : consumo * precoAguaComercial
-          // : consumo * precoAguaResidencial;
+        // const valor = unidadeComercial
+        // ? consumo < 10
+        //   ? 10 * precoAguaComercial
+        //   : consumo * precoAguaComercial
+        // : consumo * precoAguaResidencial;
         const valor = unidadeComercial
           ? consumo * precoAguaComercial
           : consumo * precoAguaResidencial;
@@ -139,10 +153,13 @@ export default function FormDespesa(props) {
       0
     );
 
-    setDespesa({
+    const new_categoria =
+      nome_categoria === null ? formList[1].value : nome_categoria;
+
+    const new_despesa_agua = {
       id: despesa.id,
       nome: "Consumo de Água - Individual",
-      categoria: formList[1].value,
+      categoria: new_categoria,
       agua: registroIndividualAtual,
       aguaIndividual: true,
       rateioAutomatico: false,
@@ -154,15 +171,17 @@ export default function FormDespesa(props) {
       informacao: false,
       Valores: valores,
       condominioId: condominio.id,
-    });
+    };
+
+    setDespesa(new_despesa_agua);
     // console.log("Despesa Água Primária:", despesa);
 
     const valorTotalComum = valorTotalDespesa - valorTotalIndividual;
 
-    setDespesa2({
+    const new_despesa_agua2 = {
       id: despesa2.id,
       nome: "Consumo de Água - Área Comum",
-      categoria: formList[1].value,
+      categoria: new_categoria,
       agua: 0, // não utilizado
       aguaIndividual: true,
       rateioAutomatico: true,
@@ -174,10 +193,13 @@ export default function FormDespesa(props) {
       informacao: false,
       Valores: [],
       condominioId: condominio.id,
-    });
+    };
+
+    setDespesa2(new_despesa_agua2);
     // console.log("Despesa Água Secundária:", despesa2);
 
-    setFormCompleted(true);
+    setFormCompleted(validForm && new_categoria !== "" && true);
+    setValidForm(true);
 
     console.groupEnd("Dados da despesa de água");
   }
@@ -229,12 +251,17 @@ export default function FormDespesa(props) {
             ></Input>
           </FormControl>
           <FormControl>
-            <InputLabel htmlFor="categoria">Categoria *</InputLabel>
-            <Input
-              autoFocus
-              defaultValue={despesa.categoria}
+            <Autocomplete
               id="categoria"
-            ></Input>
+              defaultValue={despesa.categoria === "" ? null : despesa.categoria}
+              onInputChange={formOnChange}
+              freeSolo
+              options={options}
+              style={{ width: 200 }}
+              renderInput={(params) => (
+                <TextField {...params} label="Categoria *" variant="standard" />
+              )}
+            />
           </FormControl>
         </section>
 

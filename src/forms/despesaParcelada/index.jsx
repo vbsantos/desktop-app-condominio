@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
 
 // MATERIAL UI COMPONENTS
+import { Autocomplete } from "@material-ui/lab";
 import {
   DialogContentText,
   FormControl,
@@ -11,6 +12,7 @@ import {
   FormControlLabel,
   InputLabel,
   Input,
+  TextField,
 } from "@material-ui/core";
 
 export default function FormDespesa(props) {
@@ -37,9 +39,22 @@ export default function FormDespesa(props) {
     despesa.rateioAutomatico || false
   );
 
+  // todas as categorias
+  const options = [
+    ...new Set(
+      condominio["Despesas"]
+        .filter(({ categoria }) => categoria !== "")
+        .map(({ categoria }) => categoria)
+        .sort()
+    ),
+  ];
+
+  let [validForm, setValidForm] = useState(false);
+
   // function that runs each time there is a change in the form
-  function formOnChange() {
+  function formOnChange(event, nome_categoria = null) {
     const formList = [...formRef.current.elements];
+    formList.splice(2, 1);
     // console.log("FORM LIST:", formList);
     const valoresList = formList.slice(5);
     // console.log("VALORES LIST:", valoresList);
@@ -69,15 +84,22 @@ export default function FormDespesa(props) {
         })
       );
       setValorTotal(somaValorTotal.toFixed(2));
+    } else {
+      setValores([]);
+      setValorTotal(0);
     }
 
     const parcelaAtual = Number(formList[3].value.split(".")[0]);
     const numParcelas = Number(formList[4].value.split(".")[0]);
     const valor = formList[5].value.replace(",", ".");
-    setDespesa({
+
+    const new_categoria =
+      nome_categoria === null ? formList[1].value : nome_categoria;
+
+    const new_despesa_parcelada = {
       id: despesa.id,
       nome: formList[0].value,
-      categoria: formList[1].value,
+      categoria: new_categoria,
       agua: null,
       aguaIndividual: false,
       rateioAutomatico: formList[2].checked,
@@ -95,20 +117,27 @@ export default function FormDespesa(props) {
       informacao: false,
       Valores: valores,
       condominioId: condominio.id,
-    });
+    };
 
-    setFormCompleted(
+    setDespesa(new_despesa_parcelada);
+
+    const form_is_complete =
+      validForm &&
+      new_categoria !== "" &&
       parcelaAtual > 0 &&
-        numParcelas > 0 &&
-        parcelaAtual <= numParcelas &&
-        formList.find((field) => !field.disabled && field.value === "") ===
-          undefined &&
-        valoresList.find(
-          (field) =>
-            isNaN(Number(field.value.replace(",", "."))) ||
-            Number(field.value.replace(",", ".")) < 0
-        ) === undefined
-    );
+      numParcelas > 0 &&
+      parcelaAtual <= numParcelas &&
+      formList
+        .filter((field, index) => index !== 1)
+        .find((field) => !field.disabled && field.value === "") === undefined &&
+      valoresList.find(
+        (field) =>
+          isNaN(Number(field.value.replace(",", "."))) ||
+          Number(field.value.replace(",", ".")) < 0
+      ) === undefined;
+
+    setFormCompleted(form_is_complete);
+    setValidForm(true);
   }
 
   return (
@@ -124,8 +153,17 @@ export default function FormDespesa(props) {
             <Input autoFocus defaultValue={despesa.nome} id="nome"></Input>
           </FormControl>
           <FormControl>
-            <InputLabel htmlFor="categoria">Categoria *</InputLabel>
-            <Input defaultValue={despesa.categoria} id="categoria"></Input>
+            <Autocomplete
+              id="categoria"
+              defaultValue={despesa.categoria === "" ? null : despesa.categoria}
+              onInputChange={formOnChange}
+              freeSolo
+              options={options}
+              style={{ width: 200 }}
+              renderInput={(params) => (
+                <TextField {...params} label="Categoria *" variant="standard" />
+              )}
+            />
           </FormControl>
         </section>
 
@@ -148,6 +186,7 @@ export default function FormDespesa(props) {
                 </Grid>
                 <Grid item xs>
                   <FormControlLabel
+                    style={{ marginRight: "-10px" }}
                     control={
                       <Switch
                         onChange={(e) => setRateioAuto(e.target.checked)}

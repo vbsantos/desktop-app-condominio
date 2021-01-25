@@ -1,6 +1,7 @@
 import React, { useRef, useState } from "react";
 
 // MATERIAL UI COMPONENTS
+import { Autocomplete } from "@material-ui/lab";
 import {
   DialogContentText,
   FormControl,
@@ -11,6 +12,7 @@ import {
   FormControlLabel,
   InputLabel,
   Input,
+  TextField,
 } from "@material-ui/core";
 
 export default function FormDespesa(props) {
@@ -46,9 +48,22 @@ export default function FormDespesa(props) {
     despesa.fundoReserva || false
   );
 
+  // todas as categorias
+  const options = [
+    ...new Set(
+      condominio["Despesas"]
+        .filter(({ categoria }) => categoria !== "")
+        .map(({ categoria }) => categoria)
+        .sort()
+    ),
+  ];
+
+  let [validForm, setValidForm] = useState(false);
+
   // function that runs each time there is a change in the form
-  function formOnChange() {
+  function formOnChange(event, nome_categoria = null) {
     const formList = [...formRef.current.elements];
+    formList.splice(2, 1);
     // console.log("FORM LIST:", formList);
     const valoresList = formList.slice(3);
     // console.log("VALORES LIST:", valoresList);
@@ -119,12 +134,18 @@ export default function FormDespesa(props) {
             })
       );
       setValorTotal(somaValorTotal.toFixed(2));
+    } else {
+      setValores([]);
+      setValorTotal(0);
     }
 
-    setDespesa({
+    const new_categoria =
+      nome_categoria === null ? formList[1].value : nome_categoria;
+
+    const new_despesa = {
       id: despesa.id,
       nome: formList[0].value,
-      categoria: formList[1].value,
+      categoria: new_categoria,
       agua: null,
       aguaIndividual: false,
       rateioAutomatico: formList[2].checked,
@@ -142,17 +163,24 @@ export default function FormDespesa(props) {
       informacao: false,
       Valores: valores,
       condominioId: condominio.id,
-    });
+    };
 
-    setFormCompleted(
-      formList.find((field) => !field.disabled && field.value === "") ===
-        undefined &&
-        valoresList.find(
-          (field) =>
-            isNaN(Number(field.value.replace(",", "."))) ||
-            Number(field.value.replace(",", ".")) < 0
-        ) === undefined
-    );
+    setDespesa(new_despesa);
+
+    const form_is_complete =
+      validForm &&
+      new_categoria !== "" &&
+      formList
+        .filter((field, index) => index !== 1)
+        .find((field) => !field.disabled && field.value === "") === undefined &&
+      valoresList.find(
+        (field) =>
+          isNaN(Number(field.value.replace(",", "."))) ||
+          Number(field.value.replace(",", ".")) < 0
+      ) === undefined;
+
+    setFormCompleted(form_is_complete);
+    setValidForm(true);
   }
 
   return (
@@ -173,12 +201,17 @@ export default function FormDespesa(props) {
             ></Input>
           </FormControl>
           <FormControl>
-            <InputLabel htmlFor="categoria">Categoria *</InputLabel>
-            <Input
-              disabled={despesaFundoReserva}
-              defaultValue={despesa.categoria}
+            <Autocomplete
               id="categoria"
-            ></Input>
+              defaultValue={despesa.categoria === "" ? null : despesa.categoria}
+              onInputChange={formOnChange}
+              freeSolo
+              options={options}
+              style={{ width: 200 }}
+              renderInput={(params) => (
+                <TextField {...params} label="Categoria *" variant="standard" />
+              )}
+            />
           </FormControl>
         </section>
 
@@ -201,6 +234,7 @@ export default function FormDespesa(props) {
                 </Grid>
                 <Grid item xs>
                   <FormControlLabel
+                    style={{ marginRight: "-10px" }}
                     control={
                       <Switch
                         onChange={(e) => setRateioAuto(e.target.checked)}

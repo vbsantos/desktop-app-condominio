@@ -162,7 +162,6 @@ export default function RegistrarDespesas(props) {
 
   // This function runs only when the dialogs are closed
   useEffect(() => {
-    data.beneficiario.id || navigate("/");
     const allDialogsClosed = !(
       dialogDespesaFixa ||
       dialogDespesaParcelada ||
@@ -193,6 +192,12 @@ export default function RegistrarDespesas(props) {
               content: { id: data.beneficiario.id },
             }
           );
+
+          if (!allNestedBeneficiario["Condominios"]) {
+            navigate("/");
+            return;
+          }
+
           const allNestedCondominio = allNestedBeneficiario["Condominios"].find(
             (condominio) => condominio.id === data.allNestedCondominio.id
           );
@@ -227,6 +232,11 @@ export default function RegistrarDespesas(props) {
     let allCategorias = [];
     let porcentagem = 0;
     const infos = [];
+
+    if (!data.allNestedCondominio["Despesas"]) {
+      navigate("/");
+      return;
+    }
 
     for (const despesa of data.allNestedCondominio["Despesas"]) {
       if (despesa.fundoReserva) {
