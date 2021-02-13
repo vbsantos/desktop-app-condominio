@@ -59,6 +59,7 @@ export default function DraggableDialog(props) {
         fundoReserva: true,
         condominioId: condominio.id,
         informacao: false,
+        ativa: true,
         Valores: [],
       }
   );

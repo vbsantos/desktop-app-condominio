@@ -8,6 +8,7 @@ import {
   TableBody,
   TableRow,
   TableCell,
+  Checkbox,
 } from "@material-ui/core";
 
 // CSS
@@ -17,8 +18,11 @@ export default function RelatorioCondominioRegistrar(props) {
   // Stores the general report reference
   const { reportRef } = props;
 
+  // Data
+  const [data, setData] = props.data;
+
   // All Contas of the Condominio
-  const { despesas } = props;
+  const despesas = data.allNestedCondominio["Despesas"];
 
   // Function that stores the id of the selected Conta
   const { setSelected } = props;
@@ -81,10 +85,64 @@ export default function RelatorioCondominioRegistrar(props) {
     despesaFundoReserva = despesas.find((despesa) => despesa.fundoReserva);
   }
 
+  const setDespesas = (despesas) => {
+    setData({
+      ...data,
+      allNestedCondominio: {
+        ...data.allNestedCondominio,
+        Despesas: despesas,
+      },
+    });
+  };
+
+  const toggleClassInativa = (despesa_id) => {
+    const element = document.getElementById(`linha_despesa_${despesa_id}`);
+    element.classList.toggle("Inativa");
+  };
+
+  const setStatusDespesa = async (event, despesa_id) => {
+    event.stopPropagation();
+
+    const despesa_ativa = event.target.checked;
+    const despesa = despesas.find((despesa) => despesa.id === despesa_id);
+    toggleClassInativa(despesa.id);
+    despesa.ativa = despesa_ativa;
+
+    if (despesa.aguaIndividual) {
+      const despesa2 = despesas.find(
+        (despesa) => despesa.aguaIndividual && despesa.id !== despesa_id
+      );
+      toggleClassInativa(despesa2.id);
+      despesa2.ativa = despesa_ativa;
+      await window.ipcRenderer.invoke("despesas", {
+        method: "update",
+        content: despesa2,
+      });
+    }
+
+    const response = await window.ipcRenderer.invoke("despesas", {
+      method: "update",
+      content: despesa,
+    });
+
+    console.warn("Despesa Editada:", response);
+
+    const updated_despesas = data.allNestedCondominio["Despesas"].map(
+      (despesa_temp) => {
+        if (despesa_temp.id === despesa_id) {
+          despesa_temp.ativa = despesa_ativa;
+        }
+        return despesa_temp;
+      }
+    );
+
+    setDespesas(updated_despesas);
+  };
+
   return (
     <div id="relatorioCondominioRegistrar">
       <TableContainer ref={reportRef}>
-        {despesaFundoReserva && percentage[0] !== 0 && (
+        {despesaFundoReserva && (
           <Table>
             <TableHead>
               <TableRow className="Black">
@@ -96,12 +154,28 @@ export default function RelatorioCondominioRegistrar(props) {
             </TableHead>
             <TableBody>
               <TableRow
-                className="Linha"
+                id={`linha_despesa_${despesaFundoReserva.id}`}
+                className={
+                  despesaFundoReserva.ativa ? "Linha" : "Linha Inativa"
+                }
                 onClick={() =>
                   selectAndOpenDialog(despesaFundoReserva.id || "")
                 }
               >
                 <TableCell className="col1">
+                  <Checkbox
+                    color="primary"
+                    className="smallCheckbox"
+                    defaultChecked={despesaFundoReserva.ativa}
+                    title={
+                      despesaFundoReserva.ativa
+                        ? "Desativar Despesa"
+                        : "Ativar Despesa"
+                    }
+                    onClick={(event) =>
+                      setStatusDespesa(event, despesaFundoReserva.id)
+                    }
+                  />
                   Fundo Reserva - {percentage[0]} %
                 </TableCell>
                 <TableCell className="col2">{despesaFundoReserva.id}</TableCell>
@@ -115,7 +189,8 @@ export default function RelatorioCondominioRegistrar(props) {
                 <TableCell className="col2"></TableCell>
                 <TableCell className="col3"></TableCell>
                 <TableCell className="col4">
-                  {"R$ " + percentage[1].toFixed(2)}
+                  {"R$ " +
+                    (despesaFundoReserva.ativa ? percentage[1] : 0).toFixed(2)}
                 </TableCell>
               </TableRow>
             </TableBody>
@@ -128,9 +203,11 @@ export default function RelatorioCondominioRegistrar(props) {
             .sort((despesa_a, despesa_b) =>
               despesa_a.nome.localeCompare(despesa_b.nome)
             );
-          const subtotal = categoriaContas.reduce((acc, despesa) => {
-            return acc + Number(despesa.valor);
-          }, 0);
+          const subtotal = categoriaContas
+            .filter((despesa) => despesa.ativa)
+            .reduce((acc, despesa) => {
+              return acc + Number(despesa.valor);
+            }, 0);
           return (
             <Table key={categoria + "table"}>
               <TableHead>
@@ -144,11 +221,32 @@ export default function RelatorioCondominioRegistrar(props) {
               <TableBody>
                 {categoriaContas.map((categoriaConta) => (
                   <TableRow
+                    id={`linha_despesa_${categoriaConta.id}`}
                     key={categoria + categoriaConta.id}
-                    className="Linha"
+                    className={categoriaConta.ativa ? "Linha" : "Linha Inativa"}
                     onClick={() => selectAndOpenDialog(categoriaConta.id)}
                   >
                     <TableCell className="col1">
+                      {!(
+                        categoriaConta.aguaIndividual &&
+                        !categoriaConta.rateioAutomatico
+                      ) ? (
+                        <Checkbox
+                          color="primary"
+                          className="smallCheckbox"
+                          defaultChecked={categoriaConta.ativa}
+                          title={
+                            categoriaConta.ativa
+                              ? "Desativar Despesa"
+                              : "Ativar Despesa"
+                          }
+                          onClick={(event) =>
+                            setStatusDespesa(event, categoriaConta.id)
+                          }
+                        />
+                      ) : (
+                        <span className="smallCheckboxSpace"></span>
+                      )}
                       {categoriaConta.nome}
                     </TableCell>
                     <TableCell className="col2">{categoriaConta.id}</TableCell>
@@ -186,7 +284,11 @@ export default function RelatorioCondominioRegistrar(props) {
               <TableCell className="col2"></TableCell>
               <TableCell className="col3"></TableCell>
               <TableCell className="col4">
-                {"R$ " + (total + percentage[1]).toFixed(2)}
+                {"R$ " +
+                  (despesaFundoReserva?.ativa
+                    ? total + percentage[1]
+                    : total
+                  ).toFixed(2)}
               </TableCell>
             </TableRow>
           </TableHead>
@@ -202,10 +304,27 @@ export default function RelatorioCondominioRegistrar(props) {
             <TableBody>
               {informacoes.map((informacao) => (
                 <TableRow
+                  id={`linha_despesa_${informacao.id}`}
+                  className={informacao.ativa ? "" : "Inativa"}
                   key={"informacao" + informacao.id}
                   onClick={() => selectAndOpenDialog(informacao.id)}
                 >
-                  <TableCell className="uniqueCol">{informacao.text}</TableCell>
+                  <TableCell className="uniqueCol">
+                    <Checkbox
+                      color="primary"
+                      className="smallCheckbox"
+                      defaultChecked={informacao.ativa}
+                      title={
+                        informacao.ativa
+                          ? "Desativar Informação"
+                          : "Ativar Informação"
+                      }
+                      onClick={(event) =>
+                        setStatusDespesa(event, informacao.id)
+                      }
+                    />
+                    {informacao.text}
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>

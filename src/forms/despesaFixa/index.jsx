@@ -161,6 +161,7 @@ export default function FormDespesa(props) {
       parcelaAtual: null,
       numParcelas: null,
       informacao: false,
+      ativa: despesa.ativa,
       Valores: valores,
       condominioId: condominio.id,
     };
@@ -222,13 +223,7 @@ export default function FormDespesa(props) {
           </DialogContentText>
           <FormGroup>
             <Typography component="div">
-              <Grid
-                container
-                component="label"
-                justify="center"
-                alignItems="center"
-                spacing={1}
-              >
+              <Grid container justify="center" alignItems="center" spacing={1}>
                 <Grid item xs>
                   Manual
                 </Grid>

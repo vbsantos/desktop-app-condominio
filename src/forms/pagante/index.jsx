@@ -133,21 +133,15 @@ export default function FormPagante(props) {
         <DialogContentText color="inherit">Tipo de Unidade</DialogContentText>
         <FormGroup>
           <Typography component="div">
-            <Grid
-              container
-              component="label"
-              justify="center"
-              alignItems="center"
-              spacing={1}
-            >
+            <Grid container justify="center" alignItems="center" spacing={1}>
               <Grid item xs>
                 Residencial
               </Grid>
               <Grid item xs>
                 <FormControlLabel
+                  style={{ marginRight: "-10px" }}
                   control={
                     <Switch
-                      // onChange={(e) => setComercial(e.target.checked)}
                       value="cb1"
                       checked={pagante.unidadeComercial}
                       color="primary"

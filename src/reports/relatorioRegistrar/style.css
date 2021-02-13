@@ -67,3 +67,16 @@
   padding: 1px 1px 1px 10px;
   cursor: pointer;
 }
+
+#relatorioCondominioRegistrar .MuiTableRow-root.Inativa {
+  filter: opacity(50%);
+}
+
+#relatorioCondominioRegistrar .smallCheckbox {
+  margin: -1px 4px 0px -6px;
+  padding: 0px;
+}
+
+#relatorioCondominioRegistrar .smallCheckboxSpace {
+  margin: 0px 16px 0px 0px;
+}

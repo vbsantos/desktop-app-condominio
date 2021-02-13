@@ -52,6 +52,7 @@ export default function DraggableDialog(props) {
       fundoReserva: false,
       condominioId: condominio.id,
       informacao: false,
+      ativa: true,
       Valores: [],
     }
   );
@@ -120,7 +121,7 @@ export default function DraggableDialog(props) {
       }
       const neoValores = getUpdatedValores(valores, response);
       // console.warn("CREATE NEO VALORES:", neoValores);
-      if (despesa.rateioAutomatico && valores.length > 0) {
+      if (!despesa.rateioAutomatico && valores.length > 0) {
         const response2 = await window.ipcRenderer.invoke("valores", {
           method: "bulkCreate",
           content: neoValores,
@@ -133,7 +134,7 @@ export default function DraggableDialog(props) {
         method: "update",
         content: despesa,
       });
-      if (despesa.rateioAutomatico && valores.length > 0) {
+      if (!despesa.rateioAutomatico && valores.length > 0) {
         if (valores[0].id !== "") {
           // console.warn("JUST AN UPDATE:", valores);
           const response2 = await window.ipcRenderer.invoke("valores", {

@@ -49,6 +49,7 @@ export default function FormDespesaFundoReserva(props) {
       parcelaAtual: null,
       numParcelas: null,
       informacao: false,
+      ativa: despesa.ativa,
       Valores: [],
       condominioId: condominio.id,
     });

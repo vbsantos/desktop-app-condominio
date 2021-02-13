@@ -1,13 +1,7 @@
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 
 // MATERIAL UI COMPONENTS
-import {
-  DialogContentText,
-  FormControl,
-  InputLabel,
-  TextField,
-  Input,
-} from "@material-ui/core";
+import { FormControl, TextField } from "@material-ui/core";
 
 // CSS
 import "./style.css";
@@ -45,6 +39,7 @@ export default function FormDespesa(props) {
       parcelaAtual: null,
       numParcelas: null,
       informacao: true,
+      ativa: despesa.ativa,
       Valores: [],
       condominioId: condominio.id,
     });

@@ -106,29 +106,41 @@ export default function EscolherBeneficiario(props) {
 
   // This function runs only when there is an interaction with the footbar buttons
   useEffect(() => {
-    switch (footbar.action) {
-      case 0:
-        console.log("EscolherBeneficiario - Botão da esquerda");
-        setFootbar({ ...footbar, action: -1 });
-        window.close(); // sai do sistema
-        break;
-      case 1:
-        console.log("EscolherBeneficiario - Botão do centro");
-        setFootbar({ ...footbar, action: -1 });
-        break;
-      case 2:
-        console.log("EscolherBeneficiario - Botão da direita");
-        setData({
-          ...data,
-          beneficiario: list.find((a) => a.id === selected.id),
-        });
-        setFootbar({
-          ...footbar,
-          action: -1,
-        });
-        navigate("/EscolherCondominio"); // vai pra tela de condominios
-        break;
+    async function next() {
+      switch (footbar.action) {
+        case 0:
+          console.log("EscolherBeneficiario - Botão da esquerda");
+          setFootbar({ ...footbar, action: -1 });
+          window.close(); // sai do sistema
+          break;
+        case 1:
+          console.log("EscolherBeneficiario - Botão do centro");
+          setFootbar({ ...footbar, action: -1 });
+          break;
+        case 2:
+          console.log("EscolherBeneficiario - Botão da direita");
+          const beneficiario = list.find((a) => a.id === selected.id);
+          const allNestedBeneficiario = await window.ipcRenderer.invoke(
+            "beneficiarios",
+            {
+              method: "showNested",
+              content: { id: beneficiario.id },
+            }
+          );
+          setData({
+            ...data,
+            beneficiario,
+            allNestedBeneficiario,
+          });
+          setFootbar({
+            ...footbar,
+            action: -1,
+          });
+          navigate("/EscolherCondominio"); // vai pra tela de condominios
+          break;
+      }
     }
+    next();
   }, [footbar.action]);
 
   // This function runs only when a different Beneficiário is selected
