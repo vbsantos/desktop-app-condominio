@@ -70,7 +70,7 @@ export default function VisualizarRelatoriosGerados(props) {
           position: "left",
           visible: true,
           enabled: true,
-          value: "VOLTAR",
+          value: "RETORNAR",
         },
         {
           id: 1,

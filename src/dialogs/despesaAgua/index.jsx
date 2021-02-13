@@ -210,8 +210,8 @@ export default function DraggableDialog(props) {
           color="inherit"
         >
           {despesa.id === ""
-            ? "Registrar Despesa de Consumo de Água"
-            : "Editar Despesa de Consumo de Água"}
+            ? "Incluir Despesa de Consumo de Água"
+            : "Alterar Despesa de Consumo de Água"}
         </DialogTitle>
         <DialogContent>
           <FormDespesaAgua
@@ -233,7 +233,7 @@ export default function DraggableDialog(props) {
 
         <DialogActions>
           <Button onClick={handleClose} variant="outlined" color="secondary">
-            Cancelar
+            FECHAR
           </Button>
           {despesa.id !== "" && (
             <Button
@@ -253,7 +253,7 @@ export default function DraggableDialog(props) {
           >
             <CreateOutlined />
             <p className="btn-text-ajusted">
-              {despesa.id === "" ? "Registrar" : "Salvar"}
+              {despesa.id === "" ? "Incluir" : "Salvar"}
             </p>
           </Button>
         </DialogActions>

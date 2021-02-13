@@ -87,7 +87,7 @@ export default function DraggableDialog(props) {
         >
           {beneficiario.id === ""
             ? "Cadastrar Administrador"
-            : "Editar Administrador"}
+            : "Alterar Administrador"}
         </DialogTitle>
         <DialogContent>
           <FormBeneficiario
@@ -98,7 +98,7 @@ export default function DraggableDialog(props) {
 
         <DialogActions className="dialogButtons">
           <Button onClick={handleClose} variant="outlined" color="secondary">
-            Cancelar
+            FECHAR
           </Button>
           {beneficiario.id !== "" && (
             <Button

@@ -46,7 +46,7 @@ export default function FloatingActionDeleteButton(props) {
         className={onHover ? "Ajusted" : ""}
         fontSize={onHover ? "default" : "large"}
       />
-      {onHover ? <p>Deletar Relatórios</p> : ""}
+      {onHover ? <p>Excluir Relatórios</p> : ""}
     </Fab>
   );
 }

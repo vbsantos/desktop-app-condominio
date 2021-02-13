@@ -64,7 +64,7 @@ export default function DraggableDialog(props) {
             variant="contained"
             color="primary"
           >
-            VOLTAR
+            RETORNAR
           </Button>
           <Button
             onClick={handleRightButton}

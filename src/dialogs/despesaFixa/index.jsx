@@ -171,7 +171,7 @@ export default function DraggableDialog(props) {
           id="draggable-dialog-title"
           color="inherit"
         >
-          {despesa.id === "" ? "Registrar Despesa Fixa" : "Editar Despesa Fixa"}
+          {despesa.id === "" ? "Incluir Despesa Fixa" : "Alterar Despesa Fixa"}
         </DialogTitle>
         <DialogContent>
           <FormDespesaFixa
@@ -184,7 +184,7 @@ export default function DraggableDialog(props) {
 
         <DialogActions>
           <Button onClick={handleClose} variant="outlined" color="secondary">
-            Cancelar
+            FECHAR
           </Button>
           {despesa.id !== "" && (
             <Button
@@ -204,7 +204,7 @@ export default function DraggableDialog(props) {
           >
             <CreateOutlined />
             <p className="btn-text-ajusted">
-              {despesa.id === "" ? "Registrar" : "Salvar"}
+              {despesa.id === "" ? "Incluir" : "Salvar"}
             </p>
           </Button>
         </DialogActions>

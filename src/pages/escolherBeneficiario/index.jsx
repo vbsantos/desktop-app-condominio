@@ -46,6 +46,9 @@ export default function EscolherBeneficiario(props) {
 
   // This function runs only when the component is monted
   useEffect(() => {
+    if (data.systemVersion !== "") {
+      console.warn("App Version:", data.systemVersion);
+    }
     setFootbar({
       buttons: [
         {
@@ -199,9 +202,7 @@ export default function EscolherBeneficiario(props) {
           open={[dialogDelete, setDialogDelete]}
         />
       )}
-      <h1 className="PageTitle">{`Gerenciador de Condomínios${
-        data.systemVersion !== "" ? ` v${data.systemVersion}` : ""
-      }`}</h1>
+      <h1 className="PageTitle">Gerenciador de Condomínios</h1>
       <div className="UserInputs">
         <FormControl>
           <InputLabel htmlFor="administrator">Administrador</InputLabel>
@@ -233,7 +234,7 @@ export default function EscolherBeneficiario(props) {
               disabled={selected.id === -1}
               onClick={() => setDialogEditForm(true)}
             >
-              Editar
+              Alterar
             </Button>
           </ButtonGroup>
         </FormControl>

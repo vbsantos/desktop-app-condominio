@@ -110,14 +110,14 @@ export default function RegistrarDespesas(props) {
           position: "left",
           visible: true,
           enabled: true,
-          value: "VOLTAR",
+          value: "RETORNAR",
         },
         {
           id: 1,
           position: "center",
           visible: true,
           enabled: true,
-          value: "Registrar Despesa",
+          value: "Incluir Despesa",
         },
         {
           id: 2,

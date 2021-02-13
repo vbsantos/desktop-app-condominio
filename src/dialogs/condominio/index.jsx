@@ -90,7 +90,7 @@ export default function DraggableDialog(props) {
           id="draggable-dialog-title"
           color="inherit"
         >
-          {condominio.id === "" ? "Cadastrar Condomínio" : "Editar Condomínio"}
+          {condominio.id === "" ? "Incluir Condomínio" : "Alterar Condomínio"}
         </DialogTitle>
         <DialogContent>
           <FormCondominio
@@ -102,7 +102,7 @@ export default function DraggableDialog(props) {
 
         <DialogActions>
           <Button onClick={handleClose} variant="outlined" color="secondary">
-            Cancelar
+            FECHAR
           </Button>
           {condominio.id !== "" && (
             <Button
@@ -122,7 +122,7 @@ export default function DraggableDialog(props) {
           >
             <CreateOutlined />
             <p className="btn-text-ajusted">
-              {condominio.id === "" ? "Cadastrar" : "Salvar"}
+              {condominio.id === "" ? "Incluir" : "Salvar"}
             </p>
           </Button>
         </DialogActions>

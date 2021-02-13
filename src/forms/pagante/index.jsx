@@ -161,7 +161,7 @@ export default function FormPagante(props) {
       {!formCompleted && (
         <DialogContent>
           {pagante.id === ""
-            ? "É necessário preencher os campos obrigatórios (*) para cadastrar"
+            ? "É necessário preencher os campos obrigatórios (*) para incluir"
             : "É necessário modificar algum campo para salvar"}
         </DialogContent>
       )}

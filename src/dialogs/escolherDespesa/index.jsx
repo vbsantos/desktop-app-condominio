@@ -105,7 +105,7 @@ export default function DraggableDialog(props) {
           id="draggable-dialog-title"
           color="inherit"
         >
-          Escolha o tipo de despesa:
+          Tipo da Despesa
         </DialogTitle>
         <DialogContent>
           <ButtonGroup
@@ -123,7 +123,7 @@ export default function DraggableDialog(props) {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} variant="outlined" color="secondary">
-            Cancelar
+            FECHAR
           </Button>
         </DialogActions>
       </Dialog>

@@ -55,7 +55,7 @@ export default function VisualizarRelatorioAnual(props) {
           position: "left",
           visible: true,
           enabled: true,
-          value: "VOLTAR",
+          value: "RETORNAR",
         },
         {
           id: 1,

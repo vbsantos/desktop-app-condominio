@@ -53,7 +53,7 @@ export default function FormCondominio(props) {
       {!formCompleted && (
         <DialogContent>
           {condominio.id === ""
-            ? "É necessário preencher os campos obrigatórios (*) para cadastrar"
+            ? "É necessário preencher os campos obrigatórios (*) para incluir"
             : "É necessário modificar algum campo para salvar"}
         </DialogContent>
       )}

@@ -96,7 +96,7 @@ export default function EscolherCondominio(props) {
           position: "left",
           visible: true,
           enabled: true,
-          value: "VOLTAR",
+          value: "RETORNAR",
         },
         {
           id: 1,
@@ -156,7 +156,7 @@ export default function EscolherCondominio(props) {
           position: "left",
           visible: true,
           enabled: true,
-          value: "VOLTAR",
+          value: "RETORNAR",
         },
         {
           id: 1,
@@ -369,7 +369,7 @@ export default function EscolherCondominio(props) {
       {dialogAlertDespesas && (
         <DialogAlerta
           open={[dialogAlertDespesas, setDialogAlertDespesas]}
-          content="Para cadastrar Condôminos é necessário deletar as Despesas (com rateio manual) já registradas"
+          content="Para incluir Condôminos é necessário excluir as Despesas (com rateio manual) já registradas"
         />
       )}
       {dialogAlertNoReports && (
@@ -482,7 +482,7 @@ export default function EscolherCondominio(props) {
                               className="EditIcon"
                               onClick={handleCondominioEdit}
                             >
-                              <Create className="Ajusted" /> Editar
+                              <Create className="Ajusted" /> Alterar
                             </p>
                           </TableCell>
                           <TableCell
@@ -493,7 +493,7 @@ export default function EscolherCondominio(props) {
                               className="DeleteIcon"
                               onClick={handleCondominioDelete}
                             >
-                              <Delete className="Ajusted" /> Deletar
+                              <Delete className="Ajusted" /> Excluir
                             </p>
                           </TableCell>
                         </>
@@ -538,7 +538,7 @@ export default function EscolherCondominio(props) {
                             className="EditIcon"
                             onClick={() => handlePaganteEdit(pagante.id)}
                           >
-                            <Create className="Ajusted" /> Editar
+                            <Create className="Ajusted" /> Alterar
                           </p>
                         </TableCell>
                         <TableCell
@@ -549,7 +549,7 @@ export default function EscolherCondominio(props) {
                             className="DeleteIcon"
                             onClick={() => handlePaganteDelete(pagante.id)}
                           >
-                            <Delete className="Ajusted" /> Deletar
+                            <Delete className="Ajusted" /> Excluir
                           </p>
                         </TableCell>
                         <TableCell className="FixAlignCell"></TableCell>

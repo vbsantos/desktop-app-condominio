@@ -127,7 +127,7 @@ export default function DraggableDialog(props) {
             variant="outlined"
             color="secondary"
           >
-            CANCELAR
+            FECHAR
           </Button>
           <Button
             onClick={handleRightButton}
