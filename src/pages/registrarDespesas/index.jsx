@@ -342,30 +342,32 @@ export default function RegistrarDespesas(props) {
   ) => {
     const individualReportsJSON = pagantes.map((pagante) => {
       let totalIndividual = 0;
-      const individualReport = categorias.map((categoria) => {
-        const despesasByCategory = despesas
-          .filter((despesa) => despesa.categoria === categoria)
-          .map((despesa) => {
-            const valor = despesa.rateioAutomatico
-              ? despesa.valor * pagante.fracao // valor final condômino
-              : Number(
-                  despesa["Valores"].find(
-                    (valor) => valor.paganteId === pagante.id
-                  ).valor
-                );
-            totalIndividual += valor;
-            // console.warn(`[${pagante.complemento}] valor:`, valor);
-            return {
-              ...despesa,
-              valor: valor,
-            };
-          });
-        return {
-          table: true,
-          name: categoria,
-          data: [...despesasByCategory],
-        };
-      });
+      const individualReport = categorias
+        .filter((categoria) => categoria !== "")
+        .map((categoria) => {
+          const despesasByCategory = despesas
+            .filter((despesa) => despesa.categoria === categoria)
+            .map((despesa) => {
+              const valor = despesa.rateioAutomatico
+                ? despesa.valor * pagante.fracao // valor final condômino
+                : Number(
+                    despesa["Valores"].find(
+                      (valor) => valor.paganteId === pagante.id
+                    ).valor
+                  );
+              totalIndividual += valor;
+              // console.warn(`[${pagante.complemento}] valor:`, valor);
+              return {
+                ...despesa,
+                valor: valor,
+              };
+            });
+          return {
+            table: true,
+            name: categoria,
+            data: [...despesasByCategory],
+          };
+        });
       // const fundoReservaIndividual = (percentage[0] / 100) * totalIndividual;
       const fundoReservaIndividual = percentage[1] * pagante.fracao;
       if (existFundoReserva) {
@@ -431,7 +433,12 @@ export default function RegistrarDespesas(props) {
     const total = Number(totalIndividual) + Number(totalComum); // geral (R$)
     reportsTotais.raValue = total;
     const valoresIndividuais = despesaAguaPrimaria["Valores"]; // valores individuais da despesa de água primária
-    const precoAgua = valoresIndividuais[0].precoAgua; // valor do metro cubico da agua
+    const paganteResidencialId = pagantes.find(
+      (pagante) => !pagante.unidadeComercial
+    ).id;
+    const precoAgua = valoresIndividuais.find(
+      (valor) => valor.paganteId == paganteResidencialId
+    ).precoAgua; // valor do metro cubico da agua
 
     let totalAnteriorIndividual = 0; // (m³)
     let totalAtualIndividual = 0; // (m³)

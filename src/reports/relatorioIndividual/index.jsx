@@ -53,7 +53,8 @@ export default function RelatorioIndividual(props) {
             ],
           ]
     )
-    .flat(1);
+    .flat(1)
+    .sort((a, b) => a[0] - b[0]);
 
   // console.warn("RI:", JSON.parse(JSON.stringify(reportData)));
 
