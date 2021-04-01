@@ -10,6 +10,7 @@ export default function GeneralReportHeader(props) {
 
   return (
     <div id="GeneralReportFooter">
+      <div id="header-line0">Gestão de Condomínios</div>
       {nomeAdministrador && (
         <div id="header-line1">{"Administrador: " + nomeAdministrador}</div>
       )}
