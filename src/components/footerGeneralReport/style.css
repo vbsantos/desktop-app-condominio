@@ -9,22 +9,27 @@
   height: 74px;
   width: 100 vw;
 
-  padding: 5px;
+  padding: 2px;
+}
+
+#GeneralReportFooter #header-line0 {
+  line-height: 17px;
+  font-size: 14px;
 }
 
 #GeneralReportFooter #header-line1 {
-  line-height: 20px;
-  font-size: 15px;
+  line-height: 17px;
+  font-size: 14px;
 }
 
 #GeneralReportFooter #header-line2 {
-  line-height: 20px;
-  font-size: 15px;
+  line-height: 17px;
+  font-size: 14px;
 }
 
 #GeneralReportFooter #header-line3 {
-  line-height: 20px;
-  font-size: 15px;
+  line-height: 17px;
+  font-size: 14px;
 }
 
 #GeneralReportFooter {
