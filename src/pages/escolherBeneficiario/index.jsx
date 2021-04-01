@@ -202,7 +202,7 @@ export default function EscolherBeneficiario(props) {
           open={[dialogDelete, setDialogDelete]}
         />
       )}
-      <h1 className="PageTitle">Gerenciador de Condomínios</h1>
+      <h1 className="PageTitle">Gestão de Condomínios</h1>
       <div className="UserInputs">
         <FormControl>
           <InputLabel htmlFor="administrator">Administrador</InputLabel>

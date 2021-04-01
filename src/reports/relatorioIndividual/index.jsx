@@ -69,6 +69,8 @@ export default function RelatorioIndividual(props) {
           nomePagante={info.nomePagante}
           fracaoPagante={info.fracaoPagante}
           date={info.reportDate}
+          nomeCondominio={info.nomeCondominio}
+          enderecoCondominio={info.enderecoCondominio}
         />
 
         <div id="duasTabelas">

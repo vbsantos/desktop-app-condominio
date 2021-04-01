@@ -18,13 +18,6 @@ export default function WaterReportHeader(props) {
     <div id="WaterReportHeader">
       <img id="header-left" src={logo} alt="Logo" />
       <div id="header-right">
-        <div id="header-line2">
-          <span className="bold">{nomeCondominio}</span>
-          {enderecoCondominio && (
-            <span className="bold">{" - " + enderecoCondominio}</span>
-          )}
-        </div>
-
         {validDate ? (
           <div className="bold" id="header-line1">
             {`Leitura de Água ${date.mes} de ${date.ano}`}
@@ -34,6 +27,13 @@ export default function WaterReportHeader(props) {
             {"Leitura de Água"}
           </div>
         )}
+
+        <div id="header-line2">
+          <span className="bold">{nomeCondominio}</span>
+          {enderecoCondominio && (
+            <span className="bold">{" - " + enderecoCondominio}</span>
+          )}
+        </div>
 
         {enderecoCondominio && (
           <div id="header-line3">

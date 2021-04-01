@@ -407,6 +407,8 @@ export default function RegistrarDespesas(props) {
             : null,
           aguaValorUnitario: despesaAgua ? valorAgua.precoAgua : null,
           reportDate: data.reportDate,
+          nomeCondominio: data.allNestedCondominio.nome,
+          enderecoCondominio: data.allNestedCondominio.endereco,
         },
       });
       // console.warn("Relatório Individual:", individualReport);

@@ -26,9 +26,11 @@ export default function ReserveFundReportHeader(props) {
             {"Extrato Fundo Reserva"}
           </div>
         )}
+
         <div id="header-line2">
           <span className="bold">{nomeCondominio}</span>
         </div>
+
         {enderecoCondominio && (
           <div className="bold" id="header-line3">
             <span className="bold">{enderecoCondominio}</span>
