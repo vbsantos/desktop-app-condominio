@@ -43,10 +43,15 @@ export default function DraggableDialog(props) {
     props.pagante || {
       id: "",
       nome: "",
+      email: "",
+      telefone: "",
       complemento: "",
       fracao: "",
+      box: "",
       leituraAgua: "",
       unidadeComercial: false,
+      carros: "",
+      animais: "",
       condominioId: condominio.id,
     }
   );

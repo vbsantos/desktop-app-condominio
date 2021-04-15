@@ -12,6 +12,8 @@ module.exports = (sequelize, DataTypes) => {
       telefone: DataTypes.STRING,
       unidadeComercial: DataTypes.BOOLEAN,
       condominioId: DataTypes.INTEGER,
+      carros: DataTypes.STRING,
+      animais: DataTypes.STRING,
     },
     {}
   );

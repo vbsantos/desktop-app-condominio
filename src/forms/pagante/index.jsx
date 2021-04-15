@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 
 // MATERIAL UI COMPONENTS
 import {
@@ -12,7 +12,11 @@ import {
   Switch,
   Typography,
   Grid,
+  TextField,
 } from "@material-ui/core";
+
+// CSS
+import "./style.css";
 
 export default function FormPagante(props) {
   // true when all the fields of the form are filled
@@ -27,33 +31,51 @@ export default function FormPagante(props) {
   // form reference
   const formRef = useRef(null);
 
+  // FIXME muito estranho quando pressiona uma tecla ao digitar no formulário
   function formOnChange() {
     const formList = [...formRef.current.elements];
-    const fracao = formList[4].value.replace(",", ".");
-    const leituraAgua = formList[6].value.replace(",", ".");
-    const unidadeComercial = formList[7].checked;
+    atualizaPagante(formList);
+    verificaFormulario(formList);
+  }
+
+  const atualizaPagante = (inputs) => {
     setPagante({
       id: pagante.id,
-      nome: formList[0].value,
-      email: formList[1].value,
-      telefone: formList[2].value,
-      complemento: formList[3].value,
-      fracao,
-      box: formList[5].value,
-      leituraAgua,
-      unidadeComercial,
+      nome: inputs[0].value,
+      email: inputs[1].value,
+      telefone: inputs[2].value,
+      complemento: inputs[3].value,
+      fracao: inputs[4].value.replace(",", "."),
+      box: inputs[5].value,
+      leituraAgua: inputs[6].value.replace(",", "."),
+      unidadeComercial: inputs[7].checked,
+      carros: inputs[8].value,
+      animais: inputs[9].value,
       condominioId: condominio.id,
     });
-    setFormCompleted(
-      formList[0].value !== "" &&
-        formList[3].value !== "" &&
-        fracao !== "" &&
-        leituraAgua !== "" &&
-        Number(fracao) > 0 &&
-        Number(fracao) <= 1 &&
-        Number(leituraAgua) >= 0
-    );
-  }
+  };
+
+  const verificaFormulario = (inputs) => {
+    const nome = inputs[0].value;
+    const complemento = inputs[3].value;
+    const fracao = inputs[4].value.replace(",", ".");
+    const leituraAgua = inputs[6].value.replace(",", ".");
+    const isFormCompleted =
+      nome !== "" &&
+      complemento !== "" &&
+      fracao !== "" &&
+      leituraAgua !== "" &&
+      Number(fracao) > 0 &&
+      Number(fracao) <= 1 &&
+      Number(leituraAgua) >= 0;
+    setFormCompleted(isFormCompleted);
+  };
+
+  const getRows = (string, minimo_de_linhas) => {
+    if (!string) return minimo_de_linhas;
+    const quantidade_de_linhas = string.split("\n").length;
+    return Math.max(minimo_de_linhas, quantidade_de_linhas);
+  };
 
   return (
     <form ref={formRef} onChange={formOnChange}>
@@ -64,7 +86,7 @@ export default function FormPagante(props) {
         <FormControl>
           <InputLabel htmlFor="nome">Nome *</InputLabel>
           <Input
-            title="Nome do atual dono do Apartamento"
+            title="Nome do atual morador do Apartamento"
             autoFocus
             defaultValue={pagante.nome}
             id="nome"
@@ -73,7 +95,7 @@ export default function FormPagante(props) {
         <FormControl>
           <InputLabel htmlFor="email">E-mail</InputLabel>
           <Input
-            title="E-mail do atual dono do Apartamento"
+            title="E-mail do atual morador do Apartamento"
             defaultValue={pagante.email}
             id="email"
           ></Input>
@@ -81,12 +103,13 @@ export default function FormPagante(props) {
         <FormControl>
           <InputLabel htmlFor="telefone">Telefone</InputLabel>
           <Input
-            title="Telefone do atual dono do Apartamento"
+            title="Telefone do atual morador do Apartamento"
             defaultValue={pagante.telefone}
             id="telefone"
           ></Input>
         </FormControl>
       </section>
+
       <section>
         <DialogContentText color="inherit">
           Informações do Apartamento
@@ -116,6 +139,7 @@ export default function FormPagante(props) {
           ></Input>
         </FormControl>
       </section>
+
       <section>
         <DialogContentText color="inherit">
           Última Leitura de água
@@ -129,6 +153,7 @@ export default function FormPagante(props) {
           ></Input>
         </FormControl>
       </section>
+
       <section>
         <DialogContentText color="inherit">Tipo de Unidade</DialogContentText>
         <FormGroup>
@@ -155,6 +180,32 @@ export default function FormPagante(props) {
             </Grid>
           </Typography>
         </FormGroup>
+      </section>
+
+      <section>
+        <DialogContentText color="inherit">
+          Informações Extras
+        </DialogContentText>
+
+        <FormControl>
+          <TextField
+            className="text-informacoes"
+            label="Veículos"
+            multiline
+            rows={getRows(pagante.carros, 1)}
+            defaultValue={pagante.carros}
+          />
+        </FormControl>
+
+        <FormControl>
+          <TextField
+            className="text-informacoes"
+            label="Animais de estimação"
+            multiline
+            rows={getRows(pagante.animais, 1)}
+            defaultValue={pagante.animais}
+          />
+        </FormControl>
       </section>
 
       {/* FEEDBACK */}
