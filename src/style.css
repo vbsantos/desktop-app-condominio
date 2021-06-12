@@ -21,8 +21,6 @@
 
 #MainContainer {
   height: calc(100vh - 45px);
-  /* min-width: 150vw;
-  max-width: 150vw;*/
   overflow-y: auto;
   overflow-x: hidden;
   background: rgb(219, 231, 250);
@@ -34,9 +32,13 @@
   padding: 0 0 20px 0;
 }
 
+#LoadingContainer {
+  width: 100vw;
+  height: 100vh;
+  background-color: var(--report-color);
+}
 #Loading {
-  color: #f0f0f0;
-  background-color: #333;
+  color: rgb(255, 255, 255);
   margin: 0;
   position: absolute;
   top: 50%;

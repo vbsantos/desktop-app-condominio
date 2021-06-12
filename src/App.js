@@ -7,6 +7,9 @@ import Routes from "./routes";
 // CSS
 import "./style.css";
 
+// IMAGES
+import logo from "./assets/icon.png";
+
 export default function App() {
   // true when the migrations and seeds already ran
   const [config, setConfig] = useState({ done: false });
@@ -36,13 +39,18 @@ export default function App() {
 
   return (
     <div id="App">
-      <HashRouter>
-        {config.done ? (
+      {config.done ? (
+        <HashRouter>
           <Routes />
-        ) : (
-          <h1 id="Loading">Por favor aguarde enquanto o sistema carrega</h1>
-        )}
-      </HashRouter>
+        </HashRouter>
+      ) : (
+        <div id="LoadingContainer">
+          <div id="Loading">
+            <img src={logo} width="50%" />
+            <h2>Por favor aguarde enquanto o sistema carrega...</h2>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
