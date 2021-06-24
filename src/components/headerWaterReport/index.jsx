@@ -37,7 +37,9 @@ export default function WaterReportHeader(props) {
 
         {enderecoCondominio && (
           <div id="header-line3">
-            <span className="bold">{`Responsável: _______________ Data: ___ / ___ / ___ Valor do m³: R$ ${precoAgua}`}</span>
+            <span className="bold">{`Responsável: _______________ Data: ___ / ___ / ___ Valor do m³: R$ ${Number(
+              precoAgua
+            ).toFixed(2)}`}</span>
           </div>
         )}
       </div>

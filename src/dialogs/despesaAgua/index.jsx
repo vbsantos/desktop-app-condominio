@@ -13,6 +13,8 @@ import {
 
 // FORM COMPONENTS
 import FormDespesaAgua from "../../forms/despesaAgua";
+import Confirmar from "../../dialogs/confirmar";
+import Alerta from "../../dialogs/alerta";
 
 // MATERIAL UI ICONS
 import { DeleteOutlined } from "@material-ui/icons";
@@ -67,6 +69,12 @@ export default function DraggableDialog(props) {
 
   // true when all the fields of the form are filled
   const [formCompleted, setFormCompleted] = useState(false);
+
+  // Modal Confirmar
+  const [openFixModal, setOpenFixModal] = useState(false);
+
+  // Modal Alertar
+  const [openAlertModal, setOpenAlertModal] = useState(false);
 
   // Opens or Create a Despesa
   const [despesa, setDespesa] = useState(
@@ -132,8 +140,7 @@ export default function DraggableDialog(props) {
     setDialog(false);
   }
 
-  // function that runs when you click the right button
-  async function handleRightButton() {
+  async function cadastrarDespesas() {
     if (despesa.id === "") {
       const response = await window.ipcRenderer.invoke("despesas", {
         method: "create",
@@ -154,7 +161,6 @@ export default function DraggableDialog(props) {
           valor: valor.valor,
         };
       });
-      // console.warn("CREATE NEO VALORES:", neoValores);
       if (valores.length > 0) {
         const response2 = await window.ipcRenderer.invoke("valores", {
           method: "bulkCreate",
@@ -163,7 +169,6 @@ export default function DraggableDialog(props) {
         console.warn("Valores Cadastrados:", response2);
       }
     } else {
-      // console.warn("EDIT NEO VALORES:", valores);
       const response = await window.ipcRenderer.invoke("despesas", {
         method: "update",
         content: despesa,
@@ -176,14 +181,12 @@ export default function DraggableDialog(props) {
       console.warn("Despesa Editada:", response2);
       if (valores.length > 0) {
         if (valores[0].id !== "") {
-          // console.warn("JUST AN UPDATE:", valores);
           const response2 = await window.ipcRenderer.invoke("valores", {
             method: "bulkUpdate",
             content: valores,
           });
           console.warn("Valores Editados:", response2);
         } else {
-          // console.warn("IT IS A CREATION:", valores);
           const response2 = await window.ipcRenderer.invoke("valores", {
             method: "bulkCreate",
             content: valores,
@@ -196,8 +199,42 @@ export default function DraggableDialog(props) {
     setDialog(false);
   }
 
+  // function that runs when you click the right button
+  async function handleRightButton() {
+    if (despesa2.valor < 0 || despesa.valor < 0) {
+      setOpenFixModal(true);
+    } else {
+      await cadastrarDespesas();
+    }
+  }
+
   return (
     <div id="dialogRegistrarDespesaAgua">
+      {/* MODAL PARA DIZER QUE NÃO FOI POSSIVE ALTERAR */}
+      <Alerta
+        open={[openAlertModal, setOpenAlertModal]}
+        title={"Falha ao alterar o preço unitário da água"}
+        content={
+          "Não foi possível realizar a alteração, possivelmente a despesa contém valores incorretos."
+        }
+      />
+
+      {/* MODAL PARA CONFIRMAR ALTERAÇÃO */}
+      <Confirmar
+        isOpen={openFixModal}
+        close={() => setOpenFixModal(false)}
+        closeForm={() => setDialog(false)}
+        openAlert={() => setOpenAlertModal(true)}
+        condominio={condominio}
+        despesa={despesa}
+        despesa2={despesa2}
+        valores={valores}
+        title={"Essa despesa gerou valores negativos"}
+        content={
+          "Deseja que o sistema diminua do preço unitário da água afim de corrigir os valores?"
+        }
+      />
+
       <Dialog
         open={dialog}
         onClose={handleClose}

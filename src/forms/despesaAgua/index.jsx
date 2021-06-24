@@ -35,7 +35,7 @@ export default function FormDespesa(props) {
   // despesa secudaria de agua
   const [despesa2, setDespesa2] = props.despesa2;
 
-  // store despesa2 value
+  // store despesa2 value REVIEW
   const [valor2, setValor2] = useState(despesa2.valor);
 
   // stores all individual values in case of !rateioAuto
@@ -61,8 +61,6 @@ export default function FormDespesa(props) {
 
   // function that runs each time there is a change in the form
   function formOnChange(event, nome_categoria = null) {
-    console.groupCollapsed("Dados da despesa de água");
-
     const formList = [...formRef.current.elements];
     formList.splice(2, 1);
     const valoresList = formList.slice(5);
@@ -71,7 +69,12 @@ export default function FormDespesa(props) {
 
     const precoAguaComercial = Number(formList[3].value.replace(",", "."));
 
-    const valorTotalDespesa = Number(formList[4].value.replace(",", "."));
+    const valorTotalDespesaResidencial = Number(
+      formList[4].value.replace(",", ".")
+    );
+    const valorTotalDespesaComercial = Number(
+      formList[5].value.replace(",", ".")
+    );
 
     // fields registros de água individuais
     const registrosIndividuaisFields = valoresList.filter((field) =>
@@ -141,12 +144,11 @@ export default function FormDespesa(props) {
       };
     });
 
-    setValores(newValores);
-
-    const registroIndividualAtual = dadosPagantesAgua.reduce(
-      (acc, pagante) => Number(acc) + Number(pagante.leituraAtual),
-      0
-    );
+    // FIXME
+    // const registroIndividualAtual = dadosPagantesAgua.reduce(
+    //   (acc, pagante) => Number(acc) + Number(pagante.leituraAtual),
+    //   0
+    // );
 
     const valorTotalIndividual = dadosPagantesAgua.reduce(
       (acc, pagante) => Number(acc) + Number(pagante.valor),
@@ -160,7 +162,8 @@ export default function FormDespesa(props) {
       id: despesa.id,
       nome: "Consumo de Água - Individual",
       categoria: new_categoria,
-      agua: registroIndividualAtual,
+      // agua: registroIndividualAtual, // FIXME não lembro pra qq serve
+      agua: valorTotalDespesaResidencial,
       aguaIndividual: true,
       rateioAutomatico: false,
       permanente: true,
@@ -170,20 +173,20 @@ export default function FormDespesa(props) {
       numParcelas: null,
       informacao: false,
       ativa: despesa.ativa,
-      Valores: valores,
+      Valores: newValores,
       condominioId: condominio.id,
     };
 
-    setDespesa(new_despesa_agua);
-    // console.log("Despesa Água Primária:", despesa);
-
-    const valorTotalComum = valorTotalDespesa - valorTotalIndividual;
+    const valorTotalComum =
+      valorTotalDespesaResidencial +
+      valorTotalDespesaComercial -
+      valorTotalIndividual;
 
     const new_despesa_agua2 = {
       id: despesa2.id,
       nome: "Consumo de Água - Área Comum",
       categoria: new_categoria,
-      agua: 0, // não utilizado
+      agua: valorTotalDespesaComercial, // REVIEW gambiarra
       aguaIndividual: true,
       rateioAutomatico: true,
       permanente: true,
@@ -197,13 +200,14 @@ export default function FormDespesa(props) {
       condominioId: condominio.id,
     };
 
+    setValores(newValores);
+
+    setDespesa(new_despesa_agua);
+    // console.log("Despesa Água Primária:", despesa);
     setDespesa2(new_despesa_agua2);
     // console.log("Despesa Água Secundária:", despesa2);
-
     setFormCompleted(validForm && new_categoria !== "" && true);
     setValidForm(true);
-
-    console.groupEnd("Dados da despesa de água");
   }
 
   const getOldUnitaryValue = (tipoUnidade) => {
@@ -244,27 +248,39 @@ export default function FormDespesa(props) {
           <DialogContentText color="inherit">
             Informações da Despesa
           </DialogContentText>
-          <FormControl>
-            <InputLabel htmlFor="nome">Nome</InputLabel>
-            <Input
-              defaultValue={"Consumo de Água"}
-              disabled={true}
-              id="nome"
-            ></Input>
-          </FormControl>
-          <FormControl>
-            <Autocomplete
-              id="categoria"
-              defaultValue={despesa.categoria === "" ? null : despesa.categoria}
-              onInputChange={formOnChange}
-              freeSolo
-              options={options}
-              style={{ width: 200 }}
-              renderInput={(params) => (
-                <TextField {...params} label="Categoria *" variant="standard" />
-              )}
-            />
-          </FormControl>
+          <div id="containerAgua">
+            <div id="esquerdaAgua">
+              <FormControl>
+                <InputLabel htmlFor="nome">Nome</InputLabel>
+                <Input
+                  defaultValue={"Consumo de Água"}
+                  disabled={true}
+                  id="nome"
+                ></Input>
+              </FormControl>
+            </div>
+            <div id="direitaAgua">
+              <FormControl>
+                <Autocomplete
+                  id="categoria"
+                  defaultValue={
+                    despesa.categoria === "" ? null : despesa.categoria
+                  }
+                  onInputChange={formOnChange}
+                  freeSolo
+                  options={options}
+                  style={{ width: 200 }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Categoria *"
+                      variant="standard"
+                    />
+                  )}
+                />
+              </FormControl>
+            </div>
+          </div>
         </section>
 
         {/* VALORES */}
@@ -281,7 +297,7 @@ export default function FormDespesa(props) {
                 <Input
                   defaultValue={
                     valores.length > 0 && valores[0].id !== ""
-                      ? getOldUnitaryValue("residencial")
+                      ? Number(getOldUnitaryValue("residencial")).toFixed(2)
                       : ""
                   }
                   id={"valorAguaResidencial"}
@@ -296,7 +312,7 @@ export default function FormDespesa(props) {
                 <Input
                   defaultValue={
                     valores.length > 0 && valores[0].id !== ""
-                      ? getOldUnitaryValue("comercial")
+                      ? Number(getOldUnitaryValue("comercial")).toFixed(2)
                       : ""
                   }
                   id={"valorAguaComercial"}
@@ -309,19 +325,36 @@ export default function FormDespesa(props) {
         {/* VALOR TOTAL DESPESA */}
         <section>
           <DialogContentText color="inherit">
-            Custo da Despesa (Individuais + Comum)
+            Custo da Despesa
           </DialogContentText>
-          <FormControl>
-            <InputLabel htmlFor={"valorAguaLabel"}>Valor (R$) *</InputLabel>
-            <Input
-              defaultValue={
-                despesa.id === ""
-                  ? ""
-                  : (Number(despesa.valor) + Number(despesa2.valor)).toFixed(2)
-              }
-              id={"valorDespesa"}
-            ></Input>
-          </FormControl>
+          <div id="containerAgua">
+            <div id="esquerdaAgua">
+              <FormControl>
+                <InputLabel htmlFor={"valorAguaLabel"}>
+                  Total Residencial (R$) *
+                </InputLabel>
+                <Input
+                  defaultValue={
+                    despesa.id === "" ? "" : Number(despesa.agua).toFixed(2)
+                  }
+                  id={"valorDespesaResidencial"}
+                ></Input>
+              </FormControl>
+            </div>
+            <div id="direitaAgua">
+              <FormControl>
+                <InputLabel htmlFor={"valorAguaLabel"}>
+                  Total Comercial (R$) *
+                </InputLabel>
+                <Input
+                  defaultValue={
+                    despesa.id === "" ? "" : Number(despesa2.agua).toFixed(2)
+                  }
+                  id={"valorDespesaComercial"}
+                ></Input>
+              </FormControl>
+            </div>
+          </div>
         </section>
 
         {/* REGISTRO AGUA INDIVIDUAL */}
