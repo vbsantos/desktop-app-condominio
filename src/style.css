@@ -56,25 +56,25 @@
 }
 
 section {
-  border: 1px solid rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(0, 0, 0, 0.35);
   border-radius: 5px;
   padding: 20px;
   margin-bottom: 10px;
   text-align: center;
 }
 
-/* TITULO DE TODOS OS DIALOGS */
+/* TITULO DOS DIALOGS */
 .MuiDialogTitle-root {
   text-align: center;
-  min-width: 500px !important;
+  min-width: 600px !important;
 }
-/* CONTEUDO DE TODOS OS DIALOGS */
+/* CONTEUDO DOS DIALOGS */
 .MuiDialogContent-root {
   text-align: center;
-  min-width: 500px !important;
+  min-width: 600px !important;
 }
 
-/* BOTÕES DE TODOS OS DIALOGS IGUALMENTE ESPAÇADOS */
+/* BOTÕES DOS DIALOGS IGUALMENTE ESPAÇADOS */
 .MuiDialogActions-root {
   justify-content: space-around !important;
 }
@@ -82,4 +82,21 @@ section {
 /* BOTÕES COM LARGURA MÍNIMA */
 .MuiButtonBase-root.MuiButton-root {
   min-width: 150px;
+}
+
+/* Separar Formulários em 2 colunas */
+
+div.TwoColumnFormContainer {
+  display: flex !important;
+  justify-content: space-around;
+}
+
+div.LeftColumForm {
+  display: block !important;
+  width: 50%;
+}
+
+div.RightColumnForm {
+  display: block !important;
+  width: 50%;
 }

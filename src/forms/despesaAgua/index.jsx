@@ -248,8 +248,8 @@ export default function FormDespesa(props) {
           <DialogContentText color="inherit">
             Informações da Despesa
           </DialogContentText>
-          <div id="containerAgua">
-            <div id="esquerdaAgua">
+          <div className="TwoColumnFormContainer">
+            <div className="LeftColumForm">
               <FormControl>
                 <InputLabel htmlFor="nome">Nome</InputLabel>
                 <Input
@@ -259,7 +259,7 @@ export default function FormDespesa(props) {
                 ></Input>
               </FormControl>
             </div>
-            <div id="direitaAgua">
+            <div className="RightColumnForm">
               <FormControl>
                 <Autocomplete
                   id="categoria"
@@ -288,8 +288,8 @@ export default function FormDespesa(props) {
           <DialogContentText color="inherit">
             Valor Unitário da Água
           </DialogContentText>
-          <div id="containerAgua">
-            <div id="esquerdaAgua">
+          <div className="TwoColumnFormContainer">
+            <div className="LeftColumForm">
               <FormControl>
                 <InputLabel htmlFor={"valorAguaLabel"}>
                   Valor do m³ Residencial *
@@ -304,7 +304,7 @@ export default function FormDespesa(props) {
                 ></Input>
               </FormControl>
             </div>
-            <div id="direitaAgua">
+            <div className="RightColumnForm">
               <FormControl>
                 <InputLabel htmlFor={"valorAguaLabel"}>
                   Valor do m³ Comercial *
@@ -327,8 +327,8 @@ export default function FormDespesa(props) {
           <DialogContentText color="inherit">
             Custo da Despesa
           </DialogContentText>
-          <div id="containerAgua">
-            <div id="esquerdaAgua">
+          <div className="TwoColumnFormContainer">
+            <div className="LeftColumForm">
               <FormControl>
                 <InputLabel htmlFor={"valorAguaLabel"}>
                   Total Residencial (R$) *
@@ -341,7 +341,7 @@ export default function FormDespesa(props) {
                 ></Input>
               </FormControl>
             </div>
-            <div id="direitaAgua">
+            <div className="RightColumnForm">
               <FormControl>
                 <InputLabel htmlFor={"valorAguaLabel"}>
                   Total Comercial (R$) *
@@ -362,8 +362,8 @@ export default function FormDespesa(props) {
           <DialogContentText color="inherit">
             Leituras de Água Individuais atuais dos Condôminos
           </DialogContentText>
-          <div id="containerAgua">
-            <div id="esquerdaAgua">
+          <div className="TwoColumnFormContainer">
+            <div className="LeftColumForm">
               {condominio["Pagantes"].map((pagante) => (
                 <FormControl key={"aguaIndividualForm" + pagante.id}>
                   <InputLabel htmlFor={"aguaIndividual" + pagante.id}>
@@ -385,7 +385,7 @@ export default function FormDespesa(props) {
                 </FormControl>
               ))}
             </div>
-            <div id="direitaAgua">
+            <div className="RightColumnForm">
               {condominio["Pagantes"].map((pagante) => (
                 <FormControl key={"aguaIndividualForm" + pagante.id}>
                   <InputLabel>Custo para {pagante.complemento}</InputLabel>
