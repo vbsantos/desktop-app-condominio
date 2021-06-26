@@ -53,9 +53,8 @@ export default function RegistrarDespesas(props) {
   // Boolean for Despesa Agua Dialog
   const [dialogDespesaAgua, setDialogDespesaAgua] = useState(false);
   // Boolean for Fundo Reserva Dialog
-  const [dialogDespesaFundoReserva, setDialogDespesaFundoReserva] = useState(
-    false
-  );
+  const [dialogDespesaFundoReserva, setDialogDespesaFundoReserva] =
+    useState(false);
   // Boolean for Informação Dialog
   const [dialogInformacao, setDialogInformacao] = useState(false);
 
@@ -63,16 +62,13 @@ export default function RegistrarDespesas(props) {
   // Boolean for Despesa Fixa Dialog
   const [dialogEditDespesaFixa, setDialogEditDespesaFixa] = useState(false);
   // Boolean for Despesa Parcelada Dialog
-  const [dialogEditDespesaParcelada, setDialogEditDespesaParcelada] = useState(
-    false
-  );
+  const [dialogEditDespesaParcelada, setDialogEditDespesaParcelada] =
+    useState(false);
   // Boolean for Despesa Agua Dialog
   const [dialogEditDespesaAgua, setDialogEditDespesaAgua] = useState(false);
   // Boolean for Fundo Reserva Dialog
-  const [
-    dialogEditDespesaFundoReserva,
-    setDialogEditDespesaFundoReserva,
-  ] = useState(false);
+  const [dialogEditDespesaFundoReserva, setDialogEditDespesaFundoReserva] =
+    useState(false);
   const [dialogEditInformacao, setDialogEditInformacao] = useState(false);
 
   // Boolean for Delete Dialog
@@ -233,6 +229,7 @@ export default function RegistrarDespesas(props) {
     let total = 0;
     let allCategorias = [];
     let porcentagem = 0;
+    let total_chamada_extra = 0;
     const infos = [];
 
     if (!data.allNestedCondominio["Despesas"]) {
@@ -252,13 +249,19 @@ export default function RegistrarDespesas(props) {
       } else {
         if (despesa.ativa) {
           total += Number(despesa.valor);
+          if (despesa.chamadaExtra) {
+            total_chamada_extra += Number(despesa.valor);
+          }
         }
         allCategorias.push(despesa.categoria);
       }
     }
     setInformacoes(infos);
     setTotal(total);
-    setPercentage([porcentagem, (porcentagem / 100) * total]);
+    setPercentage([
+      porcentagem,
+      (porcentagem / 100) * (total - total_chamada_extra),
+    ]);
     setCategorias([...new Set(allCategorias)]);
 
     console.groupCollapsed("Dados das Despesas");

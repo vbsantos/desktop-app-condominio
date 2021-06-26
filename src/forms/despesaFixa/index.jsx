@@ -13,6 +13,7 @@ import {
   InputLabel,
   Input,
   TextField,
+  Checkbox,
 } from "@material-ui/core";
 
 export default function FormDespesa(props) {
@@ -65,7 +66,7 @@ export default function FormDespesa(props) {
     const formList = [...formRef.current.elements];
     formList.splice(2, 1);
     // console.log("FORM LIST:", formList);
-    const valoresList = formList.slice(3);
+    const valoresList = formList.slice(4);
     // console.log("VALORES LIST:", valoresList);
 
     if (!rateioAuto) {
@@ -148,11 +149,12 @@ export default function FormDespesa(props) {
       categoria: new_categoria,
       agua: null,
       aguaIndividual: false,
-      rateioAutomatico: formList[2].checked,
+      chamadaExtra: formList[2].checked,
+      rateioAutomatico: formList[3].checked,
       permanente: true,
       fundoReserva: false,
       valor: rateioAuto
-        ? formList[3].value.replace(",", ".")
+        ? formList[4].value.replace(",", ".")
         : valoresList
             .reduce((acc, field) => {
               return Number(acc) + Number(field.value.replace(",", "."));
@@ -192,28 +194,61 @@ export default function FormDespesa(props) {
           <DialogContentText key={"despesaTitle"} color="inherit">
             Informações da Despesa
           </DialogContentText>
-          <FormControl>
-            <InputLabel htmlFor="nome">Nome *</InputLabel>
-            <Input
-              autoFocus
-              disabled={despesaFundoReserva}
-              defaultValue={despesa.nome}
-              id="nome"
-            ></Input>
-          </FormControl>
-          <FormControl>
-            <Autocomplete
-              id="categoria"
-              defaultValue={despesa.categoria === "" ? null : despesa.categoria}
-              onInputChange={formOnChange}
-              freeSolo
-              options={options}
-              style={{ width: 200 }}
-              renderInput={(params) => (
-                <TextField {...params} label="Categoria *" variant="standard" />
-              )}
-            />
-          </FormControl>
+          <div className="TwoColumnFormContainer">
+            <div className="LeftColumForm">
+              <FormControl>
+                <InputLabel htmlFor="nome">Nome *</InputLabel>
+                <Input
+                  autoFocus
+                  disabled={despesaFundoReserva}
+                  defaultValue={despesa.nome}
+                  id="nome"
+                ></Input>
+              </FormControl>
+            </div>
+            <div className="RightColumnForm">
+              <FormControl>
+                <Autocomplete
+                  id="categoria"
+                  defaultValue={
+                    despesa.categoria === "" ? null : despesa.categoria
+                  }
+                  onInputChange={formOnChange}
+                  freeSolo
+                  options={options}
+                  style={{ width: 200 }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Categoria *"
+                      variant="standard"
+                    />
+                  )}
+                />
+              </FormControl>
+            </div>
+          </div>
+          <div style={{ paddingTop: "15px" }}>
+            <FormControl
+              title={
+                despesa.chamadaExtra
+                  ? "Incluir despesa no cálculo do fundo reserva"
+                  : "Remover despesa do cálculo do fundo reserva"
+              }
+            >
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    name="chamadaExtra"
+                    color="primary"
+                    value="cb1"
+                    checked={despesa.chamadaExtra}
+                  />
+                }
+                label="Chamada Extra"
+              />
+            </FormControl>
+          </div>
         </section>
 
         {/* RATEIO AUTOMATICO OU MANUAL */}
@@ -233,7 +268,7 @@ export default function FormDespesa(props) {
                     control={
                       <Switch
                         onChange={(e) => setRateioAuto(e.target.checked)}
-                        value="cb1"
+                        value="cb2"
                         checked={despesa.rateioAutomatico}
                         color="primary"
                       />

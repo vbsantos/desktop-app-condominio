@@ -16,6 +16,7 @@ module.exports = (sequelize, DataTypes) => {
       informacao: DataTypes.BOOLEAN,
       ativa: DataTypes.BOOLEAN,
       condominioId: DataTypes.INTEGER,
+      chamadaExtra: DataTypes.BOOLEAN,
     },
     {}
   );

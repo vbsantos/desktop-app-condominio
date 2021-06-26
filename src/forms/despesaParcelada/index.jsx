@@ -13,6 +13,7 @@ import {
   InputLabel,
   Input,
   TextField,
+  Checkbox,
 } from "@material-ui/core";
 
 export default function FormDespesa(props) {
@@ -56,7 +57,7 @@ export default function FormDespesa(props) {
     const formList = [...formRef.current.elements];
     formList.splice(2, 1);
     // console.log("FORM LIST:", formList);
-    const valoresList = formList.slice(5);
+    const valoresList = formList.slice(6);
     // console.log("VALORES LIST:", valoresList);
 
     if (!rateioAuto) {
@@ -89,9 +90,9 @@ export default function FormDespesa(props) {
       setValorTotal(0);
     }
 
-    const parcelaAtual = Number(formList[3].value.split(".")[0]);
-    const numParcelas = Number(formList[4].value.split(".")[0]);
-    const valor = formList[5].value.replace(",", ".");
+    const parcelaAtual = Number(formList[4].value.split(".")[0]);
+    const numParcelas = Number(formList[5].value.split(".")[0]);
+    const valor = formList[6].value.replace(",", ".");
 
     const new_categoria =
       nome_categoria === null ? formList[1].value : nome_categoria;
@@ -102,7 +103,8 @@ export default function FormDespesa(props) {
       categoria: new_categoria,
       agua: null,
       aguaIndividual: false,
-      rateioAutomatico: formList[2].checked,
+      rateioAutomatico: formList[3].checked,
+      chamadaExtra: formList[2].checked,
       permanente: false,
       fundoReserva: false,
       valor: rateioAuto
@@ -149,23 +151,56 @@ export default function FormDespesa(props) {
           <DialogContentText key={"despesaTitle"} color="inherit">
             Informações da Despesa
           </DialogContentText>
-          <FormControl>
-            <InputLabel htmlFor="nome">Nome *</InputLabel>
-            <Input autoFocus defaultValue={despesa.nome} id="nome"></Input>
-          </FormControl>
-          <FormControl>
-            <Autocomplete
-              id="categoria"
-              defaultValue={despesa.categoria === "" ? null : despesa.categoria}
-              onInputChange={formOnChange}
-              freeSolo
-              options={options}
-              style={{ width: 200 }}
-              renderInput={(params) => (
-                <TextField {...params} label="Categoria *" variant="standard" />
-              )}
-            />
-          </FormControl>
+          <div className="TwoColumnFormContainer">
+            <div className="LeftColumForm">
+              <FormControl>
+                <InputLabel htmlFor="nome">Nome *</InputLabel>
+                <Input autoFocus defaultValue={despesa.nome} id="nome"></Input>
+              </FormControl>
+            </div>
+            <div className="RightColumnForm">
+              <FormControl>
+                <Autocomplete
+                  id="categoria"
+                  defaultValue={
+                    despesa.categoria === "" ? null : despesa.categoria
+                  }
+                  onInputChange={formOnChange}
+                  freeSolo
+                  options={options}
+                  style={{ width: 200 }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Categoria *"
+                      variant="standard"
+                    />
+                  )}
+                />
+              </FormControl>
+            </div>
+          </div>
+          <div style={{ paddingTop: "15px" }}>
+            <FormControl
+              title={
+                despesa.chamadaExtra
+                  ? "Incluir despesa no cálculo do fundo reserva"
+                  : "Remover despesa do cálculo do fundo reserva"
+              }
+            >
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    name="chamadaExtra"
+                    color="primary"
+                    value="cb1"
+                    checked={despesa.chamadaExtra}
+                  />
+                }
+                label="Chamada Extra"
+              />
+            </FormControl>
+          </div>
         </section>
 
         {/* RATEIO AUTOMATICO OU MANUAL */}
@@ -185,7 +220,7 @@ export default function FormDespesa(props) {
                     control={
                       <Switch
                         onChange={(e) => setRateioAuto(e.target.checked)}
-                        value="cb1"
+                        value="cb2"
                         checked={despesa.rateioAutomatico}
                         color="primary"
                       />
@@ -205,17 +240,28 @@ export default function FormDespesa(props) {
           <DialogContentText key={"parcelaTitle"} color="inherit">
             Informações das Parcelas
           </DialogContentText>
-          <FormControl>
-            <InputLabel htmlFor="parcelaAtual">Parcela Atual *</InputLabel>
-            <Input
-              defaultValue={despesa.parcelaAtual}
-              id="parcelaAtual"
-            ></Input>
-          </FormControl>
-          <FormControl>
-            <InputLabel htmlFor="numParcelas">Total de Parcelas *</InputLabel>
-            <Input defaultValue={despesa.numParcelas} id="numParcelas"></Input>
-          </FormControl>
+          <div className="TwoColumnFormContainer">
+            <div className="LeftColumForm">
+              <FormControl>
+                <InputLabel htmlFor="parcelaAtual">Parcela Atual *</InputLabel>
+                <Input
+                  defaultValue={despesa.parcelaAtual}
+                  id="parcelaAtual"
+                ></Input>
+              </FormControl>
+            </div>
+            <div className="RightColumnForm">
+              <FormControl>
+                <InputLabel htmlFor="numParcelas">
+                  Total de Parcelas *
+                </InputLabel>
+                <Input
+                  defaultValue={despesa.numParcelas}
+                  id="numParcelas"
+                ></Input>
+              </FormControl>
+            </div>
+          </div>
         </section>
 
         {/* VALORES */}
