@@ -71,7 +71,7 @@ section {
 /* CONTEUDO DOS DIALOGS */
 .MuiDialogContent-root {
   text-align: center;
-  min-width: 600px !important;
+  min-width: 100% !important;
 }
 
 /* BOTÕES DOS DIALOGS IGUALMENTE ESPAÇADOS */
